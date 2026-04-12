@@ -1,0 +1,202 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Heart, ShoppingBag, Menu } from "lucide-react";
+import Link from "next/link";
+import { useStore } from "@/store/useStore";
+import { NAV_DATA } from "./NavData";
+import MobileMenu from "./MobileMenu";
+
+export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+
+  const { cartCount, wishlistItems, setMobileMenuOpen, setCartOpen } =
+    useStore();
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <nav className="fixed top-0 w-full z-50">
+      {/* --- TOP BAR (36px) --- */}
+      {/* Updated bg-black to bg-noir to match your config */}
+      <div className="h-[36px] bg-noir text-white flex items-center justify-between px-6 md:px-12 text-[10px] uppercase tracking-[0.2em] relative overflow-hidden">
+        <div className="flex-1">
+          <motion.p
+            animate={{ x: [400, -400] }}
+            transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+            className="whitespace-nowrap"
+          >
+            Free delivery on orders over ₦50,000
+          </motion.p>
+        </div>
+        <div className="hidden md:flex gap-6 items-center">
+          <span className="hover:text-gold transition-colors cursor-pointer">
+            My Account
+          </span>
+          <span className="hover:text-gold transition-colors cursor-pointer">
+            Track Order
+          </span>
+          <div className="flex items-center gap-2 bg-gold/20 px-2 py-1 border border-gold/30 rounded-sm">
+            <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
+            <span className="text-gold">Loyalty Points</span>
+          </div>
+        </div>
+      </div>
+
+      {/* --- MAIN NAVBAR (72px) --- */}
+      <motion.div
+        animate={{
+          backgroundColor: isScrolled ? "#FAF7F2" : "rgba(250, 247, 242, 0.05)",
+          backdropFilter: isScrolled ? "none" : "blur(12px)",
+          borderBottom: isScrolled
+            ? "1px solid rgba(201, 168, 76, 0.3)" // Updated to match your gold color
+            : "none",
+        }}
+        transition={{ duration: 0.4 }}
+        className="h-[72px] flex items-center justify-between px-6 md:px-12"
+      >
+        {/* Left: Logo (Desktop) / Hamburger (Mobile) */}
+        <div className="flex items-center gap-4 flex-1">
+          <button className="md:hidden" onClick={() => setMobileMenuOpen(true)}>
+            <Menu className="w-6 h-6 text-gold" />
+          </button>
+          <Link href="/" className="hidden md:block">
+            {/* font-serif now points to Cormorant because of our tailwind config fix */}
+            <h1 className="font-serif text-3xl text-gold italic font-bold tracking-tighter">
+              GlowHaus
+            </h1>
+          </Link>
+        </div>
+
+        {/* Centre: Logo (Mobile) */}
+        <Link href="/" className="md:hidden flex-1 text-center">
+          <h1 className="font-serif text-2xl text-gold italic font-bold">
+            GlowHaus
+          </h1>
+        </Link>
+
+        {/* Centre: Nav Links (Desktop) */}
+        <div className="hidden md:flex gap-10 items-center h-full">
+          {Object.keys(NAV_DATA)
+            .filter((k) => k !== "Simple")
+            .map((cat) => (
+              <div
+                key={cat}
+                onMouseEnter={() => setHoveredCategory(cat)}
+                onMouseLeave={() => setHoveredCategory(null)}
+                className="h-full flex items-center group cursor-pointer"
+              >
+                <span className="text-[11px] uppercase tracking-[0.25em] group-hover:text-gold transition-colors font-medium relative">
+                  {cat}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gold transition-all group-hover:w-full" />
+                </span>
+              </div>
+            ))}
+          {NAV_DATA.Simple.map((link) => (
+            <Link
+              key={link}
+              href={`/${link.toLowerCase()}`}
+              className="text-[11px] uppercase tracking-[0.25em] hover:text-gold transition-colors font-medium"
+            >
+              {link}
+            </Link>
+          ))}
+        </div>
+
+        {/* Right: Icons */}
+        <div className="flex items-center gap-6 flex-1 justify-end">
+          <Search className="w-5 h-5 cursor-pointer text-gold hover:scale-110 transition-transform" />
+
+          <Link href="/wishlist" className="relative group">
+            <Heart className="w-5 h-5 text-gold group-hover:fill-gold transition-all" />
+            <span className="absolute -top-2 -right-2 bg-noir text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center border border-gold/50">
+              {wishlistItems.length}
+            </span>
+          </Link>
+
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => setCartOpen(true)}
+          >
+            <ShoppingBag className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
+            <span className="absolute -top-2 -right-2 bg-gold text-noir text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+              {cartCount}
+            </span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* --- FULL-WIDTH MEGA MENU --- */}
+      <AnimatePresence>
+        {hoveredCategory && hoveredCategory !== "Simple" && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            onMouseEnter={() => setHoveredCategory(hoveredCategory)}
+            onMouseLeave={() => setHoveredCategory(null)}
+            className="absolute top-[108px] left-0 w-full bg-ivory border-b border-gold/30 shadow-2xl hidden md:block"
+          >
+            <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 p-12">
+              {/* Links Column */}
+              <div className="col-span-4 grid grid-cols-1 gap-y-4">
+                <h3 className="font-serif text-3xl text-gold italic mb-2 border-b border-gold/10 pb-2">
+                  {hoveredCategory}
+                </h3>
+
+                {NAV_DATA[
+                  hoveredCategory as keyof Omit<typeof NAV_DATA, "Simple">
+                ].links.map((sub: string) => (
+                  <Link
+                    key={sub}
+                    href="#"
+                    className="text-[10px] uppercase tracking-[0.2em] text-noir/70 hover:text-gold hover:translate-x-2 transition-all"
+                  >
+                    {sub}
+                  </Link>
+                ))}
+
+                <button className="mt-6 bg-gold text-white px-8 py-3 text-[10px] uppercase tracking-widest w-fit hover:bg-noir transition-colors shadow-gold">
+                  Shop All {hoveredCategory}
+                </button>
+              </div>
+
+              {/* Featured Image Section */}
+              <div className="col-span-8 flex justify-end">
+                <div className="relative w-full h-[350px] overflow-hidden group border border-gold/10">
+                  <img
+                    src={
+                      NAV_DATA[
+                        hoveredCategory as keyof Omit<typeof NAV_DATA, "Simple">
+                      ].image
+                    }
+                    alt={hoveredCategory}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-noir/20 group-hover:bg-transparent transition-colors" />
+                  <div className="absolute bottom-8 right-8 text-right">
+                    <p className="text-white text-xs uppercase tracking-[0.3em] mb-2 opacity-80">
+                      New Arrivals
+                    </p>
+                    <h4 className="text-white font-serif text-4xl italic">
+                      The Luxury Collection
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Include the MobileMenu component */}
+      <MobileMenu />
+    </nav>
+  );
+}

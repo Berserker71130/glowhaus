@@ -31,10 +31,14 @@ const config: Config = {
         taupe: "#9E8E82",
       },
       fontFamily: {
-        // Criteria: Fonts configured
-        display: ["Cormorant Garamond", "serif"],
+        // FIX: Connect the CSS variables from layout.tsx
+        serif: ["var(--font-cormorant)", "serif"],
+        sans: ["var(--font-geist-sans)", "sans-serif"],
+
+        // Keeping your custom names for flexibility
+        display: ["var(--font-cormorant)", "serif"], // Maps Cormorant to font-display
         heading: ["Playfair Display", "serif"],
-        body: ["DM Sans", "sans-serif"],
+        body: ["var(--font-geist-sans)", "sans-serif"], // Maps Geist to font-body
       },
       backgroundImage: {
         "gold-gradient":
@@ -53,6 +57,7 @@ const config: Config = {
         "fade-in": "fadeIn 0.4s ease-in-out",
         shimmer: "shimmer 1.8s infinite",
         float: "float 3s ease-in-out infinite",
+        marquee: "marquee 20s linear infinite", // Added for the top bar scroll
       },
       keyframes: {
         fadeUp: {
@@ -64,6 +69,11 @@ const config: Config = {
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
+        },
+        marquee: {
+          // Added for the free delivery text
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(-100%)" },
         },
       },
     },

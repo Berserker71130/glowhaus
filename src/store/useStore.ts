@@ -9,7 +9,7 @@ import {
 } from "../types";
 
 interface GlobalStore {
-  // --- Cart Slice ---
+  // Cart Slice
   cartItems: CartItem[];
   addToCart: (product: Product, options: any) => void;
   removeFromCart: (id: string) => void;
@@ -18,13 +18,13 @@ interface GlobalStore {
   cartTotal: number;
   cartCount: number;
 
-  // --- Wishlist Slice ---
+  // Wishlist Slice
   wishlistItems: Product[];
   addToWishlist: (product: Product) => void;
   removeFromWishlist: (id: string) => void;
   isWishlisted: (id: string) => boolean;
 
-  // --- Loyalty Slice ---
+  // Loyalty Slice
   points: number;
   tier: "Bronze" | "Silver" | "Gold" | "Platinum";
   pointsHistory: PointTransaction[];
@@ -32,7 +32,7 @@ interface GlobalStore {
   addPoints: (amount: number, reason: string) => void;
   redeemPoints: (amount: number) => void;
 
-  // --- Booking Slice ---
+  // Booking Slice
   selectedService: Service | null;
   selectedDate: string | null;
   selectedTime: string | null;
@@ -42,7 +42,7 @@ interface GlobalStore {
   setTime: (t: string) => void;
   clearBooking: () => void;
 
-  // --- UI Slice ---
+  // UI Slice
   cartOpen: boolean;
   searchOpen: boolean;
   mobileMenuOpen: boolean;
@@ -50,7 +50,7 @@ interface GlobalStore {
   setSearchOpen: (v: boolean) => void;
   setMobileMenuOpen: (v: boolean) => void;
 
-  // --- User Slice ---
+  // User Slice
   displayName: string;
   email: string;
   avatar: string;
