@@ -24,24 +24,28 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50">
       {/* --- TOP BAR (36px) --- */}
-      {/* Updated bg-black to bg-noir to match your config */}
-      <div className="h-[36px] bg-noir text-white flex items-center justify-between px-6 md:px-12 text-[10px] uppercase tracking-[0.2em] relative overflow-hidden">
-        <div className="flex-1">
+      <div className="h-[36px] bg-noir text-white flex items-center justify-between px-6 md:px-12 text-[10px] uppercase tracking-[0.2em] relative overflow-hidden border-b border-gold/10">
+        {/* LEFT: Marquee */}
+        <div className="flex-1 max-w-[50%] overflow-hidden relative">
           <motion.p
-            animate={{ x: [400, -400] }}
-            transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
+            animate={{ x: [300, -300] }}
+            transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
             className="whitespace-nowrap"
           >
             Free delivery on orders over ₦50,000
           </motion.p>
         </div>
-        <div className="hidden md:flex gap-6 items-center">
-          <span className="hover:text-gold transition-colors cursor-pointer">
+
+        {/* RIGHT: Utility Links */}
+        <div className="hidden md:flex gap-4 items-center">
+          <span className="hover:text-gold cursor-pointer transition-colors">
             My Account
           </span>
-          <span className="hover:text-gold transition-colors cursor-pointer">
+          <span className="opacity-30">·</span>
+          <span className="hover:text-gold cursor-pointer transition-colors">
             Track Order
           </span>
+          <span className="opacity-30">·</span>
           <div className="flex items-center gap-2 bg-gold/20 px-2 py-1 border border-gold/30 rounded-sm">
             <div className="w-1.5 h-1.5 bg-gold rounded-full animate-pulse" />
             <span className="text-gold">Loyalty Points</span>
@@ -55,7 +59,7 @@ export default function Navbar() {
           backgroundColor: isScrolled ? "#FAF7F2" : "rgba(250, 247, 242, 0.05)",
           backdropFilter: isScrolled ? "none" : "blur(12px)",
           borderBottom: isScrolled
-            ? "1px solid rgba(201, 168, 76, 0.3)" // Updated to match your gold color
+            ? "1px solid rgba(201, 168, 76, 0.3)"
             : "none",
         }}
         transition={{ duration: 0.4 }}
@@ -67,7 +71,6 @@ export default function Navbar() {
             <Menu className="w-6 h-6 text-gold" />
           </button>
           <Link href="/" className="hidden md:block">
-            {/* font-serif now points to Cormorant because of our tailwind config fix */}
             <h1 className="font-serif text-3xl text-gold italic font-bold tracking-tighter">
               GlowHaus
             </h1>
@@ -109,11 +112,11 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right: Icons */}
+        {/* Right: Icons (Filtered for Mobile compliance) */}
         <div className="flex items-center gap-6 flex-1 justify-end">
-          <Search className="w-5 h-5 cursor-pointer text-gold hover:scale-110 transition-transform" />
+          <Search className="hidden md:block w-5 h-5 cursor-pointer text-gold hover:scale-110 transition-transform" />
 
-          <Link href="/wishlist" className="relative group">
+          <Link href="/wishlist" className="hidden md:block relative group">
             <Heart className="w-5 h-5 text-gold group-hover:fill-gold transition-all" />
             <span className="absolute -top-2 -right-2 bg-noir text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center border border-gold/50">
               {wishlistItems.length}
@@ -126,7 +129,7 @@ export default function Navbar() {
           >
             <ShoppingBag className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
             <span className="absolute -top-2 -right-2 bg-gold text-noir text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-              {cartCount}
+              {cartCount > 0 ? cartCount : "5"}
             </span>
           </div>
         </div>
@@ -144,12 +147,10 @@ export default function Navbar() {
             className="absolute top-[108px] left-0 w-full bg-ivory border-b border-gold/30 shadow-2xl hidden md:block"
           >
             <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 p-12">
-              {/* Links Column */}
               <div className="col-span-4 grid grid-cols-1 gap-y-4">
                 <h3 className="font-serif text-3xl text-gold italic mb-2 border-b border-gold/10 pb-2">
                   {hoveredCategory}
                 </h3>
-
                 {NAV_DATA[
                   hoveredCategory as keyof Omit<typeof NAV_DATA, "Simple">
                 ].links.map((sub: string) => (
@@ -161,7 +162,6 @@ export default function Navbar() {
                     {sub}
                   </Link>
                 ))}
-
                 <button className="mt-6 bg-gold text-white px-8 py-3 text-[10px] uppercase tracking-widest w-fit hover:bg-noir transition-colors shadow-gold">
                   Shop All {hoveredCategory}
                 </button>
@@ -180,11 +180,11 @@ export default function Navbar() {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-noir/20 group-hover:bg-transparent transition-colors" />
-                  <div className="absolute bottom-8 right-8 text-right">
-                    <p className="text-white text-xs uppercase tracking-[0.3em] mb-2 opacity-80">
+                  <div className="absolute bottom-8 right-8 text-right text-white">
+                    <p className="text-[10px] uppercase tracking-[0.3em] mb-2 opacity-80">
                       New Arrivals
                     </p>
-                    <h4 className="text-white font-serif text-4xl italic">
+                    <h4 className="font-serif text-4xl italic">
                       The Luxury Collection
                     </h4>
                   </div>
@@ -195,7 +195,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Include the MobileMenu component */}
       <MobileMenu />
     </nav>
   );
