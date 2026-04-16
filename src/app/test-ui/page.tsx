@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/Input";
 import { Rating } from "@/components/ui/Ratings";
 import { GoldDivider } from "@/components/ui/Divider";
 import {
+  Select,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/Select";
+import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
@@ -81,6 +88,22 @@ export default function UITestPage() {
           <p className="text-xs text-taupe">
             Current Selection: {rating} Stars
           </p>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">
+            8. Radix Select (Gold Chevron)
+          </h2>
+          <Select>
+            <SelectTrigger className="w-[280px]">
+              <SelectValue placeholder="Select a House Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="maitama">Maitama Mansion</SelectItem>
+              <SelectItem value="gwarinpa">Gwarinpa Flat</SelectItem>
+              <SelectItem value="wuse">Wuse 2 Office</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </section>
 
