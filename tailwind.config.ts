@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "class", // Criteria: Dark mode classes configured
+  darkMode: "class",
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,7 +10,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Criteria: All custom colors available
         noir: "#0D0D0D",
         ivory: "#FAF7F2",
         blush: "#F5E6E8",
@@ -31,14 +30,11 @@ const config: Config = {
         taupe: "#9E8E82",
       },
       fontFamily: {
-        // FIX: Connect the CSS variables from layout.tsx
         serif: ["var(--font-cormorant)", "serif"],
         sans: ["var(--font-geist-sans)", "sans-serif"],
-
-        // Keeping your custom names for flexibility
-        display: ["var(--font-cormorant)", "serif"], // Maps Cormorant to font-display
+        display: ["var(--font-cormorant)", "serif"],
         heading: ["Playfair Display", "serif"],
-        body: ["var(--font-geist-sans)", "sans-serif"], // Maps Geist to font-body
+        body: ["var(--font-geist-sans)", "sans-serif"],
       },
       backgroundImage: {
         "gold-gradient":
@@ -55,9 +51,9 @@ const config: Config = {
       animation: {
         "fade-up": "fadeUp 0.5s ease-out",
         "fade-in": "fadeIn 0.4s ease-in-out",
-        shimmer: "shimmer 1.8s infinite",
+        shimmer: "shimmer 2s cubic-bezier(0.4, 0, 0.6, 1) infinite", // Updated for smoother flow
         float: "float 3s ease-in-out infinite",
-        marquee: "marquee 20s linear infinite", // Added for the top bar scroll
+        marquee: "marquee 20s linear infinite",
       },
       keyframes: {
         fadeUp: {
@@ -65,18 +61,21 @@ const config: Config = {
           to: { opacity: "1", transform: "translateY(0)" },
         },
         fadeIn: { from: { opacity: "0" }, to: { opacity: "1" } },
-        shimmer: { "0%, 100%": { opacity: "1" }, "50%": { opacity: "0.5" } },
+        shimmer: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" }, // Reduced to 0.4 for a more pronounced "shimmer" effect
+        },
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
         },
         marquee: {
-          // Added for the free delivery text
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(-100%)" },
         },
       },
     },
   },
+  plugins: [],
 };
 export default config;

@@ -65,6 +65,7 @@ const Footer = () => {
           { title: "help", display: "Help" },
         ].map((col) => (
           <div key={col.title} className="flex flex-col gap-4">
+            
             {/* Header in Playfair Display */}
             <h4 className="font-serif text-[#D4AF37] text-lg">{col.display}</h4>
 
