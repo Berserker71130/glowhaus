@@ -33,7 +33,7 @@ const CATEGORIES = [
 
 export default function CategoryShowcase() {
   return (
-    <section className="py-24 px-6 lg:px-20 bg-ivory">
+    <section className="py-24 px-6 lg:px-20 bg-ivory/20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {CATEGORIES.map((cat, index) => (
           <motion.div
