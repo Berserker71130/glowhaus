@@ -58,7 +58,7 @@ export default function SaleBanner() {
         <div className="text-center lg:text-left space-y-10 flex-1">
           <h2 className="text-5xl lg:text-7xl font-display text-white leading-tight">
             UP TO <span className="text-gold italic">40% OFF</span> <br />
-            <span className="text-2xl md:text-3xl uppercase tracking-[0.2em] font-sans text-white/60">
+            <span className="text-2xl md:text-3xl uppercase tracking-[0.2em] font-sans text-ivory/60">
               End of Season Sale
             </span>
           </h2>
@@ -70,7 +70,7 @@ export default function SaleBanner() {
             <CountdownUnit value={timeLeft.SECS} label="SECS" />
           </div>
 
-          <button className="bg-gold text-noir font-bold px-12 py-5 uppercase text-xs tracking-widest hover:bg-white transition-all duration-500 shadow-xl">
+          <button className="bg-gold text-noir font-bold px-12 py-5 uppercase text-xs tracking-widest hover:bg-ivory transition-all duration-500 shadow-gold">
             Shop the Sale →
           </button>
         </div>
@@ -91,14 +91,14 @@ export default function SaleBanner() {
                   />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-white font-display italic text-lg">
+                  <h4 className="text-ivory font-display italic text-lg">
                     {item.name}
                   </h4>
                   <div className="flex gap-3 items-center mt-1">
                     <span className="text-gold font-bold">
                       {item.salePrice}
                     </span>
-                    <span className="text-white/20 line-through text-xs">
+                    <span className="text-ivory/20 line-through text-xs">
                       {item.price}
                     </span>
                   </div>

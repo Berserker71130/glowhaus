@@ -49,11 +49,11 @@ export default function NewArrivals() {
 
   return (
     // Section background is Ivory
-    <section className="py-24 px-6 lg:px-20 bg-[#FCF9F2]">
+    <section className="py-24 px-6 lg:px-20 bg-ivory">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <h2 className="text-4xl lg:text-5xl font-display text-[#1A1A1A] mb-8 italic">
+            <h2 className="text-4xl lg:text-5xl font-display text-noir mb-8 italic">
               New Arrivals
             </h2>
             <div className="flex gap-8 overflow-x-auto pb-2">
@@ -63,15 +63,15 @@ export default function NewArrivals() {
                   onClick={() => setActiveTab(tab)}
                   className={`relative pb-2 text-xs uppercase tracking-widest font-bold transition-all ${
                     activeTab === tab
-                      ? "text-[#C5A059]"
-                      : "text-[#1A1A1A]/40 hover:text-[#1A1A1A]"
+                      ? "text-gold"
+                      : "text-noir/40 hover:text-noir"
                   }`}
                 >
                   {tab}
                   {activeTab === tab && (
                     <motion.div
                       layoutId="tabUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#C5A059]"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gold"
                     />
                   )}
                 </button>
@@ -80,7 +80,7 @@ export default function NewArrivals() {
           </div>
           <Link
             href="/shop"
-            className="text-[#C5A059] font-bold text-xs uppercase tracking-widest border-b border-[#C5A059] pb-1"
+            className="text-gold font-bold text-xs uppercase tracking-widest border-b border-gold pb-1"
           >
             Shop All New Arrivals →
           </Link>
@@ -99,30 +99,28 @@ export default function NewArrivals() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 // THE "POP" FIX:
                 // 1. bg-white: Sharp contrast against Ivory
-                // 2. border-gray-200: Hard edge definition
-                // 3. shadow-md: Makes it sit "above" the section
-                // 4. hover:shadow-[0_20px_40px_rgba(197,160,89,0.2)]: A soft gold glow on hover
-                className="group bg-white p-4 rounded-xl border border-gray-200 shadow-md hover:shadow-[0_20px_40px_rgba(197,160,89,0.2)] hover:border-[#C5A059]/50 transition-all duration-500"
+                // 2. border-taupe/20: Defined edge using brand muted color
+                // 3. shadow-card: Using your design system's custom card shadow
+                // 4. hover:shadow-gold: Using your design system's gold glow
+                className="group bg-white p-4 rounded-xl border border-taupe/20 shadow-card hover:shadow-gold hover:border-gold/50 transition-all duration-500"
               >
-                <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-[#F3F3F3]">
+                <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-blush">
                   <img
                     src={product.img}
                     className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-1000"
                     alt={product.name}
                   />
                   {/* Floating Badge to break the image line */}
-                  <div className="absolute top-3 left-3 bg-[#1A1A1A] text-white text-[9px] font-bold px-3 py-1 rounded-sm uppercase tracking-widest">
+                  <div className="absolute top-3 left-3 bg-rose-deep text-white text-[9px] font-bold px-3 py-1 rounded-sm uppercase tracking-widest">
                     New
                   </div>
                 </div>
 
                 <div className="text-center px-2">
-                  <h3 className="font-display italic text-xl text-[#1A1A1A] leading-tight mb-2">
+                  <h3 className="font-display italic text-xl text-noir leading-tight mb-2">
                     {product.name}
                   </h3>
-                  <p className="text-[#C5A059] font-bold text-lg">
-                    {product.price}
-                  </p>
+                  <p className="text-gold font-bold text-lg">{product.price}</p>
                 </div>
               </motion.div>
             ))}

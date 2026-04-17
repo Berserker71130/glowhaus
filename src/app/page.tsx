@@ -6,7 +6,7 @@ import SaleBanner from "@/components/sections/SaleBanner";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-200">
+    <main className="min-h-screen bg-ivory">
       <Hero />
       <CategoryShowcase />
       <BestSellers />

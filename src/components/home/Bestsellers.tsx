@@ -98,7 +98,7 @@ export default function BestSellers() {
 
   return (
     // CONTRAST FIX: Changed bg from #F4F4F2 to #EDECE8 (slightly darker stone)
-    <section className="py-24 px-6 lg:px-20 bg-[#EDECE8]">
+    <section className="py-24 px-6 lg:px-20 bg-ivory">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6 max-w-7xl mx-auto">
         <div>
           <span className="text-gold font-bold text-[10px] tracking-[0.3em] uppercase mb-4 block">
@@ -150,7 +150,7 @@ export default function BestSellers() {
                 className="flex-[0_0_85%] md:flex-[0_0_45%] lg:flex-[0_0_24%] min-w-0 pl-6 pb-12"
               >
                 {/* STEP 3: Change bg-ivory/20 to bg-white (This fixes the blending!) */}
-                <div className="group relative bg-white rounded-xl p-4 shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-white/50">
+                <div className="group relative bg-white rounded-xl p-4 shadow-[0_15px_40px_rgba(0,0,0,0.12)] border border-taupe/10 transition-all duration-500 hover:border-gold/30">
                   <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#EAEAEA]">
                     <img
                       src={product.img}
@@ -158,7 +158,7 @@ export default function BestSellers() {
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
 
-                    <div className="absolute top-4 left-4 bg-[#E2A7A7] text-white text-[9px] font-bold px-3 py-1 uppercase tracking-widest rounded-sm shadow-sm">
+                    <div className="absolute top-4 left-4 bg-rose-deep text-white text-[9px] font-bold px-3 py-1 uppercase tracking-widest rounded-sm shadow-sm">
                       Bestseller
                     </div>
 
