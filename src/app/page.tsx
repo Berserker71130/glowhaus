@@ -3,6 +3,7 @@ import CategoryShowcase from "@/components/home/CategoryShowcase";
 import Hero from "@/components/home/Hero";
 import NewArrivals from "@/components/sections/NewArrivals";
 import SaleBanner from "@/components/sections/SaleBanner";
+import TrustSection from "@/components/sections/TrustSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <BestSellers />
       <NewArrivals />
       <SaleBanner />
+      <TrustSection />
     </main>
   );
 }
