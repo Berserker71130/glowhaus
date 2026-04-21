@@ -1,8 +1,20 @@
+export type BadgeType =
+  | "NEW"
+  | "BESTSELLER"
+  | "SALE"
+  | "LOW STOCK"
+  | "SOLD OUT";
+
 export interface Product {
   id: string;
   name: string;
   price: number;
+  originalPrice?: number;
+  rating: number;
+  reviewsCount: number;
   image: string;
+  badges: BadgeType[];
+  isSoldOut: boolean;
 }
 
 export interface CartItem {

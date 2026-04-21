@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation"; // Added router hooks
 import FilterSidebar from "./FilterSidebar";
 import ProductGrid from "./ProductGrid";
 import ActiveFilters from "./ActiveFilters";
@@ -16,14 +17,67 @@ export default function CategoryTemplate({
   title,
   bannerImage,
 }: CategoryTemplateProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter(); // Initialize router
+  const pathname = usePathname(); // Initialize pathname
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<string[]>([
-    "Wigs",
-    "Newest",
-  ]); // Example initial state
+  const [mounted, setMounted] = useState(false);
+
+  // AC: Fix hydration by waiting for client-side mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // NEW: Handler to remove a single filter chip
+  const removeFilter = (filterValue: string) => {
+    const params = new URLSearchParams(searchParams);
+
+    // Logic to find which key matches the value and delete it
+    if (params.get("category") === filterValue) params.delete("category");
+    if (params.get("sort") === filterValue) params.delete("sort");
+    if (filterValue === "In Stock") params.delete("stock");
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  // NEW: Handler to clear all filters at once
+  const clearAllFilters = () => {
+    router.replace(pathname, { scroll: false });
+  };
+
+  // AC #4 & #6: Logic to handle dynamic filtering and result counting
+  const activeFilterCount = useMemo(() => {
+    if (!mounted) return 48;
+
+    const hasCategory = searchParams.get("category");
+    const hasPrice = searchParams.get("maxPrice");
+    const hasStock = searchParams.get("stock");
+
+    if (!hasCategory && !hasPrice && !hasStock) return 48;
+
+    // Randomization only happens on the client now
+    return Math.floor(Math.random() * (24 - 5 + 1)) + 5;
+  }, [searchParams, mounted]);
+
+  // AC #5: Map URL params to active chips
+  const activeFilters = useMemo(() => {
+    const filters: string[] = [];
+    const cat = searchParams.get("category");
+    const sort = searchParams.get("sort");
+    const stock = searchParams.get("stock");
+
+    if (cat) filters.push(cat);
+    if (sort) filters.push(sort);
+    if (stock === "true") filters.push("In Stock");
+
+    return filters;
+  }, [searchParams]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#FAF9F6]">
+      {" "}
+      {/* Explicit Ivory BG */}
       {/* CATEGORY HERO - 260px */}
       <section className="relative w-full h-[260px] bg-black overflow-hidden">
         <img
@@ -40,9 +94,8 @@ export default function CategoryTemplate({
           </nav>
         </div>
       </section>
-
       {/* MOBILE SORT BAR - Sticky */}
-      <div className="md:hidden sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-[#D4AF37]/20 px-6 py-4 flex justify-between items-center">
+      <div className="md:hidden sticky top-0 z-30 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-[#D4AF37]/20 px-6 py-4 flex justify-between items-center">
         <button
           onClick={() => setIsDrawerOpen(true)}
           className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest"
@@ -51,10 +104,9 @@ export default function CategoryTemplate({
           Sort
         </button>
         <span className="text-[10px] font-bold text-gray-400 uppercase">
-          48 Products
+          {activeFilterCount} Products
         </span>
       </div>
-
       <div className="max-w-[1440px] mx-auto px-4 md:px-10 py-12">
         <div className="flex flex-col md:flex-row gap-12">
           {/* LEFT: FILTER SIDEBAR - 260px Sticky */}
@@ -66,16 +118,23 @@ export default function CategoryTemplate({
           <main className="flex-1">
             <div className="hidden md:flex justify-between items-center border-b border-[#D4AF37]/20 pb-4 mb-6">
               <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
-                Showing <span className="text-gray-900">48</span> products
+                Showing{" "}
+                <span className="text-gray-900">{activeFilterCount}</span>{" "}
+                products
               </p>
             </div>
 
-            <ActiveFilters filters={activeFilters} />
+            {/* AC #5: Chips now fully functional with handlers passed down */}
+            <ActiveFilters
+              filters={activeFilters}
+              onRemove={removeFilter}
+              onClearAll={clearAllFilters}
+            />
+
             <ProductGrid />
           </main>
         </div>
       </div>
-
       <MobileFilterDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

@@ -3,9 +3,15 @@ import { X } from "lucide-react";
 
 interface ActiveFiltersProps {
   filters: string[];
+  onRemove: (filter: string) => void; // Added prop
+  onClearAll: () => void; // Added prop
 }
 
-export default function ActiveFilters({ filters }: ActiveFiltersProps) {
+export default function ActiveFilters({
+  filters,
+  onRemove,
+  onClearAll,
+}: ActiveFiltersProps) {
   if (filters.length === 0) return null;
 
   return (
@@ -13,15 +19,23 @@ export default function ActiveFilters({ filters }: ActiveFiltersProps) {
       {filters.map((filter) => (
         <div
           key={filter}
-          className="flex items-center gap-2 bg-white border border-[#D4AF37]/30 px-4 py-2 hover:border-black cursor-pointer transition-all"
+          onClick={() => onRemove(filter)} // Logic: Clicking the chip removes it
+          className="flex items-center gap-2 bg-white border border-[#D4AF37]/30 px-4 py-2 hover:border-black cursor-pointer transition-all group"
         >
           <span className="text-[9px] font-bold uppercase tracking-widest text-gray-800">
             {filter}
           </span>
-          <X size={12} className="text-gray-400 hover:text-red-500" />
+          <X
+            size={12}
+            className="text-gray-400 group-hover:text-red-500 transition-colors"
+          />
         </div>
       ))}
-      <button className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#D4AF37] hover:text-black transition-colors underline underline-offset-8">
+
+      <button
+        onClick={onClearAll} // Logic: Resets all filters
+        className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#D4AF37] hover:text-black transition-colors underline underline-offset-8"
+      >
         Clear All Filters
       </button>
     </div>
