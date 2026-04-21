@@ -31,7 +31,7 @@ export default function ProductCard({
 
   const cardVariants = {
     initial: { y: 0 },
-    hover: { y: -8 }, // Slightly more lift for luxury feel
+    hover: { y: -8 },
   };
 
   const imageVariants = {
@@ -49,7 +49,6 @@ export default function ProductCard({
       initial="initial"
       whileHover="hover"
       variants={cardVariants}
-      // FIXED: Added Ivory background (#FCF9F2) and a soft gold border
       className="group relative flex flex-col w-full bg-[#FCF9F2] border border-[#D4AF37]/10 transition-all duration-500 hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.3)]"
     >
       {/* 1. IMAGE CONTAINER */}
@@ -98,31 +97,41 @@ export default function ProductCard({
           />
         </button>
 
-        {/* 4. HOVER ACTION BAR (FIXED: Contrast and Colors) */}
-        {!product.isSoldOut && (
-          <motion.div
-            variants={actionBarVariants}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-            // Changed to a sleek Black bar so it stands out against Ivory
-            className="absolute bottom-0 left-0 right-0 hidden md:flex h-14 bg-black text-white z-30"
-          >
+        {/* 4. HOVER ACTION BAR - FIXED LOGIC FOR SOLD OUT */}
+        <motion.div
+          variants={actionBarVariants}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="absolute bottom-0 left-0 right-0 hidden md:flex h-14 bg-black text-white z-30"
+        >
+          {product.isSoldOut ? (
+            /* Button for Sold Out state */
             <button
-              onClick={() => onQuickView(product)}
-              className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-white transition-all duration-300 border-r border-white/10"
+              className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#D4AF37] transition-all duration-300"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Eye size={14} /> Quick View
+              Notify Me When Available
             </button>
-            <button
-              onClick={() => addToCart(product, {})}
-              className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
-            >
-              <ShoppingBag size={14} /> Add To Bag
-            </button>
-          </motion.div>
-        )}
+          ) : (
+            /* Buttons for In Stock state */
+            <>
+              <button
+                onClick={() => onQuickView(product)}
+                className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-white transition-all duration-300 border-r border-white/10"
+              >
+                <Eye size={14} /> Quick View
+              </button>
+              <button
+                onClick={() => addToCart(product, {})}
+                className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
+              >
+                <ShoppingBag size={14} /> Add To Bag
+              </button>
+            </>
+          )}
+        </motion.div>
       </div>
 
-      {/* 5. PRODUCT INFO (Inside the Ivory card) */}
+      {/* 5. PRODUCT INFO */}
       <div className="flex flex-col py-6 px-4 gap-2">
         <h3 className="font-serif text-[15px] md:text-[17px] text-gray-900 leading-tight line-clamp-2 min-h-[40px] uppercase tracking-wider">
           {product.name}
