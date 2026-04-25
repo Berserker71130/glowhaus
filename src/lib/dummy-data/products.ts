@@ -52,7 +52,14 @@ export const products: Product[] = [
     category: "hair",
     subcategory: "Closures",
     price: 28500,
-    images: ["https://images.unsplash.com/photo-1634449571010-02389ed0f9b0"],
+    images: [
+      "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0",
+      "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0", // Image 1
+      "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1", // Image 2
+      "https://images.unsplash.com/photo-1522336572468-97b06e8ef143", // Image 3
+      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937", // Image 4
+      "https://images.unsplash.com/photo-1527799822344-42ad8c5827d7", // Image
+    ],
     rating: 4.7,
     reviewCount: 45,
     inStock: true,
@@ -61,8 +68,9 @@ export const products: Product[] = [
     description: "High-quality 4x4 lace closure with natural curly patterns.",
     details: ["Swiss Lace", "Pre-plucked hairline", "Natural black color"],
     isNew: true,
-    isBestseller: false,
-    isSale: false,
+    isBestseller: true,
+    isSale: true,
+    lengthOptions: ["20", "22", "24", "26"],
   },
   {
     id: "prod-h3",
@@ -124,6 +132,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    lengthOptions: ["20", "22", "24", "26"],
   },
   {
     id: "prod-h6",
@@ -299,6 +308,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    lengthOptions: ["Short", "Medium", "Long"],
   },
   {
     id: "prod-n3",
@@ -318,6 +328,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: false,
     isSale: false,
+    shadeOptions: ["Stiletto Shape", "Square Shape", "Coffin Shape"],
   },
   {
     id: "prod-n4",
@@ -511,6 +522,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: true,
     isSale: false,
+    shadeOptions: ["Rose Gold", "Classic White", "Sleet Black"],
   },
   {
     id: "prod-a4",
@@ -625,6 +637,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    shadeOptions: ["Pastels", "Jewel Tones", "Neutral Nudes"],
   },
   {
     id: "prod-a10",
