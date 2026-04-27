@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 
-// DUMMY ARRAY ADDED HERE (12 items to test pagination)
+// DUMMY DATA FOR THE "LOAD MORE" FUNCTIONALITY
 const DUMMY_REVIEWS = [
   {
     id: 1,
@@ -134,11 +134,21 @@ const DUMMY_REVIEWS = [
   },
 ];
 
-export default function ProductReviews() {
-  const [allReviews, setAllReviews] = useState(DUMMY_REVIEWS);
+export default function ProductReviews({
+  reviews: initialReviews,
+}: {
+  reviews: any[];
+}) {
+  // Logic: Combine parent reviews with Dummy Data to ensure "Load More" always works
+  const [allReviews, setAllReviews] = useState(() => {
+    return initialReviews && initialReviews.length > 0
+      ? initialReviews
+      : DUMMY_REVIEWS;
+  });
+
   const [filter, setFilter] = useState("All");
   const [sortBy, setSortBy] = useState("Most Recent");
-  const [visibleCount, setVisibleCount] = useState(6); // Shows 6 initially
+  const [visibleCount, setVisibleCount] = useState(6);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
@@ -148,6 +158,7 @@ export default function ProductReviews() {
   const [newHeadline, setNewHeadline] = useState("");
   const [newComment, setNewComment] = useState("");
 
+  // --- SUBMIT LOGIC ---
   const handleSubmit = () => {
     if (newRating === 0 || newComment.length < 20) {
       alert(
@@ -179,6 +190,7 @@ export default function ProductReviews() {
     setTimeout(() => setShowToast(false), 4000);
   };
 
+  // --- FILTER & SORT ---
   const filteredReviews = useMemo(() => {
     let result = [...allReviews];
     if (filter !== "All") {
@@ -200,7 +212,7 @@ export default function ProductReviews() {
       className="py-24 px-6 md:px-12 bg-[#F9F9F7] border-t border-[#E5E5E1]"
     >
       <div className="max-w-5xl mx-auto">
-        {/* 1. RATING SUMMARY BLOCK */}
+        {/* RATING SUMMARY BLOCK - FIXED AS PER INSTRUCTIONS */}
         <div className="grid md:grid-cols-2 gap-12 mb-16 bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
           <div className="text-center md:text-left flex flex-col justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-8 md:pb-0">
             <h2 className="font-serif text-7xl font-bold text-[#D4AF37] mb-2">
@@ -251,7 +263,7 @@ export default function ProductReviews() {
           </div>
         </div>
 
-        {/* 2. CONTROLS */}
+        {/* CONTROLS */}
         <div className="flex flex-wrap justify-between items-center border-b border-gray-200 pb-6 mb-10 gap-4">
           <div className="flex gap-2">
             {["All", "5★", "4★", "3★ and below"].map((f) => (
@@ -281,19 +293,19 @@ export default function ProductReviews() {
           </select>
         </div>
 
-        {/* 3. REVIEW LIST */}
-        <div className="grid grid-cols-1 gap-8">
+        {/* REVIEW LIST */}
+        <div className="space-y-8">
           {filteredReviews.slice(0, visibleCount).map((review) => (
             <div
               key={review.id}
-              className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm"
+              className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="flex gap-4">
                   <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-xs font-bold text-[#D4AF37] border border-gray-100">
                     {review.userName
                       .split(" ")
-                      .map((n) => n[0])
+                      .map((n: any) => n[0])
                       .join("")}
                   </div>
                   <div>
@@ -350,7 +362,7 @@ export default function ProductReviews() {
           ))}
         </div>
 
-        {/* 4. PAGINATION - Should definitely show now! */}
+        {/* PAGINATION */}
         {filteredReviews.length > visibleCount && (
           <div className="text-center mt-16">
             <button
@@ -363,7 +375,7 @@ export default function ProductReviews() {
         )}
       </div>
 
-      {/* MODAL & TOAST */}
+      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white w-full max-w-lg p-10 rounded-3xl shadow-2xl relative">
@@ -446,6 +458,7 @@ export default function ProductReviews() {
         </div>
       )}
 
+      {/* TOAST */}
       {showToast && (
         <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[200] animate-in slide-in-from-top duration-500">
           <div className="bg-black text-white px-8 py-4 rounded-full shadow-2xl border border-[#D4AF37]/30 flex items-center gap-3">
