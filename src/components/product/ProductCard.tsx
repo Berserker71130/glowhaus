@@ -59,11 +59,15 @@ export default function ProductCard({
           className={`w-full h-full ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
         >
           <Image
-            src={product.image}
+            // Using a local string instead of the https://placehold.co link
+            src={
+              product.image && product.image !== ""
+                ? product.image
+                : "/placeholder.jpg"
+            }
             alt={product.name}
             fill
             className="object-cover"
-            sizes="(max-width:768px) 50vw, 33vw"
           />
         </motion.div>
 
@@ -74,7 +78,7 @@ export default function ProductCard({
               SOLD OUT
             </span>
           ) : (
-            product.badges.map((badge) => (
+            product.badges?.map((badge) => (
               <span
                 key={badge}
                 className={`text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-sm

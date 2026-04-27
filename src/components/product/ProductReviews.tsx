@@ -134,9 +134,6 @@ const DUMMY_REVIEWS = [
   },
 ];
 
-interface ProductReviewProps{
-  reviews: any[]
-}
 export default function ProductReviews({
   reviews: initialReviews,
 }: {

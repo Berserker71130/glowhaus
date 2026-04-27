@@ -12,6 +12,7 @@ interface GlobalStore {
   // Cart Slice
   cartItems: CartItem[];
   addToCart: (product: Product, options: any) => void;
+  addBundleToCart: (products: Product[]) => void; // Added for Task #19
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, qty: number) => void;
   clearCart: () => void;
@@ -55,6 +56,11 @@ interface GlobalStore {
   email: string;
   avatar: string;
   isLoggedIn: boolean;
+
+  // Recently Viewed Slice
+  recentlyViewed: Product[];
+  addToRecentlyViewed: (product: Product) => void;
+  removeFromRecentlyViewed: (id: string) => void;
 }
 
 export const useStore = create<GlobalStore>()(
@@ -81,6 +87,7 @@ export const useStore = create<GlobalStore>()(
         email: "admin@glowhaus.com",
         avatar: "/avatar.png",
         isLoggedIn: true,
+        recentlyViewed: [],
 
         // --- CART ACTIONS ---
         addToCart: (product, options) => {
@@ -109,6 +116,40 @@ export const useStore = create<GlobalStore>()(
             };
           });
         },
+
+        // NEW: Bundle Add to Cart Logic
+        addBundleToCart: (products) => {
+          set((state) => {
+            let currentCart = [...state.cartItems];
+
+            products.forEach((product) => {
+              const existingIndex = currentCart.findIndex(
+                (i) => i.product.id === product.id,
+              );
+              if (existingIndex > -1) {
+                currentCart[existingIndex] = {
+                  ...currentCart[existingIndex],
+                  quantity: currentCart[existingIndex].quantity + 1,
+                };
+              } else {
+                currentCart.push({ product, quantity: 1, selectedOptions: {} });
+              }
+            });
+
+            return {
+              cartItems: currentCart,
+              cartCount: currentCart.reduce(
+                (acc, item) => acc + item.quantity,
+                0,
+              ),
+              cartTotal: currentCart.reduce(
+                (acc, item) => acc + item.product.price * item.quantity,
+                0,
+              ),
+            };
+          });
+        },
+
         removeFromCart: (id) => {
           set((state) => {
             const newItems = state.cartItems.filter((i) => i.product.id !== id);
@@ -184,6 +225,22 @@ export const useStore = create<GlobalStore>()(
         setCartOpen: (v) => set({ cartOpen: v }),
         setSearchOpen: (v) => set({ searchOpen: v }),
         setMobileMenuOpen: (v) => set({ mobileMenuOpen: v }),
+
+        // --- RECENTLY VIEWED ACTIONS ---
+        addToRecentlyViewed: (product) => {
+          set((state) => {
+            const filtered = state.recentlyViewed.filter(
+              (p) => p.id !== product.id,
+            );
+            const updated = [product, ...filtered].slice(0, 10);
+            return { recentlyViewed: updated };
+          });
+        },
+        removeFromRecentlyViewed: (id) => {
+          set((state) => ({
+            recentlyViewed: state.recentlyViewed.filter((p) => p.id !== id),
+          }));
+        },
       }),
       {
         name: "glowhaus-storage",
@@ -194,6 +251,7 @@ export const useStore = create<GlobalStore>()(
           displayName: state.displayName,
           email: state.email,
           isLoggedIn: state.isLoggedIn,
+          recentlyViewed: state.recentlyViewed,
         }),
       },
     ),

@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -7,16 +8,11 @@ const nextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "placehold.co", // 🚀 Added this for the placeholder
+        pathname: "/**",
+      },
     ],
   },
-  // This tells Vercel: "Ignore the red marks in those other files"
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  // This tells Vercel: "Ignore the Type errors and build the reviews"
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 };
-
-export default nextConfig;
