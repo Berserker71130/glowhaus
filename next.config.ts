@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -8,14 +9,6 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
-  },
-  // This bypasses the strict TypeScript checks during Vercel's build phase
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  // This bypasses the ESLint checks during Vercel's build phase
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 };
 
