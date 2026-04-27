@@ -52,7 +52,7 @@ export default function CompleteTheLook() {
                 <div className="aspect-square relative rounded-xl overflow-hidden border border-[#D4AF37]/10 bg-white mb-3 shadow-sm">
                   <img
                     /* FIXED THE RED ERROR: item.images[0] is the string, item.images is an array */
-                    src={item.image || (item.images && item.images[0]) || ""}
+                    src={(item.images && item.images[0]) || ""}
                     alt={item.name}
                     className="w-full h-full object-cover"
                   />
