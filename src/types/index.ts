@@ -13,6 +13,7 @@ export interface Product {
   rating: number;
   reviewsCount: number;
   image: string;
+  category?: string;
   badges: BadgeType[];
   isSoldOut: boolean;
 }
