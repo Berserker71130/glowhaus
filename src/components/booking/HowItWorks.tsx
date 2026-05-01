@@ -22,10 +22,10 @@ const STEPS = [
 export const HowItWorks = () => {
   return (
     <section className="mt-48 py-24 border-t border-noir/5">
-      <h2 className="text-center font-serif text-4xl mb-24 tracking-tight">
+      <h2 className="text-center font-serif text-4xl mb-24 tracking-tight text-noir">
         How It Works
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto px-4">
         {STEPS.map((step, idx) => (
           <motion.div
             key={idx}
@@ -33,16 +33,21 @@ export const HowItWorks = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: idx * 0.2 }}
-            className="text-center group"
+            // Added a very slight white background with low opacity to lift from Ivory
+            className="text-center group p-8 bg-white/40 backdrop-blur-sm border border-white/60 rounded-2xl shadow-sm hover:shadow-md transition-all duration-500"
           >
-            <div className="text-5xl mb-8 group-hover:scale-125 transition-transform duration-500 block">
+            {/* Icon Container: Gives the emoji a "home" so it doesn't float awkwardly */}
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner group-hover:scale-110 transition-transform duration-500 text-4xl">
               {step.icon}
             </div>
-            <h4 className="text-xl font-serif text-noir mb-4 uppercase tracking-widest leading-none">
+
+            <h4 className="text-sm font-bold text-noir mb-4 uppercase tracking-[0.2em] leading-none">
               {step.title}
             </h4>
-            <div className="w-8 h-[1px] bg-gold mx-auto mb-6" />
-            <p className="text-noir/50 text-sm font-light leading-relaxed max-w-[280px] mx-auto">
+
+            <div className="w-12 h-[2px] bg-gold mx-auto mb-6 opacity-80" />
+
+            <p className="text-noir/70 text-sm font-light leading-relaxed max-w-[240px] mx-auto italic">
               {step.desc}
             </p>
           </motion.div>
