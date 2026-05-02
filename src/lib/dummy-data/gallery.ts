@@ -1,26 +1,32 @@
 export interface GalleryItem {
   id: string;
   imageUrl: string;
+  beforeImageUrl?: string; // Added for the slider requirement
   category: "hair" | "nails" | "makeup" | "accessories";
   title: string;
   isBeforeAfter: boolean;
+  likes: number; // Added for the hover overlay requirement
 }
 
 export const gallery: GalleryItem[] = [
-  // --- HAIR SECTION (10 items) ---
+  // --- HAIR SECTION ---
   {
     id: "gal-h1",
     category: "hair",
     title: "Luxury Bone Straight Install",
     imageUrl: "https://images.unsplash.com/photo-1595475242261-067c14b036c3",
     isBeforeAfter: false,
+    likes: 142,
   },
   {
     id: "gal-h2",
     category: "hair",
     title: "Deep Wave Lace Melt",
     imageUrl: "https://images.unsplash.com/photo-1605497746465-95394e48ef94",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1580618672591-eb180b1a973f",
     isBeforeAfter: true,
+    likes: 89,
   },
   {
     id: "gal-h3",
@@ -28,6 +34,7 @@ export const gallery: GalleryItem[] = [
     title: "Honey Blonde Custom Color",
     imageUrl: "https://images.unsplash.com/photo-1565121345959-10e6e960b730",
     isBeforeAfter: false,
+    likes: 64,
   },
   {
     id: "gal-h4",
@@ -35,6 +42,7 @@ export const gallery: GalleryItem[] = [
     title: "Kinky Curly Ponytail",
     imageUrl: "https://images.unsplash.com/photo-1634449571010-02389ed0f9b0",
     isBeforeAfter: false,
+    likes: 110,
   },
   {
     id: "gal-h5",
@@ -42,6 +50,7 @@ export const gallery: GalleryItem[] = [
     title: "Sleek High Bun Styling",
     imageUrl: "https://images.unsplash.com/photo-1574621100236-d25b64cfd647",
     isBeforeAfter: false,
+    likes: 34,
   },
   {
     id: "gal-h6",
@@ -49,13 +58,17 @@ export const gallery: GalleryItem[] = [
     title: "Boho Knotless Braids",
     imageUrl: "https://images.unsplash.com/photo-1620331311520-246422ff83f9",
     isBeforeAfter: false,
+    likes: 256,
   },
   {
     id: "gal-h7",
     category: "hair",
     title: "Pixie Cut Transformation",
     imageUrl: "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1595475242261-067c14b036c3",
     isBeforeAfter: true,
+    likes: 178,
   },
   {
     id: "gal-h8",
@@ -63,6 +76,7 @@ export const gallery: GalleryItem[] = [
     title: "Soft Curls Bridal Look",
     imageUrl: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b",
     isBeforeAfter: false,
+    likes: 412,
   },
   {
     id: "gal-h9",
@@ -70,6 +84,7 @@ export const gallery: GalleryItem[] = [
     title: "Ponytail with Laid Edges",
     imageUrl: "https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3",
     isBeforeAfter: false,
+    likes: 93,
   },
   {
     id: "gal-h10",
@@ -77,15 +92,17 @@ export const gallery: GalleryItem[] = [
     title: "Burgundy Silk Press",
     imageUrl: "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11",
     isBeforeAfter: false,
+    likes: 58,
   },
 
-  // --- NAILS SECTION (10 items) ---
+  // --- NAILS SECTION ---
   {
     id: "gal-n1",
     category: "nails",
     title: "Nude Ombre Almond Shape",
     imageUrl: "https://images.unsplash.com/photo-1604654894610-df490c9397ae",
     isBeforeAfter: false,
+    likes: 77,
   },
   {
     id: "gal-n2",
@@ -93,13 +110,17 @@ export const gallery: GalleryItem[] = [
     title: "Chrome Finish Stiletto",
     imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04",
     isBeforeAfter: false,
+    likes: 134,
   },
   {
     id: "gal-n3",
     category: "nails",
     title: "French Tip Revival",
     imageUrl: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1604654894610-df490c9397ae",
     isBeforeAfter: true,
+    likes: 121,
   },
   {
     id: "gal-n4",
@@ -107,6 +128,7 @@ export const gallery: GalleryItem[] = [
     title: "3D Floral Nail Art",
     imageUrl: "https://images.unsplash.com/photo-1632345031435-8727f6897d53",
     isBeforeAfter: false,
+    likes: 189,
   },
   {
     id: "gal-n5",
@@ -114,6 +136,7 @@ export const gallery: GalleryItem[] = [
     title: "Matte Royal Blue Set",
     imageUrl: "https://images.unsplash.com/photo-1627383200760-4740e53a299d",
     isBeforeAfter: false,
+    likes: 46,
   },
   {
     id: "gal-n6",
@@ -121,6 +144,7 @@ export const gallery: GalleryItem[] = [
     title: "Glitter Gradient Acrylics",
     imageUrl: "https://images.unsplash.com/photo-1599733594230-6b823276abcc",
     isBeforeAfter: false,
+    likes: 152,
   },
   {
     id: "gal-n7",
@@ -128,6 +152,7 @@ export const gallery: GalleryItem[] = [
     title: "Short Gel Natural Look",
     imageUrl: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da",
     isBeforeAfter: false,
+    likes: 39,
   },
   {
     id: "gal-n8",
@@ -135,6 +160,7 @@ export const gallery: GalleryItem[] = [
     title: "Luxury Marble Design",
     imageUrl: "https://images.unsplash.com/photo-1610991140635-be00185e3472",
     isBeforeAfter: false,
+    likes: 118,
   },
   {
     id: "gal-n9",
@@ -142,6 +168,7 @@ export const gallery: GalleryItem[] = [
     title: "Neon Summer Set",
     imageUrl: "https://images.unsplash.com/photo-1610991140660-8f6452286e92",
     isBeforeAfter: false,
+    likes: 85,
   },
   {
     id: "gal-n10",
@@ -149,22 +176,27 @@ export const gallery: GalleryItem[] = [
     title: "Bridal Pearl Nails",
     imageUrl: "https://images.unsplash.com/photo-1610991140685-6b6452286e92",
     isBeforeAfter: false,
+    likes: 290,
   },
 
-  // --- MAKEUP SECTION (10 items) ---
+  // --- MAKEUP SECTION ---
   {
     id: "gal-m1",
     category: "makeup",
     title: "Traditional Bridal Glam",
     imageUrl: "https://images.unsplash.com/photo-1522338140262-f46f5912018a",
     isBeforeAfter: false,
+    likes: 530,
   },
   {
     id: "gal-m2",
     category: "makeup",
     title: "Clean Girl Aesthetic Look",
     imageUrl: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1503235930437-8c6293ba41f5",
     isBeforeAfter: true,
+    likes: 215,
   },
   {
     id: "gal-m3",
@@ -172,6 +204,7 @@ export const gallery: GalleryItem[] = [
     title: "Sunset Eye Shimmer",
     imageUrl: "https://images.unsplash.com/photo-1547881338-64645ed0c1ca",
     isBeforeAfter: false,
+    likes: 122,
   },
   {
     id: "gal-m4",
@@ -179,6 +212,7 @@ export const gallery: GalleryItem[] = [
     title: "Bold Red Lip Classic",
     imageUrl: "https://images.unsplash.com/photo-1583001838975-d546a1631911",
     isBeforeAfter: false,
+    likes: 167,
   },
   {
     id: "gal-m5",
@@ -186,13 +220,17 @@ export const gallery: GalleryItem[] = [
     title: "Soft Mauve Evening Look",
     imageUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f",
     isBeforeAfter: false,
+    likes: 82,
   },
   {
     id: "gal-m6",
     category: "makeup",
     title: "Smokey Eye Transformation",
     imageUrl: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
     isBeforeAfter: true,
+    likes: 342,
   },
   {
     id: "gal-m7",
@@ -200,6 +238,7 @@ export const gallery: GalleryItem[] = [
     title: "Dewy Skin Glow Finish",
     imageUrl: "https://images.unsplash.com/photo-1526045431048-f857369aba09",
     isBeforeAfter: false,
+    likes: 194,
   },
   {
     id: "gal-m8",
@@ -207,6 +246,7 @@ export const gallery: GalleryItem[] = [
     title: "Cut Crease Editorial Art",
     imageUrl: "https://images.unsplash.com/photo-1503235930437-8c6293ba41f5",
     isBeforeAfter: false,
+    likes: 71,
   },
   {
     id: "gal-m9",
@@ -214,6 +254,7 @@ export const gallery: GalleryItem[] = [
     title: "Matte Nude Sophistication",
     imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
     isBeforeAfter: false,
+    likes: 156,
   },
   {
     id: "gal-m10",
@@ -221,15 +262,17 @@ export const gallery: GalleryItem[] = [
     title: "Engagement Party Glam",
     imageUrl: "https://images.unsplash.com/photo-1527736947477-2790e28f3443",
     isBeforeAfter: false,
+    likes: 204,
   },
 
-  // --- ACCESSORIES SECTION (10 items) ---
+  // --- ACCESSORIES SECTION ---
   {
     id: "gal-a1",
     category: "accessories",
     title: "Satin Bonnet Showcase",
     imageUrl: "https://images.unsplash.com/photo-1594913217409-906f36f86c87",
     isBeforeAfter: false,
+    likes: 33,
   },
   {
     id: "gal-a2",
@@ -237,6 +280,7 @@ export const gallery: GalleryItem[] = [
     title: "Jade Roller Set Visual",
     imageUrl: "https://images.unsplash.com/photo-1588775017539-7561845112be",
     isBeforeAfter: false,
+    likes: 27,
   },
   {
     id: "gal-a3",
@@ -244,6 +288,7 @@ export const gallery: GalleryItem[] = [
     title: "Silk Pillowcase Texture",
     imageUrl: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2",
     isBeforeAfter: false,
+    likes: 49,
   },
   {
     id: "gal-a4",
@@ -251,13 +296,17 @@ export const gallery: GalleryItem[] = [
     title: "Vanity Mirror Setup",
     imageUrl: "https://images.unsplash.com/photo-1616627547584-bf28cee262db",
     isBeforeAfter: false,
+    likes: 88,
   },
   {
     id: "gal-a5",
     category: "accessories",
     title: "Magnetic Lash Application",
     imageUrl: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
+    beforeImageUrl:
+      "https://images.unsplash.com/photo-1596704017254-9b121068fb31",
     isBeforeAfter: true,
+    likes: 145,
   },
   {
     id: "gal-a6",
@@ -265,6 +314,7 @@ export const gallery: GalleryItem[] = [
     title: "Luxury Brush Display",
     imageUrl: "https://images.unsplash.com/photo-1596704017254-9b121068fb31",
     isBeforeAfter: false,
+    likes: 62,
   },
   {
     id: "gal-a7",
@@ -272,13 +322,16 @@ export const gallery: GalleryItem[] = [
     title: "Gold Atomiser Detail",
     imageUrl: "https://images.unsplash.com/photo-1594125354979-30924e72dd9f",
     isBeforeAfter: false,
+    likes: 21,
   },
   {
     id: "gal-a8",
     category: "accessories",
     title: "Scalp Serum Results",
     imageUrl: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc",
+    beforeImageUrl: "https://images.unsplash.com/photo-1552046122-03184de85e08",
     isBeforeAfter: true,
+    likes: 130,
   },
   {
     id: "gal-a9",
@@ -286,6 +339,7 @@ export const gallery: GalleryItem[] = [
     title: "Steamer in Action",
     imageUrl: "https://images.unsplash.com/photo-1552046122-03184de85e08",
     isBeforeAfter: false,
+    likes: 48,
   },
   {
     id: "gal-a10",
@@ -293,5 +347,6 @@ export const gallery: GalleryItem[] = [
     title: "Scrunchie Color Palette",
     imageUrl: "https://images.unsplash.com/photo-1590159202367-6745d19d6796",
     isBeforeAfter: false,
+    likes: 55,
   },
 ];
