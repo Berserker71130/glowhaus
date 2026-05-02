@@ -12,7 +12,7 @@ interface GlobalStore {
   // Cart Slice
   cartItems: CartItem[];
   addToCart: (product: Product, options: any) => void;
-  addBundleToCart: (products: Product[]) => void; // Added for Task #19
+  addBundleToCart: (products: Product[]) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, qty: number) => void;
   clearCart: () => void;
@@ -41,6 +41,14 @@ interface GlobalStore {
   setService: (s: Service) => void;
   setDate: (d: string) => void;
   setTime: (t: string) => void;
+  // Task #23 Additions
+  bookingPhone: string;
+  bookingNotes: string;
+  bookingReferral: string;
+  setBookingPhone: (phone: string) => void;
+  setBookingNotes: (notes: string) => void;
+  setBookingReferral: (src: string) => void;
+  confirmBooking: (appointment: Appointment) => void;
   clearBooking: () => void;
 
   // UI Slice
@@ -80,6 +88,9 @@ export const useStore = create<GlobalStore>()(
         selectedDate: null,
         selectedTime: null,
         bookingHistory: [],
+        bookingPhone: "",
+        bookingNotes: "",
+        bookingReferral: "",
         cartOpen: false,
         searchOpen: false,
         mobileMenuOpen: false,
@@ -117,7 +128,6 @@ export const useStore = create<GlobalStore>()(
           });
         },
 
-        // NEW: Bundle Add to Cart Logic
         addBundleToCart: (products) => {
           set((state) => {
             let currentCart = [...state.cartItems];
@@ -163,6 +173,7 @@ export const useStore = create<GlobalStore>()(
             };
           });
         },
+
         updateQuantity: (id, qty) => {
           set((state) => {
             const newItems = state.cartItems.map((i) =>
@@ -178,6 +189,7 @@ export const useStore = create<GlobalStore>()(
             };
           });
         },
+
         clearCart: () => set({ cartItems: [], cartTotal: 0, cartCount: 0 }),
 
         // --- WISHLIST ACTIONS ---
@@ -187,10 +199,12 @@ export const useStore = create<GlobalStore>()(
               ? state.wishlistItems
               : [...state.wishlistItems, product],
           })),
+
         removeFromWishlist: (id) =>
           set((state) => ({
             wishlistItems: state.wishlistItems.filter((p) => p.id !== id),
           })),
+
         isWishlisted: (id) => get().wishlistItems.some((p) => p.id === id),
 
         // --- LOYALTY ACTIONS ---
@@ -207,6 +221,7 @@ export const useStore = create<GlobalStore>()(
               },
             ],
           })),
+
         redeemPoints: (amount) =>
           set((state) => ({ points: Math.max(0, state.points - amount) })),
 
@@ -214,11 +229,21 @@ export const useStore = create<GlobalStore>()(
         setService: (s) => set({ selectedService: s }),
         setDate: (d) => set({ selectedDate: d }),
         setTime: (t) => set({ selectedTime: t }),
+        setBookingPhone: (phone) => set({ bookingPhone: phone }),
+        setBookingNotes: (notes) => set({ bookingNotes: notes }),
+        setBookingReferral: (src) => set({ bookingReferral: src }),
+        confirmBooking: (appointment) =>
+          set((state) => ({
+            bookingHistory: [appointment, ...state.bookingHistory],
+          })),
         clearBooking: () =>
           set({
             selectedService: null,
             selectedDate: null,
             selectedTime: null,
+            bookingPhone: "",
+            bookingNotes: "",
+            bookingReferral: "",
           }),
 
         // --- UI ACTIONS ---
@@ -236,6 +261,7 @@ export const useStore = create<GlobalStore>()(
             return { recentlyViewed: updated };
           });
         },
+
         removeFromRecentlyViewed: (id) => {
           set((state) => ({
             recentlyViewed: state.recentlyViewed.filter((p) => p.id !== id),
@@ -252,6 +278,7 @@ export const useStore = create<GlobalStore>()(
           email: state.email,
           isLoggedIn: state.isLoggedIn,
           recentlyViewed: state.recentlyViewed,
+          bookingHistory: state.bookingHistory,
         }),
       },
     ),
