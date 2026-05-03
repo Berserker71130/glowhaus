@@ -3,15 +3,22 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-gold",
+  "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-bold transition-colors focus:outline-none focus:ring-gold",
   {
     variants: {
       variant: {
+        // --- Product Variants ---
         new: "bg-gold text-noir",
         bestseller: "bg-[#E29587] text-white",
         sale: "bg-[#663399] text-white",
         lowstock: "bg-amber-500 text-noir",
         soldout: "bg-taupe text-white opacity-70",
+
+        // --- Task #26 Order Status Variants ---
+        processing: "bg-gold/10 text-gold border border-gold/20",
+        shipped: "bg-blue-50 text-blue-600 border border-blue-100",
+        delivered: "bg-green-50 text-green-600 border border-green-100",
+        cancelled: "bg-rose-50 text-rose-600 border border-rose-100",
       },
     },
     defaultVariants: {

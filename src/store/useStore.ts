@@ -6,67 +6,55 @@ import {
   PointTransaction,
   Service,
   Appointment,
+  Order,
 } from "../types";
 
 interface GlobalStore {
-  // Cart Slice
+  // --- State Definitions ---
   cartItems: CartItem[];
+  cartTotal: number;
+  cartCount: number;
+  wishlistItems: Product[];
+  points: number;
+  tier: "Bronze" | "Silver" | "Gold" | "Platinum";
+  pointsHistory: PointTransaction[];
+  tierBenefits: string[];
+  selectedService: Service | null;
+  selectedDate: string | null;
+  selectedTime: string | null;
+  bookingHistory: Appointment[];
+  orders: Order[];
+  cartOpen: boolean;
+  searchOpen: boolean;
+  mobileMenuOpen: boolean;
+  displayName: string;
+  email: string;
+  avatar: string;
+  isLoggedIn: boolean;
+  recentlyViewed: Product[];
+
+  // --- Actions ---
   addToCart: (product: Product, options: any) => void;
   addBundleToCart: (products: Product[]) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, qty: number) => void;
   clearCart: () => void;
-  cartTotal: number;
-  cartCount: number;
-
-  // Wishlist Slice
-  wishlistItems: Product[];
   addToWishlist: (product: Product) => void;
   removeFromWishlist: (id: string) => void;
   isWishlisted: (id: string) => boolean;
-
-  // Loyalty Slice
-  points: number;
-  tier: "Bronze" | "Silver" | "Gold" | "Platinum";
-  pointsHistory: PointTransaction[];
-  tierBenefits: string[];
   addPoints: (amount: number, reason: string) => void;
   redeemPoints: (amount: number) => void;
-
-  // Booking Slice
-  selectedService: Service | null;
-  selectedDate: string | null;
-  selectedTime: string | null;
-  bookingHistory: Appointment[];
   setService: (s: Service) => void;
   setDate: (d: string) => void;
   setTime: (t: string) => void;
-  // Task #23 Additions
-  bookingPhone: string;
-  bookingNotes: string;
-  bookingReferral: string;
-  setBookingPhone: (phone: string) => void;
-  setBookingNotes: (notes: string) => void;
-  setBookingReferral: (src: string) => void;
   confirmBooking: (appointment: Appointment) => void;
   clearBooking: () => void;
-
-  // UI Slice
-  cartOpen: boolean;
-  searchOpen: boolean;
-  mobileMenuOpen: boolean;
+  setAppointmentRating: (id: string, rating: number) => void;
+  rebookService: (service: Service) => void;
+  addOrder: (order: Order) => void;
   setCartOpen: (v: boolean) => void;
   setSearchOpen: (v: boolean) => void;
   setMobileMenuOpen: (v: boolean) => void;
-
-  // User Slice
-  displayName: string;
-  email: string;
-  avatar: string;
-  isLoggedIn: boolean;
-
-  // Recently Viewed Slice
-  recentlyViewed: Product[];
   addToRecentlyViewed: (product: Product) => void;
   removeFromRecentlyViewed: (id: string) => void;
 }
@@ -75,7 +63,7 @@ export const useStore = create<GlobalStore>()(
   devtools(
     persist(
       (set, get) => ({
-        // --- INITIAL STATE ---
+        // --- INITIAL STATE WITH TASK #26 DUMMY DATA ---
         cartItems: [],
         cartTotal: 0,
         cartCount: 0,
@@ -87,10 +75,160 @@ export const useStore = create<GlobalStore>()(
         selectedService: null,
         selectedDate: null,
         selectedTime: null,
-        bookingHistory: [],
-        bookingPhone: "",
-        bookingNotes: "",
-        bookingReferral: "",
+
+        // Dummy Data for Appointments
+        bookingHistory: [
+          {
+            id: "appt_001",
+            service: {
+              id: "s1",
+              name: "HydraFacial Luxe",
+              price: 45000,
+              duration: "60 mins", // Added missing property
+            },
+            date: "May 10, 2026",
+            time: "14:00 PM",
+            stylist: {
+              id: "st_01", // Added missing property
+              name: "Precious A.",
+              role: "Master Esthetician",
+            },
+            status: "completed",
+            rating: 0,
+          },
+          {
+            id: "appt_002",
+            service: {
+              id: "s2",
+              name: "Kinky Twist Install",
+              price: 65000,
+              duration: "180 mins", // Added missing property
+            },
+            date: "June 02, 2026",
+            time: "09:00 AM",
+            stylist: {
+              id: "st_02", // Added missing property
+              name: "Zainab B.",
+              role: "Senior Braider",
+            },
+            status: "upcoming",
+          },
+        ],
+
+        // Dummy Data for Orders
+        orders: [
+          {
+            id: "gh_order_88219",
+            date: "May 04, 2026",
+            total: 115000,
+            status: "shipped", // BLUE BADGE
+            address: "Plot 12, Garki Luxury Apartments, Abuja",
+            paymentMethod: "**** 4521",
+            items: [
+              {
+                product: {
+                  id: "p1",
+                  name: "Glow Essence",
+                  price: 65000,
+                  image:
+                    "https://images.unsplash.com/photo-1620916566398-39f1143af7be?q=80&w=200",
+                  rating: 4.8,
+                  reviewsCount: 124,
+                  badges: ["BESTSELLER"],
+                  isSoldOut: false,
+                },
+                quantity: 1,
+              },
+              {
+                product: {
+                  id: "p2",
+                  name: "Silk Wrap",
+                  price: 50000,
+                  image:
+                    "https://images.unsplash.com/photo-1606411210633-87597f8c950b?q=80&w=200",
+                  rating: 5.0,
+                  reviewsCount: 88,
+                  badges: ["NEW"],
+                  isSoldOut: false,
+                },
+                quantity: 1,
+              },
+            ],
+          },
+          {
+            id: "gh_order_88220",
+            date: "May 05, 2026",
+            total: 35000,
+            status: "processing", // GOLD BADGE
+            address: "Plot 12, Garki Luxury Apartments, Abuja",
+            paymentMethod: "**** 4521",
+            items: [
+              {
+                product: {
+                  id: "p3",
+                  name: "Night Cream",
+                  price: 35000,
+                  image:
+                    "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=200",
+                  rating: 4.5,
+                  reviewsCount: 42,
+                  badges: ["SALE"],
+                  isSoldOut: false,
+                },
+                quantity: 1,
+              },
+            ],
+          },
+          {
+            id: "gh_order_88221",
+            date: "May 01, 2026",
+            total: 45000,
+            status: "delivered", // GREEN BADGE
+            address: "15 Victoria Island, Lagos",
+            paymentMethod: "**** 4521",
+            items: [
+              {
+                product: {
+                  id: "p4",
+                  name: "Rosehip Cleanser",
+                  price: 45000,
+                  image:
+                    "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=200",
+                  rating: 4.9,
+                  reviewsCount: 210,
+                  badges: ["BESTSELLER"],
+                  isSoldOut: false,
+                },
+                quantity: 1,
+              },
+            ],
+          },
+          {
+            id: "gh_order_88222",
+            date: "April 28, 2026",
+            total: 28000,
+            status: "cancelled", // ROSE BADGE
+            address: "Plot 12, Garki Luxury Apartments, Abuja",
+            paymentMethod: "**** 4521",
+            items: [
+              {
+                product: {
+                  id: "p5",
+                  name: "Travel Mist",
+                  price: 28000,
+                  image:
+                    "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=200",
+                  rating: 4.2,
+                  reviewsCount: 15,
+                  badges: ["SALE"],
+                  isSoldOut: false,
+                },
+                quantity: 1,
+              },
+            ],
+          },
+        ],
+
         cartOpen: false,
         searchOpen: false,
         mobileMenuOpen: false,
@@ -100,7 +238,7 @@ export const useStore = create<GlobalStore>()(
         isLoggedIn: true,
         recentlyViewed: [],
 
-        // --- CART ACTIONS ---
+        // --- ACTIONS (Keeping your existing logic) ---
         addToCart: (product, options) => {
           set((state) => {
             const existing = state.cartItems.find(
@@ -116,7 +254,6 @@ export const useStore = create<GlobalStore>()(
                   ...state.cartItems,
                   { product, quantity: 1, selectedOptions: options },
                 ];
-
             return {
               cartItems: newItems,
               cartCount: newItems.reduce((acc, item) => acc + item.quantity, 0),
@@ -131,7 +268,6 @@ export const useStore = create<GlobalStore>()(
         addBundleToCart: (products) => {
           set((state) => {
             let currentCart = [...state.cartItems];
-
             products.forEach((product) => {
               const existingIndex = currentCart.findIndex(
                 (i) => i.product.id === product.id,
@@ -145,7 +281,6 @@ export const useStore = create<GlobalStore>()(
                 currentCart.push({ product, quantity: 1, selectedOptions: {} });
               }
             });
-
             return {
               cartItems: currentCart,
               cartCount: currentCart.reduce(
@@ -192,7 +327,6 @@ export const useStore = create<GlobalStore>()(
 
         clearCart: () => set({ cartItems: [], cartTotal: 0, cartCount: 0 }),
 
-        // --- WISHLIST ACTIONS ---
         addToWishlist: (product) =>
           set((state) => ({
             wishlistItems: state.wishlistItems.some((p) => p.id === product.id)
@@ -207,7 +341,6 @@ export const useStore = create<GlobalStore>()(
 
         isWishlisted: (id) => get().wishlistItems.some((p) => p.id === id),
 
-        // --- LOYALTY ACTIONS ---
         addPoints: (amount, reason) =>
           set((state) => ({
             points: state.points + amount,
@@ -225,48 +358,56 @@ export const useStore = create<GlobalStore>()(
         redeemPoints: (amount) =>
           set((state) => ({ points: Math.max(0, state.points - amount) })),
 
-        // --- BOOKING ACTIONS ---
         setService: (s) => set({ selectedService: s }),
         setDate: (d) => set({ selectedDate: d }),
         setTime: (t) => set({ selectedTime: t }),
-        setBookingPhone: (phone) => set({ bookingPhone: phone }),
-        setBookingNotes: (notes) => set({ bookingNotes: notes }),
-        setBookingReferral: (src) => set({ bookingReferral: src }),
+
         confirmBooking: (appointment) =>
           set((state) => ({
             bookingHistory: [appointment, ...state.bookingHistory],
           })),
+
         clearBooking: () =>
           set({
             selectedService: null,
             selectedDate: null,
             selectedTime: null,
-            bookingPhone: "",
-            bookingNotes: "",
-            bookingReferral: "",
           }),
 
-        // --- UI ACTIONS ---
+        setAppointmentRating: (id, rating) =>
+          set((state) => ({
+            bookingHistory: state.bookingHistory.map((appt) =>
+              appt.id === id ? { ...appt, rating } : appt,
+            ),
+          })),
+
+        rebookService: (service) =>
+          set({
+            selectedService: service,
+            selectedDate: null,
+            selectedTime: null,
+          }),
+
+        addOrder: (order) =>
+          set((state) => ({ orders: [order, ...state.orders] })),
+
         setCartOpen: (v) => set({ cartOpen: v }),
         setSearchOpen: (v) => set({ searchOpen: v }),
         setMobileMenuOpen: (v) => set({ mobileMenuOpen: v }),
 
-        // --- RECENTLY VIEWED ACTIONS ---
         addToRecentlyViewed: (product) => {
           set((state) => {
             const filtered = state.recentlyViewed.filter(
               (p) => p.id !== product.id,
             );
-            const updated = [product, ...filtered].slice(0, 10);
-            return { recentlyViewed: updated };
+            return { recentlyViewed: [product, ...filtered].slice(0, 10) };
           });
         },
 
-        removeFromRecentlyViewed: (id) => {
+        removeFromRecentlyViewed: (id) =>
           set((state) => ({
             recentlyViewed: state.recentlyViewed.filter((p) => p.id !== id),
-          }));
-        },
+          })),
       }),
       {
         name: "glowhaus-storage",
@@ -279,6 +420,7 @@ export const useStore = create<GlobalStore>()(
           isLoggedIn: state.isLoggedIn,
           recentlyViewed: state.recentlyViewed,
           bookingHistory: state.bookingHistory,
+          orders: state.orders,
         }),
       },
     ),
