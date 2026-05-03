@@ -46,7 +46,7 @@ export default function GalleryPage() {
           ))}
         </div>
 
-        {/* --- ADD THE GALLERY FOOTER HERE --- */}
+        {/* --- GALLERY FOOTER --- */}
         <section className="mt-32 mb-12 py-20 border-t border-noir/5 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

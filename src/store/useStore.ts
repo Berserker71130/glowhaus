@@ -80,7 +80,7 @@ export const useStore = create<GlobalStore>()(
         cartTotal: 0,
         cartCount: 0,
         wishlistItems: [],
-        points: 0,
+        points: 1250,
         tier: "Bronze",
         pointsHistory: [],
         tierBenefits: ["Priority Booking", "Exclusive Discounts"],
