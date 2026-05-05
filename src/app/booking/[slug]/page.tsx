@@ -61,6 +61,14 @@ export default function AppointmentBookingFlow({
       },
       date: selectedDate!,
       time: selectedTime!,
+      // --- ADDED THESE TO FIX THE RED UNDERLINE ---
+      stylist: {
+        id: "st_gen",
+        name: "Staff Professional",
+        role: "GlowHaus Specialist",
+      },
+      status: "upcoming",
+      rating: 0,
     });
 
     confetti({
