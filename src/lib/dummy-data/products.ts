@@ -17,6 +17,7 @@ export interface Product {
   isNew: boolean;
   isBestseller: boolean;
   isSale: boolean;
+  isSoldOut?: boolean;
   careInstructions?: string;
   shadeOptions?: string[];
   lengthOptions?: string[];
@@ -43,6 +44,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    isSoldOut: true,
     lengthOptions: ["18", "20", "22", "24"],
   },
   {
@@ -63,6 +65,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: true,
     isSale: true,
+    isSoldOut: true,
     lengthOptions: ["20", "22", "24", "26"],
   },
   {
@@ -145,6 +148,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: false,
     isSale: true,
+    isSoldOut: true,
     originalPrice: 42000,
   },
   {
@@ -184,6 +188,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-h9",
@@ -281,6 +286,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: false,
     isSale: true,
+    isSoldOut: true,
     originalPrice: 25000,
   },
   {
@@ -360,6 +366,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-n6",
@@ -399,6 +406,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: false,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-n8",
@@ -477,6 +485,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-a2",
@@ -535,6 +544,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: true,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-a5",
@@ -592,6 +602,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: false,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "prod-a8",
@@ -650,6 +661,7 @@ export const products: Product[] = [
     isNew: false,
     isBestseller: false,
     isSale: false,
+    isSoldOut: true,
   },
 
   // --- 15 BOOKABLE SERVICES ---
@@ -690,6 +702,7 @@ export const products: Product[] = [
     isNew: true,
     isBestseller: false,
     isSale: false,
+    isSoldOut: true,
   },
   {
     id: "serv-3",

@@ -18,7 +18,7 @@ export default function AppointmentsPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-serif text-4xl text-noir mb-2">
-            My Appointments.
+            My Appointments
           </h1>
           <p className="text-muted-foreground italic">
             Manage your beauty sessions and provide feedback...

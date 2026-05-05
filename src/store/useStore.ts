@@ -9,12 +9,15 @@ import {
   Order,
 } from "../types";
 
+// Enhanced Product type for Wishlist sorting
+export type WishlistProduct = Product & { addedAt: number };
+
 interface GlobalStore {
   // --- State Definitions ---
   cartItems: CartItem[];
   cartTotal: number;
   cartCount: number;
-  wishlistItems: Product[];
+  wishlistItems: WishlistProduct[]; // Updated with timestamp support
   points: number;
   tier: "Bronze" | "Silver" | "Gold" | "Platinum";
   pointsHistory: PointTransaction[];
@@ -342,11 +345,12 @@ export const useStore = create<GlobalStore>()(
 
         clearCart: () => set({ cartItems: [], cartTotal: 0, cartCount: 0 }),
 
+        // UPDATED: Luxe Wishlist Action with addedAt timestamp
         addToWishlist: (product) =>
           set((state) => ({
             wishlistItems: state.wishlistItems.some((p) => p.id === product.id)
               ? state.wishlistItems
-              : [...state.wishlistItems, product],
+              : [{ ...product, addedAt: Date.now() }, ...state.wishlistItems],
           })),
 
         removeFromWishlist: (id) =>
