@@ -33,6 +33,11 @@ interface GlobalStore {
   isLoggedIn: boolean;
   recentlyViewed: Product[];
 
+  // --- NEW: Task #26 Missing Properties ---
+  bookingPhone: string;
+  bookingNotes: string;
+  bookingReferral: string;
+
   // --- Actions ---
   addToCart: (product: Product, options: any) => void;
   addBundleToCart: (products: Product[]) => void;
@@ -57,13 +62,18 @@ interface GlobalStore {
   setMobileMenuOpen: (v: boolean) => void;
   addToRecentlyViewed: (product: Product) => void;
   removeFromRecentlyViewed: (id: string) => void;
+
+  // --- NEW: Task #26 Action Setters ---
+  setBookingPhone: (phone: string) => void;
+  setBookingNotes: (notes: string) => void;
+  setBookingReferral: (ref: string) => void;
 }
 
 export const useStore = create<GlobalStore>()(
   devtools(
     persist(
       (set, get) => ({
-        // --- INITIAL STATE WITH TASK #26 DUMMY DATA ---
+        // --- INITIAL STATE ---
         cartItems: [],
         cartTotal: 0,
         cartCount: 0,
@@ -76,6 +86,11 @@ export const useStore = create<GlobalStore>()(
         selectedDate: null,
         selectedTime: null,
 
+        // Form States
+        bookingPhone: "",
+        bookingNotes: "",
+        bookingReferral: "",
+
         // Dummy Data for Appointments
         bookingHistory: [
           {
@@ -84,12 +99,12 @@ export const useStore = create<GlobalStore>()(
               id: "s1",
               name: "HydraFacial Luxe",
               price: 45000,
-              duration: "60 mins", // Added missing property
+              duration: "60 mins",
             },
             date: "May 10, 2026",
             time: "14:00 PM",
             stylist: {
-              id: "st_01", // Added missing property
+              id: "st_01",
               name: "Precious A.",
               role: "Master Esthetician",
             },
@@ -102,12 +117,12 @@ export const useStore = create<GlobalStore>()(
               id: "s2",
               name: "Kinky Twist Install",
               price: 65000,
-              duration: "180 mins", // Added missing property
+              duration: "180 mins",
             },
             date: "June 02, 2026",
             time: "09:00 AM",
             stylist: {
-              id: "st_02", // Added missing property
+              id: "st_02",
               name: "Zainab B.",
               role: "Senior Braider",
             },
@@ -121,7 +136,7 @@ export const useStore = create<GlobalStore>()(
             id: "gh_order_88219",
             date: "May 04, 2026",
             total: 115000,
-            status: "shipped", // BLUE BADGE
+            status: "shipped",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
             paymentMethod: "**** 4521",
             items: [
@@ -159,7 +174,7 @@ export const useStore = create<GlobalStore>()(
             id: "gh_order_88220",
             date: "May 05, 2026",
             total: 35000,
-            status: "processing", // GOLD BADGE
+            status: "processing",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
             paymentMethod: "**** 4521",
             items: [
@@ -183,7 +198,7 @@ export const useStore = create<GlobalStore>()(
             id: "gh_order_88221",
             date: "May 01, 2026",
             total: 45000,
-            status: "delivered", // GREEN BADGE
+            status: "delivered",
             address: "15 Victoria Island, Lagos",
             paymentMethod: "**** 4521",
             items: [
@@ -207,7 +222,7 @@ export const useStore = create<GlobalStore>()(
             id: "gh_order_88222",
             date: "April 28, 2026",
             total: 28000,
-            status: "cancelled", // ROSE BADGE
+            status: "cancelled",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
             paymentMethod: "**** 4521",
             items: [
@@ -238,7 +253,7 @@ export const useStore = create<GlobalStore>()(
         isLoggedIn: true,
         recentlyViewed: [],
 
-        // --- ACTIONS (Keeping your existing logic) ---
+        // --- ACTIONS ---
         addToCart: (product, options) => {
           set((state) => {
             const existing = state.cartItems.find(
@@ -362,6 +377,10 @@ export const useStore = create<GlobalStore>()(
         setDate: (d) => set({ selectedDate: d }),
         setTime: (t) => set({ selectedTime: t }),
 
+        setBookingPhone: (phone) => set({ bookingPhone: phone }),
+        setBookingNotes: (notes) => set({ bookingNotes: notes }),
+        setBookingReferral: (ref) => set({ bookingReferral: ref }),
+
         confirmBooking: (appointment) =>
           set((state) => ({
             bookingHistory: [appointment, ...state.bookingHistory],
@@ -372,6 +391,9 @@ export const useStore = create<GlobalStore>()(
             selectedService: null,
             selectedDate: null,
             selectedTime: null,
+            bookingPhone: "",
+            bookingNotes: "",
+            bookingReferral: "",
           }),
 
         setAppointmentRating: (id, rating) =>
