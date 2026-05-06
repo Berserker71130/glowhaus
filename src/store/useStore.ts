@@ -9,8 +9,27 @@ import {
   Order,
 } from "../types";
 
-// Enhanced Product type for Wishlist sorting
+// --- TYPES FOR TASK #28 ---
 export type WishlistProduct = Product & { addedAt: number };
+
+export interface UserAddress {
+  id: string;
+  name: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  phone: string;
+  isDefault: boolean;
+}
+
+export interface NotificationSettings {
+  emailOffers: boolean;
+  emailOrders: boolean;
+  emailReminders: boolean;
+  smsOrders: boolean;
+  smsReminders: boolean;
+}
 
 interface GlobalStore {
   // --- State Definitions ---
@@ -36,10 +55,16 @@ interface GlobalStore {
   isLoggedIn: boolean;
   recentlyViewed: Product[];
 
-  // --- NEW: Task #26 Missing Properties ---
+  // --- Task #26 Missing Properties ---
   bookingPhone: string;
   bookingNotes: string;
   bookingReferral: string;
+
+  // --- NEW Task #28 Profile State ---
+  phone: string;
+  dob: string;
+  addresses: UserAddress[];
+  notifications: NotificationSettings;
 
   // --- Actions ---
   addToCart: (product: Product, options: any) => void;
@@ -66,10 +91,26 @@ interface GlobalStore {
   addToRecentlyViewed: (product: Product) => void;
   removeFromRecentlyViewed: (id: string) => void;
 
-  // --- NEW: Task #26 Action Setters ---
+  // --- Task #26 Action Setters ---
   setBookingPhone: (phone: string) => void;
   setBookingNotes: (notes: string) => void;
   setBookingReferral: (ref: string) => void;
+
+  // --- NEW Task #28 Profile Actions ---
+  updateProfile: (
+    data: Partial<{
+      displayName: string;
+      email: string;
+      phone: string;
+      dob: string;
+      avatar: string;
+    }>,
+  ) => void;
+  addAddress: (address: Omit<UserAddress, "id">) => void;
+  updateAddress: (id: string, address: Partial<UserAddress>) => void;
+  deleteAddress: (id: string) => void;
+  setDefaultAddress: (id: string) => void;
+  updateNotifications: (settings: Partial<NotificationSettings>) => void;
 }
 
 export const useStore = create<GlobalStore>()(
@@ -93,6 +134,45 @@ export const useStore = create<GlobalStore>()(
         bookingPhone: "",
         bookingNotes: "",
         bookingReferral: "",
+
+        // Profile Details
+        displayName: "M. Anche",
+        email: "admin@glowhaus.com",
+        phone: "+234 800 000 0000",
+        dob: "1995-05-20",
+        avatar: "/avatar.png",
+        isLoggedIn: true,
+
+        // Task #28 Dummy Data
+        addresses: [
+          {
+            id: "addr_1",
+            name: "Home",
+            street: "Plot 12, Garki Luxury Apartments",
+            city: "Abuja",
+            state: "FCT",
+            zipCode: "900101",
+            phone: "+234 800 000 0000",
+            isDefault: true,
+          },
+          {
+            id: "addr_2",
+            name: "Office",
+            street: "15 Victoria Island",
+            city: "Lagos",
+            state: "Lagos State",
+            zipCode: "100001",
+            phone: "+234 800 111 2222",
+            isDefault: false,
+          },
+        ],
+        notifications: {
+          emailOffers: true,
+          emailOrders: true,
+          emailReminders: true,
+          smsOrders: true,
+          smsReminders: true,
+        },
 
         // Dummy Data for Appointments
         bookingHistory: [
@@ -250,10 +330,6 @@ export const useStore = create<GlobalStore>()(
         cartOpen: false,
         searchOpen: false,
         mobileMenuOpen: false,
-        displayName: "M. Anche",
-        email: "admin@glowhaus.com",
-        avatar: "/avatar.png",
-        isLoggedIn: true,
         recentlyViewed: [],
 
         // --- ACTIONS ---
@@ -434,6 +510,42 @@ export const useStore = create<GlobalStore>()(
           set((state) => ({
             recentlyViewed: state.recentlyViewed.filter((p) => p.id !== id),
           })),
+
+        // --- NEW PROFILE ACTIONS ---
+        updateProfile: (data) => set((state) => ({ ...state, ...data })),
+
+        addAddress: (address) =>
+          set((state) => ({
+            addresses: [
+              ...state.addresses,
+              { ...address, id: Math.random().toString(36).substr(2, 9) },
+            ],
+          })),
+
+        updateAddress: (id, updatedFields) =>
+          set((state) => ({
+            addresses: state.addresses.map((addr) =>
+              addr.id === id ? { ...addr, ...updatedFields } : addr,
+            ),
+          })),
+
+        deleteAddress: (id) =>
+          set((state) => ({
+            addresses: state.addresses.filter((addr) => addr.id !== id),
+          })),
+
+        setDefaultAddress: (id) =>
+          set((state) => ({
+            addresses: state.addresses.map((addr) => ({
+              ...addr,
+              isDefault: addr.id === id,
+            })),
+          })),
+
+        updateNotifications: (settings) =>
+          set((state) => ({
+            notifications: { ...state.notifications, ...settings },
+          })),
       }),
       {
         name: "glowhaus-storage",
@@ -443,6 +555,11 @@ export const useStore = create<GlobalStore>()(
           points: state.points,
           displayName: state.displayName,
           email: state.email,
+          phone: state.phone,
+          dob: state.dob,
+          avatar: state.avatar,
+          addresses: state.addresses,
+          notifications: state.notifications,
           isLoggedIn: state.isLoggedIn,
           recentlyViewed: state.recentlyViewed,
           bookingHistory: state.bookingHistory,

@@ -19,7 +19,7 @@ export default function GalleryPage() {
   }, [activeFilter]);
 
   return (
-    <main className="min-h-screen bg-[#FCFAFA] pt-32 pb-20 px-4 md:px-8">
+    <main className="min-h-screen pt-32 pb-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         {/* HERO */}
         <header className="text-center mb-16">
