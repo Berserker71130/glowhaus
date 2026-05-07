@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { toast } from "react-hot-toast";
+// 1. Swapped manual toast for the Luxe Engine
+import { showGlowToast } from "@/lib/toast";
 import { products as allProducts } from "@/lib/dummy-data/products";
 import {
   ArrowDown,
@@ -22,51 +23,41 @@ export default function WishlistPage() {
 
   const [sortBy, setSortBy] = useState("Date Added");
 
-  // LOGIC: SHARE WISHLIST
+  // --- TASK: LINK COPIED (Blue) ---
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    toast.success("Wishlist link copied to clipboard", {
-      style: { background: "#1A1A1A", color: "#fff", borderRadius: "0px" },
+    showGlowToast({
+      message: "Wishlist link copied to clipboard! 🔗",
+      accentColor: "#3B82F6", // Luxe Blue
+      icon: "🌐",
     });
   };
 
-  //   LOGIC: REMOVE WITH UNDO
+  // --- TASK: REMOVE FROM WISHLIST (Dark with Undo) ---
   const handleRemove = (product: any) => {
     removeFromWishlist(product.id);
-    toast(
-      (t) => (
-        <span className="flex items-center gap-4">
-          Removed from wishlist
-          <button
-            onClick={() => {
-              addToWishlist(product);
-              toast.dismiss(t.id);
-            }}
-            className="text-gold uppercase text-xs font-bold tracking-widest"
-          >
-            Undo
-          </button>
-        </span>
-      ),
-      {
-        duration: 4000,
-        position: "bottom-right",
-        style: { background: "#1A1A1A", color: "#fff", borderRadius: "0px" },
+    showGlowToast({
+      message: "Removed from wishlist",
+      accentColor: "#1A1A1A",
+      icon: "🗑️",
+      action: {
+        label: "Undo",
+        fn: () => addToWishlist(product),
       },
-    );
+    });
   };
 
-  //   LOGIC: SORTING
+  // LOGIC: SORTING
   const sortedItems = useMemo(() => {
     const items = [...wishlistItems];
     if (sortBy === "Price Low-High")
       return items.sort((a, b) => a.price - b.price);
     if (sortBy === "Price High-Low")
       return items.sort((a, b) => b.price - a.price);
-    return items; //Default 'Date Added
+    return items;
   }, [wishlistItems, sortBy]);
 
-  //   LOGIC: RECOMMENDATIONS (Based on category of first wishlisted item)
+  // LOGIC: RECOMMENDATIONS
   const recommendations = useMemo(() => {
     const favoriteCategory = wishlistItems[0]?.category || "hair";
     return allProducts
@@ -121,8 +112,7 @@ export default function WishlistPage() {
               variant="outline"
               className="border-noir/10 rounded-none h-12 hover:bg-noir hover:text-white"
             >
-              <Share2 size={18} className="mr-2" />
-              Share
+              <Share2 size={18} className="mr-2" /> Share
             </Button>
           </div>
         </div>
@@ -149,17 +139,13 @@ export default function WishlistPage() {
                       alt={product.name}
                       className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${product.isSoldOut ? "grayscale" : ""}`}
                     />
-
-                    {/* SOLD OUT OVERLAY */}
                     {product.isSoldOut && (
-                      <div className="absolute inset-0 bg-white/40backdrop-blur-[2px] flex items-center justify-center">
+                      <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px] flex items-center justify-center">
                         <span className="bg-noir text-white text-[10px] tracking-[0.2em] uppercase px-4 py-2">
                           Sold Out
                         </span>
                       </div>
                     )}
-
-                    {/* REMOVE BUTTON */}
                     <button
                       onClick={() => handleRemove(product)}
                       className="absolute top-4 right-4 p-2.5 bg-white text-noir hover:bg-noir hover:text-white transition-all shadow-sm"
@@ -180,21 +166,23 @@ export default function WishlistPage() {
                     </p>
 
                     {product.isSoldOut ? (
-                      <Button className="w-full rounded-none h-12 bg-transparent border border-noir/20 text-noir hover:bg-noir hover:text-white transition-all text-[10px] uppercase tracking-widest">
-                        <BellRing size={14} className="mr-2" />
-                        Notify Me
+                      <Button className="w-full rounded-none h-12 bg-transparent border border-noir/20 text-noir hover:bg-noir hover:text-white text-[10px] uppercase tracking-widest">
+                        <BellRing size={14} className="mr-2" /> Notify Me
                       </Button>
                     ) : (
                       <Button
                         onClick={() => {
                           addToCart(product, {});
                           removeFromWishlist(product.id);
-                          toast.success("Moved to Bag");
+                          showGlowToast({
+                            message: "Moved to Bag",
+                            icon: "🛍️",
+                            accentColor: "#C5A059",
+                          });
                         }}
                         className="w-full rounded-none h-12 bg-noir text-white hover:bg-gold transition-all text-[10px] uppercase tracking-widest"
                       >
-                        <ShoppingBag size={14} className="mr-2" />
-                        Move to Cart
+                        <ShoppingBag size={14} className="mr-2" /> Move to Cart
                       </Button>
                     )}
                   </div>
@@ -202,8 +190,8 @@ export default function WishlistPage() {
               ))}
             </motion.div>
           ) : (
-            // EMPTY STATE
-            <div className="flex flex-col items-center justify-center py-32 bordey-y border-noir/5">
+            /* EMPTY STATE */
+            <div className="flex flex-col items-center justify-center py-32 border-y border-noir/5">
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -214,7 +202,7 @@ export default function WishlistPage() {
               <h2 className="text-3xl font-serif text-noir mb-4">
                 Your Wishlist is empty
               </h2>
-              <p className="text-noir/40 font-light mb-10 max-w-xs text-center">
+              <p className="text-noir/40 font-light mb-10 max-w-xs text-center text-sm">
                 Sign in to sync your wishlist across all your devices or browse
                 our shop to add favorites.
               </p>
@@ -227,7 +215,7 @@ export default function WishlistPage() {
           )}
         </AnimatePresence>
 
-        {/* YOU MIGHT ALSO LIKE */}
+        {/* YOU MIGHT ALSO LIKE SECTION */}
         {recommendations.length > 0 && (
           <section className="mt-40">
             <div className="flex items-center gap-8 mb-12">
@@ -242,16 +230,16 @@ export default function WishlistPage() {
                   <div className="relative aspect-[3/4] mb-4 bg-gray-50 overflow-hidden">
                     <img
                       src={
-                        p.images && p.images[0]
+                        Array.isArray(p.images)
                           ? p.images[0]
-                          : "/placeholder.png"
+                          : p.images || "/placeholder.png"
                       }
                       className="w-full h-full object-cover transition-transform group-hover:scale-105"
                       alt={p.name}
                     />
                   </div>
                   <h4 className="font-serif text-lg">{p.name}</h4>
-                  <p className="text-gold text-sm">
+                  <p className="text-gold text-sm font-medium">
                     ₦{p.price.toLocaleString()}
                   </p>
                 </div>

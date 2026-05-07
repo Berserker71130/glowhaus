@@ -41,15 +41,29 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[#FAF7F2] text-black">
         {/* 3. Global Toaster (positioned at bottom-center as requested) */}
         <Toaster
-          position="bottom-center"
+          position="bottom-right"
+          {...({ limit: 3 } as any)}
+          containerStyle={{
+            bottom: 40,
+            right: 40,
+            zIndex: 99999, // Ensures it stays above the Navbar/Drawer
+          }}
           toastOptions={{
-            duration: 3000,
+            // Default styling for all toasts
             style: {
-              background: "#333",
-              color: "#fff",
+              background: "#FCF9F2", // Your Ivory/Linen background
+              color: "#1A1A1A", // Noir text
+              border: "1px solid rgba(212, 175, 55, 0.2)", // Subtle gold border
+              borderRadius: "12px",
               fontSize: "12px",
-              textTransform: "uppercase",
+              fontWeight: "600",
+              letterSpacing: "0.05em",
+              padding: "16px 24px",
+              maxWidth: "400px",
+              boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)",
             },
+            // Ensure the animations are smooth
+            duration: 3500,
           }}
         />
 

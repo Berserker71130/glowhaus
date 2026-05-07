@@ -9,8 +9,9 @@ import {
   Plus,
   X,
 } from "lucide-react";
+// 1. Import the Luxe Toast Engine
+import { showGlowToast } from "@/lib/toast";
 
-// DUMMY DATA FOR THE "LOAD MORE" FUNCTIONALITY
 const DUMMY_REVIEWS = [
   {
     id: 1,
@@ -139,26 +140,19 @@ export default function ProductReviews({
 }: {
   reviews: any[];
 }) {
-  // Logic: Combine parent reviews with Dummy Data to ensure "Load More" always works
-  const [allReviews, setAllReviews] = useState(() => {
-    return initialReviews && initialReviews.length > 0
-      ? initialReviews
-      : DUMMY_REVIEWS;
-  });
-
+  const [allReviews, setAllReviews] = useState(() =>
+    initialReviews?.length > 0 ? initialReviews : DUMMY_REVIEWS,
+  );
   const [filter, setFilter] = useState("All");
   const [sortBy, setSortBy] = useState("Most Recent");
   const [visibleCount, setVisibleCount] = useState(6);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showToast, setShowToast] = useState(false);
 
-  // Modal specific states
   const [newRating, setNewRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [newHeadline, setNewHeadline] = useState("");
   const [newComment, setNewComment] = useState("");
 
-  // --- SUBMIT LOGIC ---
   const handleSubmit = () => {
     if (newRating === 0 || newComment.length < 20) {
       alert(
@@ -186,20 +180,23 @@ export default function ProductReviews({
     setNewRating(0);
     setNewHeadline("");
     setNewComment("");
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000);
+
+    // --- TASK: TRIGGER GOLD TOAST ---
+    showGlowToast({
+      message: "Review submitted — thank you! ✨",
+      accentColor: "#D4AF37",
+      icon: "✍️",
+    });
   };
 
-  // --- FILTER & SORT ---
   const filteredReviews = useMemo(() => {
     let result = [...allReviews];
     if (filter !== "All") {
       const starTarget = parseInt(filter);
-      if (filter === "3★ and below") {
-        result = result.filter((r) => r.rating <= 3);
-      } else {
-        result = result.filter((r) => r.rating === starTarget);
-      }
+      result =
+        filter === "3★ and below"
+          ? result.filter((r) => r.rating <= 3)
+          : result.filter((r) => r.rating === starTarget);
     }
     if (sortBy === "Highest Rated") result.sort((a, b) => b.rating - a.rating);
     if (sortBy === "Lowest Rated") result.sort((a, b) => a.rating - b.rating);
@@ -212,7 +209,7 @@ export default function ProductReviews({
       className="py-24 px-6 md:px-12 bg-[#F9F9F7] border-t border-[#E5E5E1]"
     >
       <div className="max-w-5xl mx-auto">
-        {/* RATING SUMMARY BLOCK - FIXED AS PER INSTRUCTIONS */}
+        {/* RATING SUMMARY */}
         <div className="grid md:grid-cols-2 gap-12 mb-16 bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
           <div className="text-center md:text-left flex flex-col justify-center border-b md:border-b-0 md:border-r border-gray-100 pb-8 md:pb-0">
             <h2 className="font-serif text-7xl font-bold text-[#D4AF37] mb-2">
@@ -269,105 +266,71 @@ export default function ProductReviews({
             {["All", "5★", "4★", "3★ and below"].map((f) => (
               <button
                 key={f}
-                onClick={() => {
-                  setFilter(f);
-                  setVisibleCount(6);
-                }}
-                className={`px-5 py-2 rounded-full text-[10px] uppercase tracking-widest border transition-all ${
-                  filter === f
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-gray-400 border-gray-200 hover:border-black"
-                }`}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all ${filter === f ? "bg-black text-white" : "bg-white text-gray-400 border border-gray-100 hover:border-black"}`}
               >
                 {f}
               </button>
             ))}
           </div>
-          <select
-            className="text-[10px] uppercase tracking-widest border-none bg-transparent font-bold cursor-pointer"
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option>Most Recent</option>
-            <option>Highest Rated</option>
-            <option>Lowest Rated</option>
-          </select>
         </div>
 
-        {/* REVIEW LIST */}
-        <div className="space-y-8">
+        {/* REVIEWS GRID */}
+        <div className="grid md:grid-cols-2 gap-8">
           {filteredReviews.slice(0, visibleCount).map((review) => (
             <div
               key={review.id}
-              className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm transition-all hover:shadow-md"
+              className="bg-white p-8 rounded-2xl border border-gray-100 flex flex-col justify-between"
             >
-              <div className="flex justify-between items-start mb-6">
-                <div className="flex gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-xs font-bold text-[#D4AF37] border border-gray-100">
-                    {review.userName
-                      .split(" ")
-                      .map((n: any) => n[0])
-                      .join("")}
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex text-[#D4AF37]">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={12}
+                        fill={i < review.rating ? "currentColor" : "none"}
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-xs uppercase tracking-widest text-black">
-                        {review.userName}
-                      </span>
-                      {review.isVerified && (
-                        <div className="flex items-center gap-1 text-[#D4AF37] bg-[#D4AF37]/5 px-2 py-0.5 rounded-full border border-[#D4AF37]/20">
-                          <CheckCircle2 size={10} />
-                          <span className="text-[8px] uppercase font-black">
-                            Verified Purchase
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-4 items-center">
-                      <div className="flex text-[#D4AF37]">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            size={12}
-                            fill={i < review.rating ? "currentColor" : "none"}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-[10px] text-gray-400 uppercase tracking-widest">
-                        {review.date}
-                      </span>
-                    </div>
-                  </div>
+                  <span className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter">
+                    {review.date}
+                  </span>
                 </div>
+                <h4 className="font-bold text-sm mb-2">{review.headline}</h4>
+                <p className="text-gray-500 text-sm leading-relaxed mb-6 italic">
+                  "{review.comment}"
+                </p>
               </div>
-              <h4 className="font-bold text-black text-sm mb-3 tracking-tight">
-                {review.headline}
-              </h4>
-              <p className="text-gray-600 text-sm leading-relaxed font-light mb-8">
-                "{review.comment}"
-              </p>
-              <div className="flex items-center gap-6 text-gray-400 pt-6 border-t border-gray-50">
-                <span className="text-[9px] uppercase tracking-[0.2em] font-bold">
-                  Helpful?
-                </span>
-                <button className="flex items-center gap-2 hover:text-black transition-colors">
-                  <ThumbsUp size={14} />{" "}
-                  <span className="text-[10px]">Yes (12)</span>
-                </button>
-                <button className="flex items-center gap-2 hover:text-black transition-colors">
-                  <ThumbsDown size={14} />{" "}
-                  <span className="text-[10px]">No</span>
-                </button>
+              <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-bold text-black">
+                    {review.userName}
+                  </span>
+                  {review.isVerified && (
+                    <CheckCircle2 size={14} className="text-green-500" />
+                  )}
+                </div>
+                <div className="flex gap-3 text-gray-300">
+                  <ThumbsUp
+                    size={14}
+                    className="hover:text-black cursor-pointer"
+                  />
+                  <ThumbsDown
+                    size={14}
+                    className="hover:text-black cursor-pointer"
+                  />
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* PAGINATION */}
-        {filteredReviews.length > visibleCount && (
-          <div className="text-center mt-16">
+        {visibleCount < filteredReviews.length && (
+          <div className="mt-16 text-center">
             <button
-              onClick={() => setVisibleCount((v) => v + 6)}
-              className="border-2 border-black px-12 py-4 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-black hover:text-white transition-all"
+              onClick={() => setVisibleCount((prev) => prev + 4)}
+              className="px-12 py-4 border border-black text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all"
             >
               Load More Reviews
             </button>
@@ -428,17 +391,6 @@ export default function ProductReviews({
                 onChange={(e) => setNewComment(e.target.value)}
                 className="w-full border border-gray-100 bg-gray-50 rounded-xl p-4 text-sm outline-none"
               />
-              <div>
-                <label className="text-[10px] uppercase tracking-widest mb-3 block font-bold text-black">
-                  Add Photos
-                </label>
-                <button className="w-20 h-20 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-400 hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all">
-                  <Plus size={20} />
-                  <span className="text-[8px] mt-1 uppercase font-bold tracking-widest">
-                    Upload
-                  </span>
-                </button>
-              </div>
               <div className="flex gap-4 pt-4">
                 <button
                   onClick={() => setIsModalOpen(false)}
@@ -454,20 +406,6 @@ export default function ProductReviews({
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* TOAST */}
-      {showToast && (
-        <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[200] animate-in slide-in-from-top duration-500">
-          <div className="bg-black text-white px-8 py-4 rounded-full shadow-2xl border border-[#D4AF37]/30 flex items-center gap-3">
-            <div className="bg-[#D4AF37] p-1 rounded-full">
-              <CheckCircle2 size={14} className="text-black" />
-            </div>
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold">
-              Review submitted for moderation ✨
-            </span>
           </div>
         </div>
       )}

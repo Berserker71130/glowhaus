@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
+import { showGlowToast } from "@/lib/toast";
 import {
   CartItem,
   Product,
@@ -221,7 +222,7 @@ export const useStore = create<GlobalStore>()(
             total: 115000,
             status: "shipped",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
-            paymentMethod: "**** 4521",
+            paymentMethod: "** 4521",
             items: [
               {
                 product: {
@@ -259,7 +260,7 @@ export const useStore = create<GlobalStore>()(
             total: 35000,
             status: "processing",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
-            paymentMethod: "**** 4521",
+            paymentMethod: "** 4521",
             items: [
               {
                 product: {
@@ -283,7 +284,7 @@ export const useStore = create<GlobalStore>()(
             total: 45000,
             status: "delivered",
             address: "15 Victoria Island, Lagos",
-            paymentMethod: "**** 4521",
+            paymentMethod: "** 4521",
             items: [
               {
                 product: {
@@ -307,7 +308,7 @@ export const useStore = create<GlobalStore>()(
             total: 28000,
             status: "cancelled",
             address: "Plot 12, Garki Luxury Apartments, Abuja",
-            paymentMethod: "**** 4521",
+            paymentMethod: "** 4521",
             items: [
               {
                 product: {
@@ -357,6 +358,11 @@ export const useStore = create<GlobalStore>()(
               ),
             };
           });
+          showGlowToast({
+            message: "Added to your bag! 🛍️",
+            accentColor: "#D4AF37",
+            duration: 3500,
+          });
         },
 
         addBundleToCart: (products) => {
@@ -387,9 +393,19 @@ export const useStore = create<GlobalStore>()(
               ),
             };
           });
+          showGlowToast({
+            message: "Added to your bag! 🛍️",
+            accentColor: "#D4AF37",
+            duration: 3500,
+          });
         },
 
         removeFromCart: (id) => {
+          // CAPTURE FOR UNDO (Criteria requirement)
+          const itemToRestore = get().cartItems.find(
+            (i) => i.product.id === id,
+          );
+
           set((state) => {
             const newItems = state.cartItems.filter((i) => i.product.id !== id);
             return {
@@ -400,6 +416,23 @@ export const useStore = create<GlobalStore>()(
                 0,
               ),
             };
+          });
+
+          showGlowToast({
+            message: "Item removed",
+            accentColor: "#9CA3AF",
+            duration: 3500,
+            action: {
+              label: "UNDO",
+              fn: () => {
+                if (itemToRestore) {
+                  get().addToCart(
+                    itemToRestore.product,
+                    itemToRestore.selectedOptions,
+                  );
+                }
+              },
+            },
           });
         },
 
@@ -421,18 +454,43 @@ export const useStore = create<GlobalStore>()(
 
         clearCart: () => set({ cartItems: [], cartTotal: 0, cartCount: 0 }),
 
-        // UPDATED: Luxe Wishlist Action with addedAt timestamp
-        addToWishlist: (product) =>
+        // UPDATED: Luxe Wishlist Action with criteria styles
+        addToWishlist: (product) => {
+          const alreadyIn = get().wishlistItems.some(
+            (p) => p.id === product.id,
+          );
+          if (alreadyIn) {
+            showGlowToast({
+              message: "Already in your wishlist!",
+              accentColor: "#3B82F6", // Blue Style
+              duration: 3500,
+            });
+            return;
+          }
           set((state) => ({
-            wishlistItems: state.wishlistItems.some((p) => p.id === product.id)
-              ? state.wishlistItems
-              : [{ ...product, addedAt: Date.now() }, ...state.wishlistItems],
-          })),
+            wishlistItems: [
+              { ...product, addedAt: Date.now() },
+              ...state.wishlistItems,
+            ],
+          }));
+          showGlowToast({
+            message: "Saved to wishlist ❤️",
+            accentColor: "#E29595", // Rose Style
+            duration: 3500,
+          });
+        },
 
         removeFromWishlist: (id) =>
-          set((state) => ({
-            wishlistItems: state.wishlistItems.filter((p) => p.id !== id),
-          })),
+          set((state) => {
+            showGlowToast({
+              message: "Removed from wishlist",
+              accentColor: "#9CA3AF", // Neutral Style
+              duration: 3500,
+            });
+            return {
+              wishlistItems: state.wishlistItems.filter((p) => p.id !== id),
+            };
+          }),
 
         isWishlisted: (id) => get().wishlistItems.some((p) => p.id === id),
 
@@ -450,8 +508,14 @@ export const useStore = create<GlobalStore>()(
             ],
           })),
 
-        redeemPoints: (amount) =>
-          set((state) => ({ points: Math.max(0, state.points - amount) })),
+        redeemPoints: (amount) => {
+          set((state) => ({ points: Math.max(0, state.points - amount) }));
+          showGlowToast({
+            message: "₦500 off applied from GlowPoints 💎",
+            accentColor: "#DDA0DD", // Plum Style
+            duration: 3500,
+          });
+        },
 
         setService: (s) => set({ selectedService: s }),
         setDate: (d) => set({ selectedDate: d }),
@@ -461,10 +525,16 @@ export const useStore = create<GlobalStore>()(
         setBookingNotes: (notes) => set({ bookingNotes: notes }),
         setBookingReferral: (ref) => set({ bookingReferral: ref }),
 
-        confirmBooking: (appointment) =>
+        confirmBooking: (appointment) => {
           set((state) => ({
             bookingHistory: [appointment, ...state.bookingHistory],
-          })),
+          }));
+          showGlowToast({
+            message: "Booking confirmed! Check your email. 📅",
+            accentColor: "#D4AF37", // Gold Style
+            duration: 3500,
+          });
+        },
 
         clearBooking: () =>
           set({
@@ -476,12 +546,18 @@ export const useStore = create<GlobalStore>()(
             bookingReferral: "",
           }),
 
-        setAppointmentRating: (id, rating) =>
+        setAppointmentRating: (id, rating) => {
           set((state) => ({
             bookingHistory: state.bookingHistory.map((appt) =>
               appt.id === id ? { ...appt, rating } : appt,
             ),
-          })),
+          }));
+          showGlowToast({
+            message: "Review submitted — thank you! ✨",
+            accentColor: "#D4AF37", // Gold Style
+            duration: 3500,
+          });
+        },
 
         rebookService: (service) =>
           set({
@@ -512,40 +588,77 @@ export const useStore = create<GlobalStore>()(
           })),
 
         // --- NEW PROFILE ACTIONS ---
-        updateProfile: (data) => set((state) => ({ ...state, ...data })),
+        updateProfile: (data) => {
+          set((state) => ({ ...state, ...data }));
+          showGlowToast({
+            message: "Profile updated ✨",
+            accentColor: "#D4AF37", // Gold Style
+            duration: 3500,
+          });
+        },
 
-        addAddress: (address) =>
+        addAddress: (address) => {
           set((state) => ({
             addresses: [
               ...state.addresses,
               { ...address, id: Math.random().toString(36).substr(2, 9) },
             ],
-          })),
+          }));
+          showGlowToast({
+            message: "Address added successfully",
+            accentColor: "#D4AF37",
+            duration: 3500,
+          });
+        },
 
-        updateAddress: (id, updatedFields) =>
+        updateAddress: (id, updatedFields) => {
           set((state) => ({
             addresses: state.addresses.map((addr) =>
               addr.id === id ? { ...addr, ...updatedFields } : addr,
             ),
-          })),
+          }));
+          showGlowToast({
+            message: "Address updated",
+            accentColor: "#D4AF37",
+            duration: 3500,
+          });
+        },
 
-        deleteAddress: (id) =>
+        deleteAddress: (id) => {
           set((state) => ({
             addresses: state.addresses.filter((addr) => addr.id !== id),
-          })),
+          }));
+          showGlowToast({
+            message: "Address deleted",
+            accentColor: "#9CA3AF", // Neutral Style
+            duration: 3500,
+          });
+        },
 
-        setDefaultAddress: (id) =>
+        setDefaultAddress: (id) => {
           set((state) => ({
             addresses: state.addresses.map((addr) => ({
               ...addr,
               isDefault: addr.id === id,
             })),
-          })),
+          }));
+          showGlowToast({
+            message: "Primary address set",
+            accentColor: "#D4AF37",
+            duration: 3500,
+          });
+        },
 
-        updateNotifications: (settings) =>
+        updateNotifications: (settings) => {
           set((state) => ({
             notifications: { ...state.notifications, ...settings },
-          })),
+          }));
+          showGlowToast({
+            message: "Preferences updated ✨",
+            accentColor: "#D4AF37",
+            duration: 2000,
+          });
+        },
       }),
       {
         name: "glowhaus-storage",

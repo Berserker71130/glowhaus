@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react"; // Added useEffect
+import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
-import { toast } from "react-hot-toast";
+// REMOVED: import { showGlowToast } from "@/lib/toast";
+// We don't need it here anymore because the Store handles it!
 import { Camera, Save } from "lucide-react";
 
 export default function PersonalInfo() {
   const { displayName, email, phone, dob, avatar, updateProfile } = useStore();
 
-  // 1. Initialize local state
   const [formData, setFormData] = useState({
     displayName: displayName || "",
     email: email || "",
@@ -16,7 +16,6 @@ export default function PersonalInfo() {
     dob: dob || "",
   });
 
-  // 2. SYNC EFFECT: This forces the form to update when Zustand loads from LocalStorage
   useEffect(() => {
     setFormData({
       displayName: displayName || "",
@@ -37,21 +36,23 @@ export default function PersonalInfo() {
     return cleanName.slice(0, 2).toUpperCase();
   };
 
-  const handleSave = () => {
+  // --- SURGICAL FIX: ONE CALL ONLY ---
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // updateProfile in useStore already includes the showGlowToast call
     updateProfile(formData);
-    toast.success("Profile updated ✨", {
-      style: {
-        background: "#1a1a1a",
-        color: "#FDFCFB",
-        border: "1px solid #D4AF37",
-      },
-    });
   };
 
+  // Note: For "Coming Soon" features not in the store,
+  // you can still keep a local toast if you wish,
+  // but for store actions, let the store speak!
   const handleAvatarClick = () => {
-    toast("Image upload coming soon", {
+    // This is fine because it's NOT a store action
+    const { showGlowToast } = require("@/lib/toast");
+    showGlowToast({
+      message: "Image upload coming soon",
+      accentColor: "#A3A3A3",
       icon: "📷",
-      style: { background: "#FDFCFB", color: "#1a1a1a" },
     });
   };
 
@@ -71,7 +72,6 @@ export default function PersonalInfo() {
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              // 3. CENTERING FIX: Using grid + place-items-center for perfect alignment
               <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#F3E7E4] to-[#F9F6F2] grid place-items-center overflow-hidden">
                 <span className="text-4xl font-serif text-gold uppercase tracking-tighter leading-none block transform translate-y-[2px]">
                   {getInitials(formData.displayName || displayName)}

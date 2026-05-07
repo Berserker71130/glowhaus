@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
+import { showGlowToast } from "@/lib/toast";
 
 export default function FullCartPage() {
   const {
@@ -23,20 +23,17 @@ export default function FullCartPage() {
     cartTotal,
     updateQuantity,
     removeFromCart,
+    addToCart,
     addToWishlist,
   } = useStore();
 
-  // State for Promo Codes
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [isShaking, setIsShaking] = useState(false);
   const [appliedCode, setAppliedCode] = useState("");
-
-  // State for Loyalty Points
   const [usePoints, setUsePoints] = useState(false);
-  const pointsDiscount = usePoints ? 500 : 0;
 
-  // Final Calculations
+  const pointsDiscount = usePoints ? 500 : 0;
   const finalTotal = Math.max(
     0,
     cartTotal - cartTotal * discount - pointsDiscount,
@@ -53,19 +50,57 @@ export default function FullCartPage() {
     if (validCodes[code]) {
       setDiscount(validCodes[code]);
       setAppliedCode(code);
-      toast.success(`Promo Code ${code} Applied!`);
+      showGlowToast({
+        message: `Promo ${code} applied — ${validCodes[code] * 100}% off! 🎉`,
+        accentColor: "#4ADE80",
+        icon: "🏷️",
+      });
     } else {
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 500);
-      toast.error("Invalid promo code");
+      showGlowToast({
+        message: "That code isn't valid. Try again.",
+        accentColor: "#EF4444",
+        icon: "🚫",
+      });
     }
+  };
+
+  const handleRemove = (item: any) => {
+    const { product, quantity, selectedOptions } = item;
+    removeFromCart(product.id);
+
+    showGlowToast({
+      message: `${product.name} removed`,
+      icon: "🗑️",
+      accentColor: "#1A1A1A",
+      action: {
+        label: "Undo",
+        fn: () => (addToCart as any)(product, selectedOptions, quantity),
+      },
+    });
   };
 
   const handleSaveForLater = (item: any) => {
     addToWishlist(item.product);
     removeFromCart(item.product.id);
-    toast.success("Moved to Wishlist ✨");
+    showGlowToast({
+      message: "Saved to wishlist ❤️",
+      accentColor: "#E29595",
+      icon: "✨",
+    });
   };
+
+  // --- TASK: POINTS REDEMPTION (Plum) ---
+  useEffect(() => {
+    if (usePoints) {
+      showGlowToast({
+        message: "₦500 off applied from GlowPoints 💎",
+        accentColor: "#6B4FBB",
+        icon: "✨",
+      });
+    }
+  }, [usePoints]);
 
   if (cartItems.length === 0) {
     return (
@@ -90,7 +125,6 @@ export default function FullCartPage() {
           Shopping Bag
         </h1>
 
-        {/* Layout: 2-column desktop, stacked mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           {/* LEFT: CART ITEMS */}
           <div className="lg:col-span-8 space-y-10">
@@ -119,8 +153,8 @@ export default function FullCartPage() {
                       </p>
                     </div>
                     <button
-                      onClick={() => removeFromCart(item.product.id)}
-                      className="text-noir/20 hover:text-red-500"
+                      onClick={() => handleRemove(item)}
+                      className="text-noir/20 hover:text-red-500 transition-colors"
                     >
                       <X size={18} />
                     </button>
@@ -128,7 +162,6 @@ export default function FullCartPage() {
 
                   <div className="flex justify-between items-end">
                     <div className="flex items-center gap-6">
-                      {/* Qty update with no flash */}
                       <div className="flex items-center border border-noir/10 rounded-full px-4 py-2 gap-6 bg-white shadow-sm">
                         <button
                           onClick={() =>
@@ -150,7 +183,6 @@ export default function FullCartPage() {
                           <Plus size={14} />
                         </button>
                       </div>
-
                       <button
                         onClick={() => handleSaveForLater(item)}
                         className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-tighter text-noir/40 hover:text-gold transition-colors"
@@ -158,7 +190,6 @@ export default function FullCartPage() {
                         <Heart size={14} /> Save for later
                       </button>
                     </div>
-
                     <p className="text-lg font-black text-noir tracking-tighter">
                       ₦{(item.product.price * item.quantity).toLocaleString()}
                     </p>
@@ -166,7 +197,6 @@ export default function FullCartPage() {
                 </div>
               </div>
             ))}
-
             <Link
               href="/"
               className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-noir hover:text-gold transition-colors pt-4"
@@ -175,13 +205,12 @@ export default function FullCartPage() {
             </Link>
           </div>
 
-          {/* RIGHT: ORDER SUMMARY (Sticky) */}
+          {/* RIGHT: ORDER SUMMARY */}
           <div className="lg:col-span-4 relative">
             <div className="sticky top-32 space-y-8 bg-white p-8 border border-gold/10 rounded-sm shadow-sm">
               <h2 className="text-xs font-black uppercase tracking-[0.3em] text-noir border-b border-gold/5 pb-4">
                 Order Summary
               </h2>
-
               <div className="space-y-4">
                 <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40">
                   <span>Subtotal</span>
@@ -189,7 +218,6 @@ export default function FullCartPage() {
                     ₦{cartTotal.toLocaleString()}
                   </span>
                 </div>
-
                 <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40">
                   <span>Delivery</span>
                   <span className="text-green-600 font-black">
@@ -197,7 +225,6 @@ export default function FullCartPage() {
                   </span>
                 </div>
 
-                {/* Promo Code Input */}
                 <div className="pt-4">
                   <label className="text-[9px] font-black uppercase tracking-widest text-noir/40 mb-2 block">
                     Promo Code
@@ -227,7 +254,6 @@ export default function FullCartPage() {
                   )}
                 </div>
 
-                {/* Loyalty Points Redemption Toggle */}
                 <div className="flex items-center justify-between pt-4 pb-2 border-y border-gold/5">
                   <div className="flex items-center gap-2">
                     <Tag size={14} className="text-gold" />
@@ -235,7 +261,6 @@ export default function FullCartPage() {
                       Redeem 500 GlowPoints
                     </span>
                   </div>
-                  {/* Radix UI Style Switch */}
                   <button
                     onClick={() => setUsePoints(!usePoints)}
                     className={`w-10 h-5 rounded-full transition-colors relative ${usePoints ? "bg-gold" : "bg-gray-200"}`}
@@ -263,26 +288,22 @@ export default function FullCartPage() {
                   </span>
                 </button>
 
-                {/* Trust Badges */}
                 <div className="flex justify-center gap-4 pt-6 border-t border-gold/5">
-                  <div className="flex flex-col items-center gap-1 opacity-40">
-                    <ShieldCheck size={18} />
-                    <span className="text-[8px] font-bold uppercase tracking-tighter">
-                      Secure
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1 opacity-40">
-                    <RotateCcw size={18} />
-                    <span className="text-[8px] font-bold uppercase tracking-tighter">
-                      Returns
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1 opacity-40">
-                    <Truck size={18} />
-                    <span className="text-[8px] font-bold uppercase tracking-tighter">
-                      Fast
-                    </span>
-                  </div>
+                  {[
+                    { icon: ShieldCheck, label: "Secure" },
+                    { icon: RotateCcw, label: "Returns" },
+                    { icon: Truck, label: "Fast" },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center gap-1 opacity-40"
+                    >
+                      <item.icon size={18} />
+                      <span className="text-[8px] font-bold uppercase tracking-tighter">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

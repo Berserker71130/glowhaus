@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Eye, Heart, ShoppingBag, Star } from "lucide-react";
@@ -16,17 +16,27 @@ export default function ProductCard({
   product,
   onQuickView,
 }: ProductCardProps) {
-  const { addToCart, addToWishlist, removeFromWishlist, wishlistItems } =
-    useStore();
-  const isLiked = wishlistItems.some((item) => item.id === product.id);
+  const { addToCart, addToWishlist, isWishlisted } = useStore();
+
+  // --- HYDRATION FIX ---
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only check if liked once the component has mounted in the browser
+  const isLiked = mounted ? isWishlisted(product.id) : false;
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isLiked) {
-      removeFromWishlist(product.id);
-    } else {
-      addToWishlist(product);
-    }
+    e.preventDefault();
+    addToWishlist(product);
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart(product, {});
   };
 
   const cardVariants = {
@@ -59,12 +69,7 @@ export default function ProductCard({
           className={`w-full h-full ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
         >
           <Image
-            // Using a local string instead of the https://placehold.co link
-            src={
-              product.image && product.image !== ""
-                ? product.image
-                : "/placeholder.jpg"
-            }
+            src={product.image || "/placeholder.jpg"}
             alt={product.name}
             fill
             className="object-cover"
@@ -90,33 +95,33 @@ export default function ProductCard({
           )}
         </div>
 
-        {/* 3. WISHLIST HEART */}
+        {/* 3. WISHLIST HEART (The Hydration Target) */}
         <button
           onClick={handleWishlist}
           className="absolute top-3 right-3 p-2.5 rounded-full bg-[#FCF9F2]/90 backdrop-blur-md hover:bg-white transition-all duration-300 z-20 shadow-md"
         >
           <Heart
             size={16}
-            className={`transition-colors duration-300 ${isLiked ? "fill-[#D4AF37] text-[#D4AF37]" : "text-black"}`}
+            className={`transition-colors duration-300 ${
+              isLiked ? "fill-[#D4AF37] text-[#D4AF37]" : "text-black"
+            }`}
           />
         </button>
 
-        {/* 4. HOVER ACTION BAR - FIXED LOGIC FOR SOLD OUT */}
+        {/* 4. HOVER ACTION BAR */}
         <motion.div
           variants={actionBarVariants}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className="absolute bottom-0 left-0 right-0 hidden md:flex h-14 bg-black text-white z-30"
         >
           {product.isSoldOut ? (
-            /* Button for Sold Out state */
             <button
               className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#D4AF37] transition-all duration-300"
               onClick={(e) => e.stopPropagation()}
             >
-              Notify Me When Available
+              Notify Me
             </button>
           ) : (
-            /* Buttons for In Stock state */
             <>
               <button
                 onClick={() => onQuickView(product)}
@@ -125,7 +130,7 @@ export default function ProductCard({
                 <Eye size={14} /> Quick View
               </button>
               <button
-                onClick={() => addToCart(product, {})}
+                onClick={handleAddToCart}
                 className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-300"
               >
                 <ShoppingBag size={14} /> Add To Bag
@@ -170,7 +175,7 @@ export default function ProductCard({
 
         {/* MOBILE BUTTON */}
         <button
-          onClick={() => !product.isSoldOut && addToCart(product, {})}
+          onClick={(e) => !product.isSoldOut && handleAddToCart(e)}
           className={`mt-4 w-full py-4 text-[10px] font-bold uppercase tracking-[0.3em] transition-all duration-300 md:hidden border
             ${
               product.isSoldOut

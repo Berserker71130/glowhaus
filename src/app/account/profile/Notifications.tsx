@@ -1,7 +1,6 @@
 "use client";
 
 import { useStore } from "@/store/useStore";
-import { toast } from "react-hot-toast";
 import { Switch } from "@/components/ui/Switch";
 import { Mail, ShieldCheck, Smartphone } from "lucide-react";
 
@@ -9,27 +8,9 @@ export default function Notifications() {
   const { notifications, updateNotifications } = useStore();
 
   const handleToggle = (key: keyof typeof notifications, value: boolean) => {
+    // SURGICAL FIX: We call the store only.
+    // The showGlowToast is now inside updateNotifications in your useStore.ts
     updateNotifications({ [key]: value });
-
-    // LUXE TOAST FIX: Light Ivory background with Noir text for perfect contrast
-    toast.success("Preferences updated", {
-      duration: 2000,
-      style: {
-        background: "#FDFCFB", // Creamy Ivory
-        color: "#1a1a1a", // Deep Noir
-        border: "1px solid #D4AF37", // Thin Gold border
-        fontSize: "12px",
-        fontWeight: "600",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase",
-        borderRadius: "12px",
-        padding: "12px 20px",
-      },
-      iconTheme: {
-        primary: "#D4AF37", // Gold Checkmark
-        secondary: "#FDFCFB",
-      },
-    });
   };
 
   return (

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useStore } from "@/store/useStore";
-import { toast } from "react-hot-toast";
+// LOCAL TOAST REMOVED: Store handles all feedback now.
 import {
   Briefcase,
   CheckCircle2,
@@ -32,11 +32,8 @@ export default function Addresses() {
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // FIXED: Removed 'id' because your store uses Omit<UserAddress, "id">
-    // The store will handle ID generation automatically.
-    addAddress({
-      ...newAddr,
-    });
+    // The store action handles the "Address added successfully" Gold toast
+    addAddress({ ...newAddr });
 
     // Reset Form
     setShowAddForm(false);
@@ -48,14 +45,6 @@ export default function Addresses() {
       zipCode: "",
       phone: "",
       isDefault: false,
-    });
-
-    toast.success("Address saved to your profile", {
-      style: {
-        background: "#FDFCFB",
-        color: "#1a1a1a",
-        border: "1px solid #D4AF37",
-      },
     });
   };
 
@@ -76,7 +65,7 @@ export default function Addresses() {
           className={`flex items-center gap-2 px-6 py-3 rounded-full border font-bold uppercase tracking-[0.2em] text-[10px] transition-all duration-300 ${
             showAddForm
               ? "border-noir text-noir hover:bg-noir hover:text-white"
-              : "border-gold text-gold hover:bg-gold hover:text-noir"
+              : "border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white"
           }`}
         >
           {showAddForm ? (
@@ -93,7 +82,7 @@ export default function Addresses() {
       {showAddForm && (
         <form
           onSubmit={handleAdd}
-          className="bg-white p-8 rounded-3xl border border-gold/20 grid grid-cols-1 md:grid-cols-2 gap-5 animate-in zoom-in-95 duration-500 shadow-xl shadow-gold/5"
+          className="bg-white p-8 rounded-3xl border border-[#D4AF37]/20 grid grid-cols-1 md:grid-cols-2 gap-5 animate-in zoom-in-95 duration-500 shadow-xl shadow-[#D4AF37]/5"
         >
           <div className="md:col-span-2 space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-noir/40 ml-1">
@@ -101,7 +90,7 @@ export default function Addresses() {
             </label>
             <input
               placeholder="e.g. Penthouse, Office, Summer Home"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.name}
               onChange={(e) => setNewAddr({ ...newAddr, name: e.target.value })}
               required
@@ -114,7 +103,7 @@ export default function Addresses() {
             </label>
             <input
               placeholder="123 Luxury Way"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.street}
               onChange={(e) =>
                 setNewAddr({ ...newAddr, street: e.target.value })
@@ -129,7 +118,7 @@ export default function Addresses() {
             </label>
             <input
               placeholder="Lagos"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.city}
               onChange={(e) => setNewAddr({ ...newAddr, city: e.target.value })}
               required
@@ -138,11 +127,11 @@ export default function Addresses() {
 
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-noir/40 ml-1">
-              State / Province
+              State
             </label>
             <input
               placeholder="Lagos State"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.state}
               onChange={(e) =>
                 setNewAddr({ ...newAddr, state: e.target.value })
@@ -157,7 +146,7 @@ export default function Addresses() {
             </label>
             <input
               placeholder="100001"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.zipCode}
               onChange={(e) =>
                 setNewAddr({ ...newAddr, zipCode: e.target.value })
@@ -173,7 +162,7 @@ export default function Addresses() {
             <input
               placeholder="+234..."
               type="tel"
-              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-gold transition-all"
+              className="w-full p-4 bg-[#FDFCFB] border border-blush/30 rounded-xl outline-none focus:border-[#D4AF37] transition-all"
               value={newAddr.phone}
               onChange={(e) =>
                 setNewAddr({ ...newAddr, phone: e.target.value })
@@ -184,7 +173,7 @@ export default function Addresses() {
 
           <button
             type="submit"
-            className="md:col-span-2 mt-4 bg-noir text-white py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[11px] hover:bg-gold hover:text-noir transition-all duration-500 shadow-lg active:scale-95"
+            className="md:col-span-2 mt-4 bg-noir text-white py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[11px] hover:bg-[#D4AF37] hover:text-white transition-all duration-500 shadow-lg active:scale-95"
           >
             Save Address to Profile
           </button>
@@ -198,19 +187,19 @@ export default function Addresses() {
             key={addr.id}
             className={`group relative p-8 rounded-3xl border transition-all duration-500 ${
               addr.isDefault
-                ? "border-gold bg-gold/[0.03] shadow-xl shadow-gold/5"
-                : "border-blush/20 bg-white hover:border-gold/40 hover:shadow-lg"
+                ? "border-[#D4AF37] bg-[#D4AF37]/[0.03] shadow-xl shadow-[#D4AF37]/5"
+                : "border-blush/20 bg-white hover:border-[#D4AF37]/40 hover:shadow-lg"
             }`}
           >
             {addr.isDefault && (
-              <div className="absolute -top-3 left-6 bg-gold text-noir text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-md border border-white">
+              <div className="absolute -top-3 left-6 bg-[#D4AF37] text-white text-[9px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-md border border-white">
                 Primary Residence
               </div>
             )}
 
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-white border border-blush/20 rounded-2xl text-gold shadow-sm group-hover:scale-110 transition-transform duration-500">
+                <div className="p-3 bg-white border border-blush/20 rounded-2xl text-[#D4AF37] shadow-sm group-hover:scale-110 transition-transform duration-500">
                   {addr.name.toLowerCase().includes("home") ? (
                     <Home size={22} strokeWidth={1.5} />
                   ) : (
@@ -228,17 +217,14 @@ export default function Addresses() {
                 {!addr.isDefault && (
                   <button
                     onClick={() => setDefaultAddress(addr.id)}
-                    className="p-2 text-taupe hover:text-gold transition-colors"
+                    className="p-2 text-taupe hover:text-[#D4AF37] transition-colors"
                     title="Make Default"
                   >
                     <CheckCircle2 size={18} />
                   </button>
                 )}
                 <button
-                  onClick={() => {
-                    deleteAddress(addr.id);
-                    toast.error("Address deleted", { icon: "🗑️" });
-                  }}
+                  onClick={() => deleteAddress(addr.id)}
                   className="p-2 text-taupe hover:text-red-500 transition-colors"
                 >
                   <Trash2 size={18} />
@@ -248,7 +234,10 @@ export default function Addresses() {
 
             <div className="space-y-3 text-sm text-taupe ml-1 flex flex-col">
               <div className="flex items-start gap-3">
-                <MapPin size={16} className="text-gold/50 mt-0.5 shrink-0" />
+                <MapPin
+                  size={16}
+                  className="text-[#D4AF37]/50 mt-0.5 shrink-0"
+                />
                 <p className="leading-relaxed">
                   {addr.street}
                   <br />
@@ -256,7 +245,7 @@ export default function Addresses() {
                 </p>
               </div>
               <div className="flex items-center gap-3 pt-2 border-t border-blush/10 mt-2">
-                <Phone size={14} className="text-gold/50 shrink-0" />
+                <Phone size={14} className="text-[#D4AF37]/50 shrink-0" />
                 <p className="text-noir font-semibold tracking-tight">
                   {addr.phone}
                 </p>

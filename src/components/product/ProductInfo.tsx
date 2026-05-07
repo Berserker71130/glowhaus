@@ -12,6 +12,7 @@ import {
 import * as Accordion from "@radix-ui/react-accordion";
 import { useStore } from "@/store/useStore";
 import { useRouter } from "next/navigation";
+import { showGlowToast } from "@/lib/toast";
 
 interface ProductInfoProps {
   product: any;
@@ -23,15 +24,19 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const [selectedLength, setSelectedLength] = useState(
     product.lengthOptions?.[0] || "",
   );
+
+  // --- FIXED: ZUSTAND SELECTORS (Moved || [] outside to stop infinite loop) ---
   const addToCart = useStore((state: any) => state.addToCart);
   const addToWishlist = useStore((state: any) => state.addToWishlist);
-  // Criteria: Stock indicator logic with refined colors
+  const wishlist = useStore((state: any) => state.wishlist) || [];
+
+  // Criteria: Stock indicator logic
   const getStockStatus = () => {
     if (!product.stockCount || product.stockCount <= 0)
       return { label: "✗ Sold Out", color: "text-rose-600" };
     if (product.stockCount <= 3)
       return {
-        label: `⚠ Only ${product.stockCount} left!`,
+        label: `⚠️ Only ${product.stockCount} left!`,
         color: "text-amber-600",
       };
     return {
@@ -42,33 +47,62 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
   const status = getStockStatus();
 
+  // --- TASK: ADD TO CART TOAST (Gold) ---
   const handleAddToCart = () => {
     addToCart({ ...product, quantity, selectedLength });
+    showGlowToast({
+      message: "Added to your bag! 🛍️",
+      accentColor: "#D4AF37", // Gold
+      icon: "✨",
+    });
   };
 
+  // --- TASK: WISHLIST TOASTS (Rose / Blue) ---
   const handleAddToWishlist = (p: any) => {
-    addToWishlist(p);
+    if (!p) return;
+    const pId = p.id || p._id;
+    // Check if already in wishlist using stable ID check
+    const isAlreadyIn = wishlist.some(
+      (item: any) => (item.id || item._id) === pId,
+    );
+
+    if (isAlreadyIn) {
+      showGlowToast({
+        message: "Already in your wishlist!",
+        accentColor: "#3B82F6", // Blue
+        icon: "💙",
+      });
+    } else {
+      addToWishlist(p);
+      showGlowToast({
+        message: "Saved to wishlist ❤️",
+        accentColor: "#E29595", // Rose
+        icon: "✨",
+      });
+    }
   };
 
   const handleBuyNow = () => {
-    handleAddToCart();
-    router.push("/cart"); // Navigates directly to cart as requested
+    addToCart({ ...product, quantity, selectedLength });
+    router.push("/cart");
   };
 
   return (
     <div className="flex flex-col gap-8">
-      {/* 1. Breadcrumb (Home › Category › Sub) */}
+      {/* 1. Breadcrumb */}
       <nav className="text-[10px] uppercase tracking-[0.2em] text-gray-400">
         Home › {product.category} ›{" "}
-        <span className="text-black">{product.subcategory || "Wigs"}</span>
+        <span className="text-black">
+          {product.subcategory || "Collection"}
+        </span>
       </nav>
 
-      {/* 2. Product Name (Luxury Serif - Removed Uppercase for Elegance) */}
+      {/* 2. Product Name */}
       <div className="space-y-3">
         <h1 className="font-serif text-4xl md:text-5xl text-black leading-tight italic">
           {product.name}
         </h1>
-        {/* 3. Rating Stars + Link */}
+        {/* 3. Rating Stars */}
         <div className="flex items-center gap-4">
           <div className="flex text-[#D4AF37]">
             {[...Array(5)].map((_, i) => (
@@ -89,10 +123,10 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* 4. Price (Large, Gold) */}
+      {/* 4. Price */}
       <div className="flex items-baseline gap-4">
         <span className="text-3xl font-bold text-[#D4AF37]">
-          ₦{product.price.toLocaleString()}
+          ₦{product.price?.toLocaleString()}
         </span>
         {product.originalPrice && product.originalPrice > product.price && (
           <span className="text-xl text-gray-300 line-through">
@@ -108,9 +142,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         {status.label}
       </div>
 
-      {/* 6. Variant Selectors (Pills for Hair, Color Circles for Nails) */}
+      {/* 6. Variant Selectors */}
       <div className="space-y-6 my-6">
-        {/* 1. HAIR LENGTHS */}
         {product.category === "hair" && product.lengthOptions && (
           <div className="space-y-4">
             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
@@ -123,8 +156,8 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                   onClick={() => setSelectedLength(len)}
                   className={`px-6 py-3 rounded-full border text-[10px] font-bold tracking-[0.15em] uppercase transition-all duration-300 ${
                     selectedLength === len
-                      ? "bg-black text-white border-black shadow-md scale-105" // Selected: Black Pill
-                      : "bg-white border-gray-200 text-gray-400 hover:border-black hover:text-black" // Unselected: Clean White Pill
+                      ? "bg-black text-white border-black shadow-md scale-105"
+                      : "bg-white border-gray-200 text-gray-400 hover:border-black hover:text-black"
                   }`}
                 >
                   {len}"
@@ -134,7 +167,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           </div>
         )}
 
-        {/* 2. NAIL OPTIONS (Smart Selector) */}
         {product.category === "nails" && product.shadeOptions && (
           <div className="space-y-4">
             <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
@@ -142,8 +174,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             </label>
             <div className="flex flex-wrap gap-2">
               {product.shadeOptions.map((shade: string) => {
-                const isHex = shade.startsWith("#"); // Checks if it's a color code
-
+                const isHex = shade.startsWith("#");
                 return (
                   <button
                     key={shade}
@@ -190,7 +221,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* 8. CTAs (Primary Gold Gradient) */}
+      {/* 8. CTAs */}
       <div className="flex flex-col gap-3">
         <button
           onClick={handleAddToCart}
@@ -221,10 +252,10 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </p>
       </div>
 
-      {/* 10. Accordion & Payment */}
+      {/* 10. Accordion */}
       <Accordion.Root
         type="single"
-        defaultValue="description" // Criteria: Open by default
+        defaultValue="description"
         collapsible
         className="w-full pt-8"
       >
@@ -234,23 +265,20 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             title: "Description",
             content: product.description,
           },
-          {
-            id: "details",
-            title: "Product Details",
-            content: product.details, // This should be an array in your dummy data
-          },
+          { id: "details", title: "Product Details", content: product.details },
           {
             id: "care",
             title: "Care Instructions",
             content:
               product.careInstructions ||
-              "Wash with sulfate-free shampoo. Air dry only.",
+              (product.category === "nails"
+                ? "Avoid harsh chemicals and excessive water exposure."
+                : "Wash with sulfate-free shampoo. Air dry only."),
           },
           {
             id: "shipping",
             title: "Shipping & Returns",
-            content:
-              "Free shipping on orders over ₦200k. 7-day return policy. Items must be unworn and in original packaging.",
+            content: "Free shipping on orders over ₦200k. 7-day return policy.",
           },
         ].map((item) => (
           <Accordion.Item
@@ -267,13 +295,11 @@ export default function ProductInfo({ product }: ProductInfoProps) {
                 />
               </Accordion.Trigger>
             </Accordion.Header>
-
             <Accordion.Content className="overflow-hidden data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp">
               <div className="pb-6 text-sm text-gray-500 leading-loose font-light">
-                {/* Criteria: Render Product Details as a bullet list */}
                 {item.id === "details" && Array.isArray(item.content) ? (
                   <ul className="list-disc pl-5 space-y-2 decoration-[#D4AF37]">
-                    {item.content.map((detail, index) => (
+                    {item.content.map((detail: string, index: number) => (
                       <li key={index} className="pl-2">
                         {detail}
                       </li>
@@ -288,6 +314,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         ))}
       </Accordion.Root>
 
+      {/* 11. Secure Payments */}
       <div className="flex flex-col items-center gap-4 pt-8 border-t border-gray-50">
         <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-gray-400">
           Secure Checkout With
