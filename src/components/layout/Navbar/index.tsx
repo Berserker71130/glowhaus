@@ -169,18 +169,72 @@ export default function Navbar() {
       <AnimatePresence>
         {hoveredCategory && hoveredCategory !== "Simple" && (
           <motion.div
-            initial={{ opacity: 0, y: -5 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
+            exit={{ opacity: 0, y: -10 }}
             onMouseEnter={() => setHoveredCategory(hoveredCategory)}
             onMouseLeave={() => setHoveredCategory(null)}
-            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] border-b border-gold/20 shadow-2xl hidden md:block z-40"
+            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] border-b border-gold/20 shadow-2xl hidden md:block z-[100]"
           >
-            {/* Mega menu content would go here */}
+            <div className="max-w-7xl mx-auto grid grid-cols-2 gap-12 p-12">
+              {/* Using a constant to safely extract the data */}
+              {(() => {
+                const data = NAV_DATA[hoveredCategory as keyof typeof NAV_DATA];
+
+                // Type Guard: Ensure we aren't dealing with the "Simple" string array
+                if (!data || Array.isArray(data)) return null;
+
+                return (
+                  <>
+                    {/* LEFT SIDE: Links */}
+                    <div className="flex flex-col">
+                      <h2 className="font-serif text-4xl text-gold italic mb-8">
+                        {hoveredCategory}
+                      </h2>
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+                        {data.links.map((link) => (
+                          <Link
+                            key={link}
+                            href={`/category/${link.toLowerCase().replace(/ /g, "-")}`}
+                            className="text-noir/70 hover:text-gold text-sm tracking-wide transition-colors duration-300 italic"
+                          >
+                            {link}
+                          </Link>
+                        ))}
+                      </div>
+
+                      <Link
+                        href="/shop"
+                        className="mt-10 inline-block text-[10px] font-bold uppercase tracking-[0.3em] text-gold border-b border-gold/40 pb-1 w-fit hover:border-gold transition-all"
+                      >
+                        Shop All {hoveredCategory}
+                      </Link>
+                    </div>
+
+                    {/* RIGHT SIDE: Featured Image */}
+                    <div className="relative h-[300px] w-full overflow-hidden rounded-sm group">
+                      <img
+                        src={data.image}
+                        alt={hoveredCategory}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-noir/20 group-hover:bg-noir/10 transition-colors duration-500" />
+                      <div className="absolute bottom-6 left-6 text-white">
+                        <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2">
+                          Luxury Collection
+                        </p>
+                        <p className="font-serif text-2xl italic">
+                          Signature Style
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-
       <MobileMenu />
     </nav>
   );

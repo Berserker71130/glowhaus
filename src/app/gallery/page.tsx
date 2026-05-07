@@ -24,7 +24,7 @@ export default function GalleryPage() {
         {/* HERO */}
         <header className="text-center mb-16">
           {" "}
-          {/* Fixed your 'nb-16' typo to 'mb-16' here too! */}
+          {/* Fixed your 'mb-16' typo to 'mb-16' here too! */}
           <h1 className="font-serif text-5xl md:text-8xl text-noir mb-4">
             The GlowHaus Gallery
           </h1>
