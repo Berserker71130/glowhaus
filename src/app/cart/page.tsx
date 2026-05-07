@@ -16,6 +16,8 @@ import {
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 import { showGlowToast } from "@/lib/toast";
+// 1. IMPORT THE LUXURY EMPTY STATE COMPONENT
+import EmptyState from "@/components/ui/EmptyState";
 
 export default function FullCartPage() {
   const {
@@ -91,7 +93,6 @@ export default function FullCartPage() {
     });
   };
 
-  // --- TASK: POINTS REDEMPTION (Plum) ---
   useEffect(() => {
     if (usePoints) {
       showGlowToast({
@@ -102,18 +103,17 @@ export default function FullCartPage() {
     }
   }, [usePoints]);
 
+  // 2. THE FIX: UPGRADED EMPTY STATE WITH GOLD BAG
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF7F2] p-6">
-        <h2 className="font-serif italic text-3xl text-noir">
-          Your bag is empty
-        </h2>
-        <Link
-          href="/"
-          className="mt-6 flex items-center gap-2 text-gold font-bold uppercase tracking-widest text-[10px]"
-        >
-          <ArrowLeft size={14} /> Continue Shopping
-        </Link>
+      <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]">
+        <EmptyState
+          icon="bag"
+          title="Your bag is empty"
+          subtitle="Looks like you haven't added any luxury pieces to your bag yet. Your next look is just a click away."
+          ctaText="Start Shopping"
+          ctaLink="/shop"
+        />
       </div>
     );
   }

@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer"; // 1. Import the Drawer
 import { Toaster } from "react-hot-toast"; // 2. Import the Toast provider
+import OfflineBanner from "@/components/layout/OffllineBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,7 +40,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#FAF7F2] text-black">
-        {/* 3. Global Toaster (positioned at bottom-center as requested) */}
+        {/* OFFLINE BANNER */}
+        <OfflineBanner />
+        {/*  Global Toaster (positioned at bottom-center as requested) */}
         <Toaster
           position="bottom-right"
           {...({ limit: 3 } as any)}

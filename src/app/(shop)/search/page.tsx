@@ -1,8 +1,8 @@
 "use client";
 
-import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import EmptyState from "@/components/ui/EmptyState";
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -11,32 +11,42 @@ function SearchResults() {
 
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 max-w-7xl mx-auto">
+      {/* Search Header */}
       <h1 className="text-4xl font-bold tracking-tight text-black">
         Search results for "{query}"
       </h1>
 
-      <div className="flex gap-6 border-b border--gray-100 mt-10 mb-8 overflow-x-auto no-scrollbar">
+      {/* Category Tabs */}
+      <div className="flex gap-6 border-b border-gray-100 mt-10 mb-8 overflow-x-auto no-scrollbar">
         {["All", "Hair", "Nails", "Accessories"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${activeTab === tab ? "border-b-2 border-black text-black" : "text-gray-300"}`}
+            className={`pb-4 text-sm font-bold uppercase tracking-widest transition-all ${
+              activeTab === tab
+                ? "border-b-2 border-black text-black"
+                : "text-gray-300"
+            }`}
           >
             {tab}
           </button>
         ))}
       </div>
 
-      <div className="text-center py-32 bg-gray-50/50 rounded-3xl border border-dashed border-gray-200">
-        <Search className="mx-auto text-gray-200 mb-6" size={64} />
-        <h2 className="text-2xl font-bold text-black">No products found</h2>
-        <p className="text-gray-500 mt-2">
-          Try different keywords or browse our categories
-        </p>
-        <button className="mt-8 px-10 py-4 bg-black text-white rounded-full font-bold uppercase text-xs tracking-widest hover:scale-105 transition-transform">
-          Browse All Products
-        </button>
-      </div>
+      {/* THE UPGRADED EMPTY STATE: Matches requirement exactly */}
+      <EmptyState
+        icon="search"
+        title={`No results for "${query}"`}
+        subtitle={
+          <span>
+            Try:{" "}
+            <span className="text-[#D4AF37] font-bold">Brazilian Hair</span> ·{" "}
+            <span className="text-[#D4AF37] font-bold">Press-On Nails</span>
+          </span>
+        }
+        ctaText="Browse All Products"
+        ctaLink="/shop"
+      />
     </div>
   );
 }
@@ -44,7 +54,11 @@ function SearchResults() {
 export default function SearchPage() {
   return (
     <Suspense
-      fallback={<div className="pt-40 text-center">Loading Search...</div>}
+      fallback={
+        <div className="pt-40 text-center font-bold tracking-widest uppercase text-xs">
+          Loading Search...
+        </div>
+      }
     >
       <SearchResults />
     </Suspense>

@@ -7,6 +7,7 @@ import ProductGrid from "./ProductGrid";
 import ActiveFilters from "./ActiveFilters";
 import MobileFilterDrawer from "./MobileFilterDrawer";
 import { SlidersHorizontal } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface CategoryTemplateProps {
   title: string;
@@ -57,6 +58,7 @@ export default function CategoryTemplate({
     if (!hasCategory && !hasPrice && !hasStock) return 48;
 
     // Randomization only happens on the client now
+    // To test the Empty State, you can temporarily change this to return 0
     return Math.floor(Math.random() * (24 - 5 + 1)) + 5;
   }, [searchParams, mounted]);
 
@@ -131,7 +133,29 @@ export default function CategoryTemplate({
               onClearAll={clearAllFilters}
             />
 
-            <ProductGrid />
+            {/* NEW LUXURY EMPTY STATE LOGIC */}
+            {activeFilterCount > 0 ? (
+              <ProductGrid />
+            ) : (
+              <div className="py-20 border-y border-[#D4AF37]/10 mt-8">
+                <EmptyState
+                  icon="search"
+                  title="We couldn't find anything matching your filters"
+                  subtitle={
+                    <span>
+                      Try adjusting your selection or clearing your filters to
+                      see our full
+                      <span className="text-[#D4AF37] italic ml-1">
+                        {title}
+                      </span>{" "}
+                      collection.
+                    </span>
+                  }
+                  ctaText="Clear Filters"
+                  onClear={clearAllFilters}
+                />
+              </div>
+            )}
           </main>
         </div>
       </div>

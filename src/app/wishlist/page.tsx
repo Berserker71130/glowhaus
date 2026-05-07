@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-// 1. Swapped manual toast for the Luxe Engine
 import { showGlowToast } from "@/lib/toast";
 import { products as allProducts } from "@/lib/dummy-data/products";
+// 1. Added EmptyState Import
+import EmptyState from "@/components/ui/EmptyState";
 import {
   ArrowDown,
   BellRing,
   ChevronRight,
-  Heart,
   Share2,
   ShoppingBag,
   Trash2,
@@ -117,7 +117,7 @@ export default function WishlistPage() {
           </div>
         </div>
 
-        {/* WISHLIST GRID */}
+        {/* WISHLIST GRID OR EMPTY STATE */}
         <AnimatePresence mode="popLayout">
           {wishlistItems.length > 0 ? (
             <motion.div
@@ -190,27 +190,23 @@ export default function WishlistPage() {
               ))}
             </motion.div>
           ) : (
-            /* EMPTY STATE */
-            <div className="flex flex-col items-center justify-center py-32 border-y border-noir/5">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="mb-8"
-              >
-                <Heart size={80} strokeWidth={0.5} className="text-gold" />
-              </motion.div>
-              <h2 className="text-3xl font-serif text-noir mb-4">
-                Your Wishlist is empty
-              </h2>
-              <p className="text-noir/40 font-light mb-10 max-w-xs text-center text-sm">
-                Sign in to sync your wishlist across all your devices or browse
-                our shop to add favorites.
-              </p>
-              <Link href="/shop">
-                <Button className="bg-noir text-white px-12 h-14 rounded-none uppercase tracking-widest text-[10px] hover:bg-gold transition-all shadow-xl">
-                  Browse Our Collections
-                </Button>
-              </Link>
+            /* 2. UPGRADED LUXURY EMPTY STATE */
+            <div className="py-20 border-y border-noir/5">
+              <EmptyState
+                icon="heart"
+                title="Your Wishlist is Empty"
+                subtitle={
+                  <span>
+                    Sign in to sync your favorites across devices or explore our
+                    <span className="text-[#D4AF37] italic ml-1">
+                      Luxury Collections
+                    </span>{" "}
+                    to find your next look.
+                  </span>
+                }
+                ctaText="Browse Our Collections"
+                ctaLink="/shop"
+              />
             </div>
           )}
         </AnimatePresence>
