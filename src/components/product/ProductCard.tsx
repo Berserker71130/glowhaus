@@ -25,7 +25,14 @@ export default function ProductCard({
     setMounted(true);
   }, []);
 
-  // Only check if liked once the component has mounted in the browser
+  // --- SMART DATA MAPPING ---
+  // This ensures your plural 'images' array from product.ts works with the singular 'image' the card needs
+  const displayImage =
+    (product as any).images?.[0] ||
+    (product as any).image ||
+    "/placeholder.jpg";
+  const displayReviews =
+    (product as any).reviewCount || (product as any).reviewsCount || 0;
   const isLiked = mounted ? isWishlisted(product.id) : false;
 
   const handleWishlist = (e: React.MouseEvent) => {
@@ -39,6 +46,7 @@ export default function ProductCard({
     addToCart(product, {});
   };
 
+  // --- ANIMATION VARIANTS ---
   const cardVariants = {
     initial: { y: 0 },
     hover: { y: -8 },
@@ -69,21 +77,23 @@ export default function ProductCard({
           className={`w-full h-full ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
         >
           <Image
-            src={product.image || "/placeholder.jpg"}
+            src={displayImage}
             alt={product.name}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
+            priority={false}
           />
         </motion.div>
 
         {/* 2. BADGES OVERLAY */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {product.isSoldOut ? (
-            <span className="bg-black text-white text-[9px] font-bold px-2 py-1 tracking-widest uppercase">
+            <span className="bg-black text-white text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-lg">
               SOLD OUT
             </span>
           ) : (
-            product.badges?.map((badge) => (
+            (product as any).badges?.map((badge: string) => (
               <span
                 key={badge}
                 className={`text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-sm
@@ -93,9 +103,15 @@ export default function ProductCard({
               </span>
             ))
           )}
+          {/* Automatic "NEW" Badge logic if isNew is true in your data */}
+          {(product as any).isNew && !product.isSoldOut && (
+            <span className="bg-black text-white text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-sm">
+              NEW ARRIVAL
+            </span>
+          )}
         </div>
 
-        {/* 3. WISHLIST HEART (The Hydration Target) */}
+        {/* 3. WISHLIST HEART */}
         <button
           onClick={handleWishlist}
           className="absolute top-3 right-3 p-2.5 rounded-full bg-[#FCF9F2]/90 backdrop-blur-md hover:bg-white transition-all duration-300 z-20 shadow-md"
@@ -152,13 +168,15 @@ export default function ProductCard({
               <Star
                 key={i}
                 size={12}
-                fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
+                fill={
+                  i < Math.floor(product.rating || 5) ? "currentColor" : "none"
+                }
                 className="mr-0.5"
               />
             ))}
           </div>
           <span className="text-[10px] text-gray-500 font-bold">
-            ({product.reviewsCount})
+            ({displayReviews})
           </span>
         </div>
 

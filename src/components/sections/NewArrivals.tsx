@@ -10,7 +10,7 @@ const PRODUCTS = [
     category: "Hair",
     price: "₦145,000",
     isNew: true,
-    img: "https://images.unsplash.com/photo-1560869713-7d0a29430863?q=80&w=800",
+    img: "brazilliansilkstraight.webp",
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const PRODUCTS = [
     category: "Nails",
     price: "₦12,500",
     isNew: true,
-    img: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=800",
+    img: "/midnightchrometips.jpg",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const PRODUCTS = [
     category: "Hair",
     price: "₦185,000",
     isNew: true,
-    img: "https://images.unsplash.com/photo-1595475243692-3a99d72ad5d3d?q=80&w=800",
+    img: "/hdlacefrontal.jpg",
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ const PRODUCTS = [
     category: "Accessories",
     price: "₦15,000",
     isNew: true,
-    img: "https://images.unsplash.com/photo-1554050857-c84a8babb521?q=80&w=800",
+    img: "/goldplatedhaircuffs.jpg",
   },
 ];
 

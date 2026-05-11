@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation"; // Added router hooks
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import FilterSidebar from "./FilterSidebar";
 import ProductGrid from "./ProductGrid";
 import ActiveFilters from "./ActiveFilters";
 import MobileFilterDrawer from "./MobileFilterDrawer";
 import { SlidersHorizontal } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
+import { products } from "@/lib/dummy-data"; // Import products to get real count
 
 interface CategoryTemplateProps {
   title: string;
@@ -19,50 +20,40 @@ export default function CategoryTemplate({
   bannerImage,
 }: CategoryTemplateProps) {
   const searchParams = useSearchParams();
-  const router = useRouter(); // Initialize router
-  const pathname = usePathname(); // Initialize pathname
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // AC: Fix hydration by waiting for client-side mount
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // NEW: Handler to remove a single filter chip
   const removeFilter = (filterValue: string) => {
     const params = new URLSearchParams(searchParams);
-
-    // Logic to find which key matches the value and delete it
     if (params.get("category") === filterValue) params.delete("category");
     if (params.get("sort") === filterValue) params.delete("sort");
     if (filterValue === "In Stock") params.delete("stock");
-
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  // NEW: Handler to clear all filters at once
   const clearAllFilters = () => {
     router.replace(pathname, { scroll: false });
   };
 
-  // AC #4 & #6: Logic to handle dynamic filtering and result counting
+  // UPDATED: Now shows the REAL count of products for that category
   const activeFilterCount = useMemo(() => {
-    if (!mounted) return 48;
+    if (!mounted) return 0;
 
-    const hasCategory = searchParams.get("category");
-    const hasPrice = searchParams.get("maxPrice");
-    const hasStock = searchParams.get("stock");
+    // Filter the real products array by the page title
+    const categoryProducts = products.filter(
+      (p: any) => p.category?.toLowerCase() === title.toLowerCase(),
+    );
 
-    if (!hasCategory && !hasPrice && !hasStock) return 48;
+    return categoryProducts.length;
+  }, [mounted, title]);
 
-    // Randomization only happens on the client now
-    // To test the Empty State, you can temporarily change this to return 0
-    return Math.floor(Math.random() * (24 - 5 + 1)) + 5;
-  }, [searchParams, mounted]);
-
-  // AC #5: Map URL params to active chips
   const activeFilters = useMemo(() => {
     const filters: string[] = [];
     const cat = searchParams.get("category");
@@ -78,9 +69,6 @@ export default function CategoryTemplate({
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">
-      {" "}
-      {/* Explicit Ivory BG */}
-      {/* CATEGORY HERO - 260px */}
       <section className="relative w-full h-[260px] bg-black overflow-hidden">
         <img
           src={bannerImage}
@@ -96,7 +84,7 @@ export default function CategoryTemplate({
           </nav>
         </div>
       </section>
-      {/* MOBILE SORT BAR - Sticky */}
+
       <div className="md:hidden sticky top-0 z-30 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-[#D4AF37]/20 px-6 py-4 flex justify-between items-center">
         <button
           onClick={() => setIsDrawerOpen(true)}
@@ -109,14 +97,13 @@ export default function CategoryTemplate({
           {activeFilterCount} Products
         </span>
       </div>
+
       <div className="max-w-[1440px] mx-auto px-4 md:px-10 py-12">
         <div className="flex flex-col md:flex-row gap-12">
-          {/* LEFT: FILTER SIDEBAR - 260px Sticky */}
           <aside className="hidden md:block w-[260px] sticky top-32 h-fit">
             <FilterSidebar />
           </aside>
 
-          {/* RIGHT: MAIN CONTENT */}
           <main className="flex-1">
             <div className="hidden md:flex justify-between items-center border-b border-[#D4AF37]/20 pb-4 mb-6">
               <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
@@ -126,16 +113,15 @@ export default function CategoryTemplate({
               </p>
             </div>
 
-            {/* AC #5: Chips now fully functional with handlers passed down */}
             <ActiveFilters
               filters={activeFilters}
               onRemove={removeFilter}
               onClearAll={clearAllFilters}
             />
 
-            {/* NEW LUXURY EMPTY STATE LOGIC */}
+            {/* KEY CHANGE: We are now passing the 'title' to the ProductGrid */}
             {activeFilterCount > 0 ? (
-              <ProductGrid />
+              <ProductGrid categoryTitle={title} />
             ) : (
               <div className="py-20 border-y border-[#D4AF37]/10 mt-8">
                 <EmptyState

@@ -19,7 +19,7 @@ const BESTSELLER_PRODUCTS = [
     price: "₦145,000",
     rating: 5,
     reviews: 48,
-    img: "https://images.unsplash.com/photo-1560869713-7d0a29430863?q=80&w=800&auto=format&fit=crop",
+    img: "/velvetlacefront.jpg",
     isBestSeller: true,
   },
   {
@@ -28,7 +28,7 @@ const BESTSELLER_PRODUCTS = [
     price: "₦85,000",
     rating: 4,
     reviews: 32,
-    img: "https://images.unsplash.com/photo-1595475243692-3a99d72ad5d3d?q=80&w=800&auto=format&fit=crop",
+    img: "/midnightsilkbundle.jpg",
     isBestSeller: true,
   },
   {
@@ -46,7 +46,7 @@ const BESTSELLER_PRODUCTS = [
     price: "₦45,000",
     rating: 5,
     reviews: 15,
-    img: "https://images.unsplash.com/photo-1554050857-c84a8babb521?q=80&w=800&auto=format&fit=crop",
+    img: "/goldvanitymirror.jpg",
     isBestSeller: true,
   },
 ];

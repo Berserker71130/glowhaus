@@ -20,8 +20,7 @@ export const NAV_DATA: NavDataType = {
       "Hair Care",
       "Accessories",
     ],
-    image:
-      "https://images.unsplash.com/photo-1595475241949-0f02b288d607?q=80&w=500",
+    image: "/hair.jpg",
   },
   Nails: {
     links: [
@@ -31,8 +30,7 @@ export const NAV_DATA: NavDataType = {
       "Tools & Lamps",
       "Nail Care",
     ],
-    image:
-      "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=500",
+    image: "/midnightchrometips.jpg",
   },
   Accessories: {
     links: [
@@ -42,8 +40,7 @@ export const NAV_DATA: NavDataType = {
       "Mirrors & Lighting",
       "Perfume",
     ],
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=500",
+    image: "/accessories.jpg",
   },
   Simple: ["Book", "Gallery", "Sale"],
 };

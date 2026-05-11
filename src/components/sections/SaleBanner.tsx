@@ -8,21 +8,21 @@ const SALE_ITEMS = [
     name: "Brazilian Silk",
     price: "₦145,000",
     salePrice: "₦110,000",
-    img: "https://images.unsplash.com/photo-1560869713-7d0a29430863?q=80&w=200",
+    img: "/brazilliansilkstraight.webp",
   },
   {
     id: 2,
     name: "Chrome Tips",
     price: "₦12,500",
     salePrice: "₦8,500",
-    img: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=200",
+    img: "/midnightchrometips.jpg",
   },
   {
     id: 4,
     name: "Gold Cuff",
     price: "₦15,000",
     salePrice: "₦10,000",
-    img: "https://images.unsplash.com/photo-1554050857-c84a8babb521?q=80&w=200",
+    img: "/goldplatedhaircuffs.jpg",
   },
 ];
 

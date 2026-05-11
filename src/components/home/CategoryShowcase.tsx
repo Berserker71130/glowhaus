@@ -9,25 +9,22 @@ const CATEGORIES = [
     title: "HAIR COLLECTION",
     subtitle: "Wigs ∙ Weaves ∙ Extensions",
     badge: "120+ Products",
-    image:
-      "https://images.unsplash.com/photo-1620331311520-246422ff83f9?q=80&w=1374&auto=format&fit=crop",
-    href: "/shop/hair",
+    image: "/hair.jpg",
+    href: "/hair",
   },
   {
     title: "NAIL STUDIO",
     subtitle: "Press-On ∙ Gel ∙ Acrylic",
     badge: "Nail Kits & Art",
-    image:
-      "https://images.unsplash.com/photo-1604654894610-df490982570d?q=80&w=1370&auto=format&fit=crop",
-    href: "/shop/nails",
+    image: "/nailstudio.jpg",
+    href: "/nails",
   },
   {
     title: "ACCESSORIES",
     subtitle: "Silk ∙ Vanity ∙ Makeup Tools",
     badge: "Premium Picks",
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?q=80&w=1480&auto=format&fit=crop",
-    href: "/shop/accessories",
+    image: "/accessories.jpg",
+    href: "/accessories",
   },
 ];
 
