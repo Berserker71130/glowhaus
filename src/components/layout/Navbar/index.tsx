@@ -14,14 +14,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
-  // Added setMobileMenuOpen and cartOpen/setCartOpen for better control
-  const {
-    cartCount,
-    wishlistItems,
-    setMobileMenuOpen,
-    setCartOpen,
-    cartOpen, // Added to check if cart is already open
-  } = useStore();
+  const { cartCount, wishlistItems, setMobileMenuOpen, setCartOpen, cartOpen } =
+    useStore();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 80);
@@ -29,10 +23,21 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Helper to open cart and ensure mobile menu is closed
   const toggleCart = () => {
     setMobileMenuOpen(false);
     setCartOpen(true);
+  };
+
+  // HELPER TO GENERATE SLUGS THAT MATCH YOUR DATA
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .trim()
+      .replace("hair care", "care")
+      .replace("press-on nails", "press-ons")
+      .replace("closure & frontals", "closures")
+      .replace("nail care", "care")
+      .replace(/\s+/g, "-");
   };
 
   return (
@@ -67,14 +72,17 @@ export default function Navbar() {
       {/* --- MAIN NAVBAR (72px) --- */}
       <motion.div
         animate={{
-          backgroundColor: isScrolled ? "#FAF7F2" : "rgba(250, 247, 242, 0.05)",
-          backdropFilter: isScrolled ? "none" : "blur(12px)",
+          backdropFilter: isScrolled ? "blur(20px)" : "blur(12px)",
           borderBottom: isScrolled
             ? "1px solid rgba(201, 168, 76, 0.1)"
             : "none",
         }}
         transition={{ duration: 0.4 }}
-        className="h-[72px] flex items-center justify-between px-6 md:px-12 transition-colors duration-300"
+        className={`h-[72px] flex items-center justify-between px-6 md:px-12 transition-all duration-500 ${
+          isScrolled
+            ? "bg-[#FAF7F2]/90 dark:bg-noir/90 shadow-sm"
+            : "bg-transparent"
+        }`}
       >
         {/* Left: Logo (Desktop) / Hamburger (Mobile) */}
         <div className="flex items-center gap-4 flex-1">
@@ -110,7 +118,7 @@ export default function Navbar() {
                 onMouseLeave={() => setHoveredCategory(null)}
                 className="h-full flex items-center group cursor-pointer"
               >
-                <span className="text-[11px] uppercase tracking-[0.25em] group-hover:text-gold transition-colors font-bold relative">
+                <span className="text-[11px] uppercase tracking-[0.25em] group-hover:text-gold transition-colors font-bold relative dark:text-ivory">
                   {cat}
                   <motion.span
                     className="absolute -bottom-1 left-0 h-[1.5px] bg-gold"
@@ -124,7 +132,7 @@ export default function Navbar() {
             <Link
               key={link}
               href={`/${link.toLowerCase()}`}
-              className="text-[11px] uppercase tracking-[0.25em] hover:text-gold transition-colors font-bold"
+              className="text-[11px] uppercase tracking-[0.25em] hover:text-gold transition-colors font-bold dark:text-ivory"
             >
               {link}
             </Link>
@@ -133,7 +141,6 @@ export default function Navbar() {
 
         {/* Right: Icons */}
         <div className="flex items-center gap-6 flex-1 justify-end">
-          {/* THE SURGICAL TOGGLE BUTTON */}
           <div className="hover:scale-110 transition-transform">
             <ThemeToggle />
           </div>
@@ -151,7 +158,6 @@ export default function Navbar() {
             )}
           </Link>
 
-          {/* Optimized Cart Trigger */}
           <button
             className="relative group p-2 -mr-2"
             onClick={toggleCart}
@@ -180,14 +186,11 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -10 }}
             onMouseEnter={() => setHoveredCategory(hoveredCategory)}
             onMouseLeave={() => setHoveredCategory(null)}
-            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] dark:bg-[#0D0D0D] border-b border-gold/20 shadow-2xl hidden md:block z-[100]"
+            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] dark:bg-noir border-b border-gold/20 shadow-2xl hidden md:block z-[100]"
           >
             <div className="max-w-7xl mx-auto grid grid-cols-2 gap-12 p-12">
-              {/* Using a constant to safely extract the data */}
               {(() => {
                 const data = NAV_DATA[hoveredCategory as keyof typeof NAV_DATA];
-
-                // Type Guard: Ensure we aren't dealing with the "Simple" string array
                 if (!data || Array.isArray(data)) return null;
 
                 return (
@@ -201,7 +204,8 @@ export default function Navbar() {
                         {data.links.map((link) => (
                           <Link
                             key={link}
-                            href={`/category/${link.toLowerCase().replace(/ /g, "-")}`}
+                            // FIX: Added generateSlug to match category architecture
+                            href={`/category/${generateSlug(link)}`}
                             className="text-noir/70 dark:text-ivory/70 hover:text-gold text-sm tracking-wide transition-colors duration-300 italic"
                           >
                             {link}
@@ -210,7 +214,8 @@ export default function Navbar() {
                       </div>
 
                       <Link
-                        href="/shop"
+                        // THE CRITICAL FIX: Changed hardcoded "/shop" to dynamic category
+                        href={`/category/${hoveredCategory.toLowerCase()}`}
                         className="mt-10 inline-block text-[10px] font-bold uppercase tracking-[0.3em] text-gold border-b border-gold/40 pb-1 w-fit hover:border-gold transition-all"
                       >
                         Shop All {hoveredCategory}
