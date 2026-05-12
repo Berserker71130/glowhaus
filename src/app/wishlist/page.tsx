@@ -138,7 +138,7 @@ export default function WishlistPage() {
                 >
                   <div className="relative aspect-[3/4] mb-6 overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-noir/5 dark:border-white/5 transition-colors">
                     <img
-                      src={product.image || (product as any).images?.[0]}
+                      src={product.images || (product as any).images?.[0]}
                       alt={product.name}
                       className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${product.isSoldOut ? "grayscale" : ""}`}
                     />
