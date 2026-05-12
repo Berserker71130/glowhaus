@@ -97,7 +97,7 @@ export default function CartDrawer() {
                   <div key={item.product.id} className="flex gap-5 group">
                     <div className="w-[60px] h-[80px] flex-shrink-0 bg-white rounded-sm overflow-hidden border border-gold/10 shadow-sm relative">
                       <img
-                        src={item.product.image?.[0] || "/placeholder.png"}
+                        src={item.product.images?.[0] || "/placeholder.png"}
                         alt={item.product.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
@@ -244,7 +244,7 @@ export default function CartDrawer() {
 
                 <div className="grid grid-cols-1 gap-3 pt-2">
                   <Link
-                    href="/cart"
+                    href="/checkout"
                     onClick={() => setCartOpen(false)}
                     className="w-full bg-gold text-noir text-center py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir hover:text-gold transition-all active:scale-[0.98] shadow-lg"
                   >

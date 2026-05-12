@@ -71,16 +71,25 @@ export default function ProductCard({
         <motion.div
           variants={imageVariants}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className={`w-full h-full ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
+          className={`w-full h-full relative ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
         >
+          {/* Primary Image */}
           <Image
             src={displayImage}
             alt={product.name}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover"
-            priority={false}
+            className={`object-cover transition-opacity duration-700 ${product.images?.[1] ? "group-hover:opacity-0" : ""}`}
           />
+
+          {/* Hover Image (The "Back" or "Action" shot) */}
+          {product.images?.[1] && (
+            <Image
+              src={product.images[1]}
+              alt={`${product.name} alternate view`}
+              fill
+              className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            />
+          )}
         </motion.div>
 
         {/* 2. BADGES OVERLAY */}

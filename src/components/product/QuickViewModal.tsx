@@ -28,7 +28,7 @@ export default function QuickViewModal({
   const displayImage =
     (product as any).images?.[0] ||
     (product as any).image ||
-    product.image ||
+    product.images?.[0] ||
     "/placeholder.jpg";
 
   return (

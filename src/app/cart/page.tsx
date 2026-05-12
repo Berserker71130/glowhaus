@@ -133,7 +133,7 @@ export default function FullCartPage() {
               >
                 <div className="w-[120px] h-[160px] flex-shrink-0 bg-white dark:bg-zinc-900 border border-gold/5 rounded-sm overflow-hidden">
                   <img
-                    src={item.product.image?.[0] || "/placeholder.png"}
+                    src={item.product.images?.[0] || "/placeholder.png"}
                     className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700"
                     alt={item.product.name}
                   />
@@ -279,12 +279,14 @@ export default function FullCartPage() {
                   </span>
                 </div>
 
-                <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir dark:hover:bg-white hover:text-gold dark:hover:text-noir transition-all shadow-xl group">
-                  Secure Checkout{" "}
+<Link href='/checkout' className='block w-full mt-8'>
+                <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir dark:hover:bg-white hover:text-gold dark:hover:text-noir transition-all shadow-xl group flex items-center justify-center gap-2">
+                  <span>Secure Checkout{" "}</span>
                   <span className="inline-block transition-transform group-hover:translate-x-2">
                     →
                   </span>
                 </button>
+                </Link>
 
                 <div className="flex justify-center gap-4 pt-6 border-t border-gold/5 text-noir dark:text-ivory">
                   {[

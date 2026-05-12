@@ -21,7 +21,7 @@ export default function AuditPage() {
             }}
           >
             <img
-              src={product.images[0]}
+              src={product.images[0] || "/placeholder.png"}
               alt={product.name}
               style={{
                 width: "100%",

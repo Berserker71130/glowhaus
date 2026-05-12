@@ -229,7 +229,7 @@ export const useStore = create<GlobalStore>()(
                   id: "p1",
                   name: "Glow Essence",
                   price: 65000,
-                  image:
+                  images:
                     "https://images.unsplash.com/photo-1620916566398-39f1143af7be?q=80&w=200",
                   rating: 4.8,
                   reviewsCount: 124,
@@ -243,7 +243,7 @@ export const useStore = create<GlobalStore>()(
                   id: "p2",
                   name: "Silk Wrap",
                   price: 50000,
-                  image:
+                  images:
                     "https://images.unsplash.com/photo-1606411210633-87597f8c950b?q=80&w=200",
                   rating: 5.0,
                   reviewsCount: 88,
@@ -267,7 +267,7 @@ export const useStore = create<GlobalStore>()(
                   id: "p3",
                   name: "Night Cream",
                   price: 35000,
-                  image:
+                  images:
                     "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=200",
                   rating: 4.5,
                   reviewsCount: 42,
@@ -291,7 +291,7 @@ export const useStore = create<GlobalStore>()(
                   id: "p4",
                   name: "Rosehip Cleanser",
                   price: 45000,
-                  image:
+                  images:
                     "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=200",
                   rating: 4.9,
                   reviewsCount: 210,
@@ -315,7 +315,7 @@ export const useStore = create<GlobalStore>()(
                   id: "p5",
                   name: "Travel Mist",
                   price: 28000,
-                  image:
+                  images:
                     "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?q=80&w=200",
                   rating: 4.2,
                   reviewsCount: 15,
