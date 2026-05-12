@@ -19,17 +19,24 @@ export default function QuickViewModal({
 }: QuickViewModalProps) {
   const { addToCart } = useStore();
 
+  // If no product is selected, don't even try to render the modal
   if (!product) return null;
+
+  // --- THE SURGICAL FIX FOR THE RED ERROR ---
+  // We check every possible place the image could be.
+  // If all else fails, we use a placeholder so the 'src' is NEVER empty.
+  const displayImage =
+    (product as any).images?.[0] ||
+    (product as any).image ||
+    product.image ||
+    "/placeholder.jpg";
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
-        {/* Overlay - The dark background */}
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] animate-in fade-in duration-300" />
+        <Dialog.Overlay className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-[100] animate-in fade-in duration-300" />
 
-        {/* Content - The Modal Box */}
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl bg-[#FCF9F2] shadow-2xl z-[101] outline-none animate-in zoom-in-95 duration-300 overflow-hidden border border-[#D4AF37]/20">
-          {/* ACCESSIBILITY FIX: Screen Reader Only Titles */}
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl bg-[#FCF9F2] dark:bg-[#0D0D0D] shadow-2xl z-[101] outline-none animate-in zoom-in-95 duration-300 overflow-hidden border border-[#D4AF37]/20 dark:border-white/10 transition-colors duration-500">
           <Dialog.Title className="sr-only">
             Quick view for {product.name}
           </Dialog.Title>
@@ -39,12 +46,13 @@ export default function QuickViewModal({
 
           <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-y-auto">
             {/* LEFT: Image Section */}
-            <div className="relative w-full md:w-1/2 aspect-[3/4] bg-[#F2EDE4]">
+            <div className="relative w-full md:w-1/2 aspect-[3/4] bg-[#F2EDE4] dark:bg-zinc-800 transition-colors duration-500">
               <Image
-                src={product.image}
+                src={displayImage} // UPDATED TO USE THE SMART CONSTANT
                 alt={product.name}
                 fill
                 className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
               {product.isSoldOut && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
@@ -56,18 +64,17 @@ export default function QuickViewModal({
             </div>
 
             {/* RIGHT: Product Details */}
-            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-[#FCF9F2]">
-              <Dialog.Close className="absolute top-4 right-4 p-2 hover:bg-[#D4AF37]/10 rounded-full transition-colors">
-                <X size={20} className="text-black" />
+            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-[#FCF9F2] dark:bg-zinc-900 transition-colors duration-500">
+              <Dialog.Close className="absolute top-4 right-4 p-2 hover:bg-[#D4AF37]/10 dark:hover:bg-white/10 rounded-full transition-all">
+                <X size={20} className="text-black dark:text-ivory" />
               </Dialog.Close>
 
               <div className="space-y-6">
                 <div>
-                  <h2 className="font-serif text-3xl md:text-4xl text-gray-900 uppercase tracking-tight leading-tight">
+                  <h2 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-ivory uppercase tracking-tight leading-tight transition-colors">
                     {product.name}
                   </h2>
 
-                  {/* Rating in Modal */}
                   <div className="flex items-center gap-2 mt-4">
                     <div className="flex text-[#D4AF37]">
                       {[...Array(5)].map((_, i) => (
@@ -75,15 +82,19 @@ export default function QuickViewModal({
                           key={i}
                           size={14}
                           fill={
-                            i < Math.floor(product.rating)
+                            i < Math.floor(product.rating || 5)
                               ? "currentColor"
                               : "none"
                           }
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] font-bold text-gray-400 tracking-widest">
-                      ({product.reviewsCount} REVIEWS)
+                    <span className="text-[10px] font-bold text-gray-400 dark:text-ivory/40 tracking-widest transition-colors">
+                      (
+                      {(product as any).reviewCount ||
+                        (product as any).reviewsCount ||
+                        0}{" "}
+                      REVIEWS)
                     </span>
                   </div>
                 </div>
@@ -93,13 +104,13 @@ export default function QuickViewModal({
                     ₦{product.price.toLocaleString()}
                   </span>
                   {product.originalPrice && (
-                    <span className="text-lg text-gray-400 line-through italic">
+                    <span className="text-lg text-gray-400 dark:text-white/20 line-through italic transition-colors">
                       ₦{product.originalPrice.toLocaleString()}
                     </span>
                   )}
                 </div>
 
-                <p className="text-sm text-gray-700 leading-relaxed font-light italic">
+                <p className="text-sm text-gray-700 dark:text-ivory/70 leading-relaxed font-light italic transition-colors">
                   Experience the epitome of luxury with the {product.name}.
                   Carefully curated for the Glowhaus woman who values elegance
                   and quality above all else.
@@ -110,12 +121,12 @@ export default function QuickViewModal({
                     disabled={product.isSoldOut}
                     onClick={() => {
                       addToCart(product, {});
-                      onClose(); //Close modal after adding
+                      onClose();
                     }}
                     className={`w-full flex items-center justify-center gap-3 py-5 text-[10px] font-bold uppercase tracking-[0.3em] transition-all ${
                       product.isSoldOut
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-black text-white hover:bg-[#D4AF37]"
+                        ? "bg-gray-200 dark:bg-zinc-800 text-gray-400 dark:text-white/20 cursor-not-allowed"
+                        : "bg-black dark:bg-white text-white dark:text-black hover:bg-[#D4AF37] dark:hover:bg-gold transition-colors duration-300"
                     }`}
                   >
                     <ShoppingBag size={18} />
@@ -124,7 +135,7 @@ export default function QuickViewModal({
                       : "Add to Shopping Bag"}
                   </button>
 
-                  <button className="w-full text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors underline underline-offset-8 decoration-[#D4AF37]/40">
+                  <button className="w-full text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-ivory/40 hover:text-black dark:hover:text-gold transition-colors underline underline-offset-8 decoration-[#D4AF37]/40">
                     View Full Product Details
                   </button>
                 </div>

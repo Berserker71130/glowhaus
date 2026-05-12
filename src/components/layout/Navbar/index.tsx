@@ -8,6 +8,7 @@ import { useStore } from "@/store/useStore";
 import { NAV_DATA } from "./NavData";
 import MobileMenu from "./MobileMenu";
 import SearchOverlay from "@/components/shared/SearchOverlay";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,7 +74,7 @@ export default function Navbar() {
             : "none",
         }}
         transition={{ duration: 0.4 }}
-        className="h-[72px] flex items-center justify-between px-6 md:px-12"
+        className="h-[72px] flex items-center justify-between px-6 md:px-12 transition-colors duration-300"
       >
         {/* Left: Logo (Desktop) / Hamburger (Mobile) */}
         <div className="flex items-center gap-4 flex-1">
@@ -132,6 +133,11 @@ export default function Navbar() {
 
         {/* Right: Icons */}
         <div className="flex items-center gap-6 flex-1 justify-end">
+          {/* THE SURGICAL TOGGLE BUTTON */}
+          <div className="hover:scale-110 transition-transform">
+            <ThemeToggle />
+          </div>
+
           <div className="text-gold hover:scale-110 transition-transform cursor-pointer">
             <SearchOverlay />
           </div>
@@ -174,7 +180,7 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -10 }}
             onMouseEnter={() => setHoveredCategory(hoveredCategory)}
             onMouseLeave={() => setHoveredCategory(null)}
-            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] border-b border-gold/20 shadow-2xl hidden md:block z-[100]"
+            className="absolute top-[108px] left-0 w-full bg-[#FAF7F2] dark:bg-[#0D0D0D] border-b border-gold/20 shadow-2xl hidden md:block z-[100]"
           >
             <div className="max-w-7xl mx-auto grid grid-cols-2 gap-12 p-12">
               {/* Using a constant to safely extract the data */}
@@ -196,7 +202,7 @@ export default function Navbar() {
                           <Link
                             key={link}
                             href={`/category/${link.toLowerCase().replace(/ /g, "-")}`}
-                            className="text-noir/70 hover:text-gold text-sm tracking-wide transition-colors duration-300 italic"
+                            className="text-noir/70 dark:text-ivory/70 hover:text-gold text-sm tracking-wide transition-colors duration-300 italic"
                           >
                             {link}
                           </Link>

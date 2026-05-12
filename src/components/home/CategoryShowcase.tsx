@@ -30,7 +30,10 @@ const CATEGORIES = [
 
 export default function CategoryShowcase() {
   return (
-    <section className="py-24 px-6 lg:px-20 bg-blush">
+    /* 1. Added dark:bg-[#0A0A0A] (a slightly deeper noir than the body) 
+       2. Added transition-colors for that luxury fade
+    */
+    <section className="py-24 px-6 lg:px-20 bg-blush dark:bg-[#0A0A0A] transition-colors duration-500">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {CATEGORIES.map((cat, index) => (
           <motion.div
@@ -46,7 +49,7 @@ export default function CategoryShowcase() {
           >
             <Link
               href={cat.href}
-              className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-noir"
+              className="group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-noir border border-transparent dark:border-gold/10"
             >
               {/* Image with Hover Zoom */}
               <motion.img
@@ -64,7 +67,10 @@ export default function CategoryShowcase() {
 
               {/* Bottom Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-noir/90 via-noir/20 to-transparent flex flex-col justify-end p-8">
-                <h3>{cat.title}</h3>
+                {/* Fixed: Added font and color classes to the H3 */}
+                <h3 className="font-display text-2xl text-white italic mb-1">
+                  {cat.title}
+                </h3>
                 <p className="text-ivory/70 text-sm font-sans mb-6">
                   {cat.subtitle}
                 </p>

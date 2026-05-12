@@ -52,13 +52,15 @@ export default function SaleBanner() {
   }, []);
 
   return (
-    <section className="bg-noir py-24 px-6 lg:px-20 border-y border-gold/10 overflow-hidden">
+    /* Since this is already bg-noir, we just ensure it transitions smoothly and 
+       maybe deepens slightly in true dark mode if needed. */
+    <section className="bg-noir dark:bg-[#050505] py-24 px-6 lg:px-20 border-y border-gold/10 overflow-hidden transition-colors duration-500">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16">
         {/* LEFT: TEXT & TIMER */}
         <div className="text-center lg:text-left space-y-10 flex-1">
           <h2 className="text-5xl lg:text-7xl font-display text-white leading-tight">
             UP TO <span className="text-gold italic">40% OFF</span> <br />
-            <span className="text-2xl md:text-3xl uppercase tracking-[0.2em] font-sans text-ivory/60">
+            <span className="text-2xl md:text-3xl uppercase tracking-[0.2em] font-sans text-ivory/60 transition-colors duration-500">
               End of Season Sale
             </span>
           </h2>
@@ -70,7 +72,7 @@ export default function SaleBanner() {
             <CountdownUnit value={timeLeft.SECS} label="SECS" />
           </div>
 
-          <button className="bg-gold text-noir font-bold px-12 py-5 uppercase text-xs tracking-widest hover:bg-ivory transition-all duration-500 shadow-gold">
+          <button className="bg-gold text-noir font-bold px-12 py-5 uppercase text-xs tracking-widest hover:bg-ivory dark:hover:bg-gold/90 transition-all duration-500 shadow-gold active:scale-95">
             Shop the Sale →
           </button>
         </div>
@@ -80,13 +82,14 @@ export default function SaleBanner() {
           {SALE_ITEMS.map((item) => (
             <div
               key={item.id}
-              className="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-md hover:border-gold/50 transition-all group"
+              /* Enhanced the white/5 to white/10 in dark mode for better card definition */
+              className="bg-white/5 dark:bg-white/[0.08] border border-white/10 dark:border-gold/20 p-4 rounded-xl backdrop-blur-md hover:border-gold/50 transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
                   <img
                     src={item.img}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     alt="sale item"
                   />
                 </div>

@@ -57,14 +57,14 @@ export default function PersonalInfo() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700 bg-[#F9F6F2] p-8 rounded-3xl border border-blush/20 shadow-sm">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-700 bg-[#F9F6F2] dark:bg-white/[0.02] p-8 rounded-3xl border border-blush/20 dark:border-white/5 shadow-sm transition-colors">
       {/* AVATAR SECTION */}
-      <section className="flex flex-col sm:flex-row items-center gap-8 p-6 rounded-2xl bg-white/40 border border-white shadow-sm backdrop-blur-sm">
+      <section className="flex flex-col sm:flex-row items-center gap-8 p-6 rounded-2xl bg-white/40 dark:bg-white/[0.03] border border-white dark:border-white/10 shadow-sm backdrop-blur-sm transition-all">
         <div
           className="relative group cursor-pointer"
           onClick={handleAvatarClick}
         >
-          <div className="w-32 h-32 rounded-full border border-gold/20 p-1.5 flex items-center justify-center bg-white shadow-md transition-all duration-500 group-hover:scale-[1.02]">
+          <div className="w-32 h-32 rounded-full border border-gold/20 p-1.5 flex items-center justify-center bg-white dark:bg-noir shadow-md transition-all duration-500 group-hover:scale-[1.02]">
             {avatar && avatar.length > 10 ? (
               <img
                 src={avatar}
@@ -72,7 +72,7 @@ export default function PersonalInfo() {
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#F3E7E4] to-[#F9F6F2] grid place-items-center overflow-hidden">
+              <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#F3E7E4] to-[#F9F6F2] dark:from-white/5 dark:to-white/[0.01] grid place-items-center overflow-hidden">
                 <span className="text-4xl font-serif text-gold uppercase tracking-tighter leading-none block transform translate-y-[2px]">
                   {getInitials(formData.displayName || displayName)}
                 </span>
@@ -85,10 +85,10 @@ export default function PersonalInfo() {
         </div>
 
         <div className="text-center sm:text-left space-y-1">
-          <h2 className="text-2xl font-serif text-noir tracking-tight">
+          <h2 className="text-2xl font-serif text-noir dark:text-ivory tracking-tight transition-colors">
             Your Portrait
           </h2>
-          <p className="text-sm text-taupe max-w-[280px]">
+          <p className="text-sm text-taupe dark:text-ivory/40 max-w-[280px] transition-colors">
             Personalize your GlowHaus profile appearance.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function PersonalInfo() {
       {/* FORM SECTION */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
         <div className="space-y-2.5">
-          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">
+          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 dark:text-ivory/40 ml-1 transition-colors">
             Display Name
           </label>
           <input
@@ -106,12 +106,12 @@ export default function PersonalInfo() {
             onChange={(e) =>
               setFormData({ ...formData, displayName: e.target.value })
             }
-            className="w-full px-5 py-4 bg-white border border-blush/30 rounded-2xl focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm"
+            className="w-full px-5 py-4 bg-white dark:bg-white/[0.03] border border-blush/30 dark:border-white/10 rounded-2xl focus:border-gold dark:focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm text-noir dark:text-ivory"
           />
         </div>
 
         <div className="space-y-2.5">
-          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">
+          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 dark:text-ivory/40 ml-1 transition-colors">
             Email Address
           </label>
           <input
@@ -120,12 +120,12 @@ export default function PersonalInfo() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="w-full px-5 py-4 bg-white border border-blush/30 rounded-2xl focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm"
+            className="w-full px-5 py-4 bg-white dark:bg-white/[0.03] border border-blush/30 dark:border-white/10 rounded-2xl focus:border-gold dark:focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm text-noir dark:text-ivory"
           />
         </div>
 
         <div className="space-y-2.5">
-          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">
+          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 dark:text-ivory/40 ml-1 transition-colors">
             Phone Number
           </label>
           <input
@@ -134,19 +134,19 @@ export default function PersonalInfo() {
             onChange={(e) =>
               setFormData({ ...formData, phone: e.target.value })
             }
-            className="w-full px-5 py-4 bg-white border border-blush/30 rounded-2xl focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm"
+            className="w-full px-5 py-4 bg-white dark:bg-white/[0.03] border border-blush/30 dark:border-white/10 rounded-2xl focus:border-gold dark:focus:border-gold focus:ring-4 focus:ring-gold/5 outline-none transition-all duration-300 shadow-sm text-noir dark:text-ivory"
           />
         </div>
 
         <div className="space-y-2.5">
-          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 ml-1">
+          <label className="text-[10px] font-bold uppercase tracking-[0.3em] text-noir/40 dark:text-ivory/40 ml-1 transition-colors">
             Date of Birth
           </label>
           <input
             type="date"
             value={formData.dob}
             onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-            className="w-full px-5 py-4 bg-white border border-blush/30 rounded-2xl focus:border-gold outline-none transition-all duration-300 shadow-sm"
+            className="w-full px-5 py-4 bg-white dark:bg-white/[0.03] border border-blush/30 dark:border-white/10 rounded-2xl focus:border-gold dark:focus:border-gold outline-none transition-all duration-300 shadow-sm text-noir dark:text-ivory"
           />
         </div>
       </div>
@@ -154,7 +154,7 @@ export default function PersonalInfo() {
       <div className="pt-8 flex justify-center md:justify-start">
         <button
           onClick={handleSave}
-          className="group relative flex items-center justify-center gap-5 bg-noir text-white px-14 py-5 rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-noir/20 active:scale-95"
+          className="group relative flex items-center justify-center gap-5 bg-noir dark:bg-ivory text-white dark:text-noir px-14 py-5 rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-noir/20 dark:hover:shadow-white/5 active:scale-95"
         >
           <span className="relative z-10 font-bold tracking-[0.4em] uppercase text-[11px]">
             Save Changes

@@ -1,20 +1,27 @@
-/* 1. Imports must come first */
+/* 1. Imports */
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap");
 
-/* 2. Then the Tailwind directives */
+/* 2. Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 3. Then your custom styles */
-* {
-  box-sizing: border-box;
+/* 3. Base Styles - The Surgical Way */
+@layer base {
+  body {
+    /* This sets your default Light Mode colors */
+    @apply bg-[#faf7f2] text-[#0d0d0d] antialiased;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  /* This tells the body what to do when Dark Mode is active */
+  .dark body {
+    @apply bg-[#0D0D0D] text-[#FAF7F2];
+  }
 }
 
-body {
-  background-color: #faf7f2;
-  color: #0d0d0d;
-  font-family: "DM Sans", sans-serif;
+* {
+  box-sizing: border-box;
 }
 
 /* Custom Gold Scrollbar */
@@ -22,7 +29,7 @@ body {
   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf7f2;
+  @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #c9a84c;

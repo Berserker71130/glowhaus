@@ -16,7 +16,6 @@ import {
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 import { showGlowToast } from "@/lib/toast";
-// 1. IMPORT THE LUXURY EMPTY STATE COMPONENT
 import EmptyState from "@/components/ui/EmptyState";
 
 export default function FullCartPage() {
@@ -103,10 +102,9 @@ export default function FullCartPage() {
     }
   }, [usePoints]);
 
-  // 2. THE FIX: UPGRADED EMPTY STATE WITH GOLD BAG
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FAF7F2] dark:bg-noir transition-colors duration-500">
         <EmptyState
           icon="bag"
           title="Your bag is empty"
@@ -119,9 +117,9 @@ export default function FullCartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pt-32 pb-20 px-6 sm:px-12">
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-noir pt-32 pb-20 px-6 sm:px-12 transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
-        <h1 className="font-serif italic text-4xl text-noir mb-12">
+        <h1 className="font-serif italic text-4xl text-noir dark:text-ivory mb-12">
           Shopping Bag
         </h1>
 
@@ -133,7 +131,7 @@ export default function FullCartPage() {
                 key={item.product.id}
                 className="flex gap-6 border-b border-gold/10 pb-10 group"
               >
-                <div className="w-[120px] h-[160px] flex-shrink-0 bg-white border border-gold/5 rounded-sm overflow-hidden">
+                <div className="w-[120px] h-[160px] flex-shrink-0 bg-white dark:bg-zinc-900 border border-gold/5 rounded-sm overflow-hidden">
                   <img
                     src={item.product.image?.[0] || "/placeholder.png"}
                     className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700"
@@ -144,7 +142,7 @@ export default function FullCartPage() {
                 <div className="flex-1 flex flex-col justify-between py-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-sm font-bold uppercase tracking-widest text-noir">
+                      <h3 className="text-sm font-bold uppercase tracking-widest text-noir dark:text-ivory">
                         {item.product.name}
                       </h3>
                       <p className="text-[10px] text-gold font-black mt-1 uppercase italic">
@@ -162,35 +160,35 @@ export default function FullCartPage() {
 
                   <div className="flex justify-between items-end">
                     <div className="flex items-center gap-6">
-                      <div className="flex items-center border border-noir/10 rounded-full px-4 py-2 gap-6 bg-white shadow-sm">
+                      <div className="flex items-center border border-noir/10 dark:border-white/10 rounded-full px-4 py-2 gap-6 bg-white dark:bg-white/5 shadow-sm transition-all">
                         <button
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity - 1)
                           }
-                          className="text-gold"
+                          className="text-gold hover:scale-110 transition-transform"
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="text-xs font-black">
+                        <span className="text-xs font-black text-noir dark:text-ivory">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity + 1)
                           }
-                          className="text-gold"
+                          className="text-gold hover:scale-110 transition-transform"
                         >
                           <Plus size={14} />
                         </button>
                       </div>
                       <button
                         onClick={() => handleSaveForLater(item)}
-                        className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-tighter text-noir/40 hover:text-gold transition-colors"
+                        className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-tighter text-noir/40 dark:text-ivory/40 hover:text-gold transition-colors"
                       >
                         <Heart size={14} /> Save for later
                       </button>
                     </div>
-                    <p className="text-lg font-black text-noir tracking-tighter">
+                    <p className="text-lg font-black text-noir dark:text-ivory tracking-tighter">
                       ₦{(item.product.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
@@ -199,7 +197,7 @@ export default function FullCartPage() {
             ))}
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-noir hover:text-gold transition-colors pt-4"
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-noir dark:text-ivory hover:text-gold transition-colors pt-4"
             >
               <ArrowLeft size={16} /> Continue Shopping
             </Link>
@@ -207,26 +205,26 @@ export default function FullCartPage() {
 
           {/* RIGHT: ORDER SUMMARY */}
           <div className="lg:col-span-4 relative">
-            <div className="sticky top-32 space-y-8 bg-white p-8 border border-gold/10 rounded-sm shadow-sm">
-              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-noir border-b border-gold/5 pb-4">
+            <div className="sticky top-32 space-y-8 bg-white dark:bg-white/[0.03] p-8 border border-gold/10 dark:border-white/10 rounded-sm shadow-sm transition-all">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-noir dark:text-ivory border-b border-gold/5 pb-4">
                 Order Summary
               </h2>
               <div className="space-y-4">
-                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40">
+                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40 dark:text-ivory/40">
                   <span>Subtotal</span>
-                  <span className="text-noir font-black text-sm">
+                  <span className="text-noir dark:text-ivory font-black text-sm">
                     ₦{cartTotal.toLocaleString()}
                   </span>
                 </div>
-                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40">
+                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-noir/40 dark:text-ivory/40">
                   <span>Delivery</span>
-                  <span className="text-green-600 font-black">
+                  <span className="text-green-600 dark:text-green-400 font-black">
                     {cartTotal >= 50000 ? "FREE" : "Calculated at next step"}
                   </span>
                 </div>
 
                 <div className="pt-4">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-noir/40 mb-2 block">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-noir/40 dark:text-ivory/40 mb-2 block">
                     Promo Code
                   </label>
                   <motion.div
@@ -238,17 +236,17 @@ export default function FullCartPage() {
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                       placeholder="ENTER CODE"
-                      className="flex-1 bg-[#FAF7F2] border border-gold/10 px-4 py-3 text-[11px] font-bold focus:outline-none focus:border-gold"
+                      className="flex-1 bg-[#FAF7F2] dark:bg-white/5 border border-gold/10 dark:border-white/10 px-4 py-3 text-[11px] font-bold text-noir dark:text-ivory focus:outline-none focus:border-gold transition-all"
                     />
                     <button
                       onClick={handleApplyPromo}
-                      className="bg-noir text-white px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gold transition-colors"
+                      className="bg-noir dark:bg-ivory text-white dark:text-noir px-6 py-3 text-[10px] font-black uppercase tracking-widest hover:bg-gold dark:hover:bg-gold transition-colors"
                     >
                       Apply
                     </button>
                   </motion.div>
                   {appliedCode && (
-                    <p className="text-[9px] text-green-600 mt-2 font-bold uppercase italic tracking-widest">
+                    <p className="text-[9px] text-green-600 dark:text-green-400 mt-2 font-bold uppercase italic tracking-widest">
                       Code Applied: {appliedCode}
                     </p>
                   )}
@@ -257,23 +255,23 @@ export default function FullCartPage() {
                 <div className="flex items-center justify-between pt-4 pb-2 border-y border-gold/5">
                   <div className="flex items-center gap-2">
                     <Tag size={14} className="text-gold" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-noir">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-noir dark:text-ivory">
                       Redeem 500 GlowPoints
                     </span>
                   </div>
                   <button
                     onClick={() => setUsePoints(!usePoints)}
-                    className={`w-10 h-5 rounded-full transition-colors relative ${usePoints ? "bg-gold" : "bg-gray-200"}`}
+                    className={`w-10 h-5 rounded-full transition-colors relative ${usePoints ? "bg-gold" : "bg-gray-200 dark:bg-white/10"}`}
                   >
                     <motion.div
                       animate={{ x: usePoints ? 22 : 2 }}
-                      className="w-4 h-4 bg-white rounded-full absolute top-0.5 shadow-sm"
+                      className="w-4 h-4 bg-white dark:bg-ivory rounded-full absolute top-0.5 shadow-sm"
                     />
                   </button>
                 </div>
 
                 <div className="flex justify-between items-center pt-6">
-                  <span className="text-sm font-black uppercase tracking-widest">
+                  <span className="text-sm font-black uppercase tracking-widest text-noir dark:text-ivory">
                     Total
                   </span>
                   <span className="text-3xl font-black text-gold tracking-tighter">
@@ -281,14 +279,14 @@ export default function FullCartPage() {
                   </span>
                 </div>
 
-                <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir hover:text-gold transition-all shadow-xl group">
+                <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir dark:hover:bg-white hover:text-gold dark:hover:text-noir transition-all shadow-xl group">
                   Secure Checkout{" "}
                   <span className="inline-block transition-transform group-hover:translate-x-2">
                     →
                   </span>
                 </button>
 
-                <div className="flex justify-center gap-4 pt-6 border-t border-gold/5">
+                <div className="flex justify-center gap-4 pt-6 border-t border-gold/5 text-noir dark:text-ivory">
                   {[
                     { icon: ShieldCheck, label: "Secure" },
                     { icon: RotateCcw, label: "Returns" },

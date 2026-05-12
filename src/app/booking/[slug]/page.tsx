@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-// 1. Import Luxe Toast Engine
 import { showGlowToast } from "@/lib/toast";
 
 export default function AppointmentBookingFlow({
@@ -48,7 +47,6 @@ export default function AppointmentBookingFlow({
 
   const progress = (step / 3) * 100;
 
-  // --- TASK: BOOKING CONFIRMED (Gold) ---
   const handleFinalConfirm = () => {
     const reference = `GH-2025-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
 
@@ -71,7 +69,6 @@ export default function AppointmentBookingFlow({
       rating: 0,
     });
 
-    // Fire Luxe Gold Toast per Criteria
     showGlowToast({
       message: "Your glow-up is scheduled! ✨",
       accentColor: "#C5A059",
@@ -92,15 +89,16 @@ export default function AppointmentBookingFlow({
     return <SuccessCard serviceName={service.name} clear={clearBooking} />;
 
   return (
-    <main className="min-h-screen bg-[#FCFAFA] pt-28 pb-20 px-6">
+    /* SURGERY: Background updated to theme-aware noir */
+    <main className="min-h-screen bg-[#FCFAFA] dark:bg-noir pt-28 pb-20 px-6 transition-colors duration-500">
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
           <div className="flex justify-between items-end mb-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-noir">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-noir dark:text-ivory/60 transition-colors">
               Step {step} of 3
             </span>
           </div>
-          <div className="h-[2px] w-full bg-noir/10 relative">
+          <div className="h-[2px] w-full bg-noir/10 dark:bg-white/10 relative">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
@@ -161,10 +159,8 @@ export default function AppointmentBookingFlow({
   );
 }
 
-// Sub-components (StepOne, StepTwo, StepThree) - Keeping your original logic
 function StepOne({ service, onNext, state }: any) {
   const [viewDate, setViewDate] = useState(new Date());
-  const today = new Date();
   const daysInMonth = new Date(
     viewDate.getFullYear(),
     viewDate.getMonth() + 1,
@@ -189,9 +185,10 @@ function StepOne({ service, onNext, state }: any) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
       <div className="lg:col-span-7 space-y-8">
-        <div className="bg-white p-8 border border-noir/10 shadow-sm">
+        {/* SURGERY: Calendar container now supports dark mode */}
+        <div className="bg-white dark:bg-white/[0.03] p-8 border border-noir/10 dark:border-white/10 shadow-sm transition-all">
           <div className="flex justify-between items-center mb-8">
-            <h3 className="font-serif text-xl italic text-noir">
+            <h3 className="font-serif text-xl italic text-noir dark:text-ivory">
               {viewDate.toLocaleString("default", {
                 month: "long",
                 year: "numeric",
@@ -204,7 +201,7 @@ function StepOne({ service, onNext, state }: any) {
                     new Date(viewDate.setMonth(viewDate.getMonth() - 1)),
                   )
                 }
-                className="text-noir hover:text-gold"
+                className="p-2 hover:bg-noir/5 dark:hover:bg-white/5 dark:text-ivory"
               >
                 <ChevronLeft size={18} />
               </button>
@@ -214,87 +211,71 @@ function StepOne({ service, onNext, state }: any) {
                     new Date(viewDate.setMonth(viewDate.getMonth() + 1)),
                   )
                 }
-                className="text-noir hover:text-gold"
+                className="p-2 hover:bg-noir/5 dark:hover:bg-white/5 dark:text-ivory"
               >
                 <ChevronRight size={18} />
               </button>
             </div>
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center text-[9px] font-black tracking-widest text-noir/40 mb-4 uppercase">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d}>{d}</div>
-            ))}
-          </div>
           <div className="grid grid-cols-7 gap-2">
-            {Array(firstDay)
-              .fill(null)
-              .map((_, i) => (
-                <div key={i} />
-              ))}
-            {Array.from({ length: daysInMonth }, (_, i) => i + 1).map((d) => {
-              const dateKey = `${viewDate.getFullYear()}-${viewDate.getMonth() + 1}-${d}`;
-              const isToday =
-                d === today.getDate() &&
-                viewDate.getMonth() === today.getMonth();
+            {/* NEW FIXED CODE */}
+            {["S", "M", "T", "W", "T", "F", "S"].map((d, index) => (
+              <div
+                key={`${d}-${index}`}
+                className="text-[10px] font-black text-center text-noir/30 dark:text-ivory/30 pb-4"
+              >
+                {d}
+              </div>
+            ))}
+            {Array.from({ length: daysInMonth }).map((_, i) => {
+              const day = i + 1;
+              const dateStr = `${viewDate.getFullYear()}-${viewDate.getMonth() + 1}-${day}`;
+              const isSelected = state.selectedDate === dateStr;
               return (
                 <button
-                  key={d}
-                  onClick={() => state.setDate(dateKey)}
-                  className={`aspect-square text-[11px] font-bold relative flex items-center justify-center transition-all
-                  ${state.selectedDate === dateKey ? "bg-gold text-white" : "text-noir hover:text-gold"}`}
+                  key={day}
+                  onClick={() => state.setDate(dateStr)}
+                  className={`aspect-square flex items-center justify-center text-xs transition-all ${
+                    isSelected
+                      ? "bg-noir dark:bg-white text-white dark:text-noir"
+                      : "hover:bg-gold/10 text-noir dark:text-ivory"
+                  }`}
                 >
-                  {d}
-                  {isToday && (
-                    <div className="absolute bottom-1 w-1 h-1 bg-gold rounded-full" />
-                  )}
+                  {day}
                 </button>
               );
             })}
           </div>
         </div>
-        {state.selectedDate && (
-          <div className="space-y-4">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-noir/70">
-              Available Slots
-            </h4>
-            <div className="grid grid-cols-4 gap-2">
-              {timeSlots.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => state.setTime(t)}
-                  className={`py-4 text-[10px] font-bold border transition-all
-                  ${state.selectedTime === t ? "bg-gold border-gold text-white" : "border-noir/20 text-noir hover:border-noir"}`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
-      <div className="lg:col-span-5">
-        <div className="bg-noir text-white p-8 space-y-6 shadow-xl">
-          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/60 border-b border-white/10 pb-4">
-            Service Summary
-          </p>
-          <div>
-            <h2 className="font-serif text-2xl mb-1">{service.name}</h2>
-            <p className="text-[10px] text-white/70 italic">
-              {service.details[0]}
-            </p>
+      <div className="lg:col-span-5 space-y-8">
+        <div className="bg-white dark:bg-white/[0.03] p-8 border border-noir/10 dark:border-white/10 transition-all">
+          <h3 className="text-[10px] font-black uppercase tracking-widest text-noir dark:text-ivory mb-6">
+            Select Time
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {timeSlots.map((slot) => (
+              <button
+                key={slot}
+                disabled={bookedSlots.includes(slot)}
+                onClick={() => state.setTime(slot)}
+                className={`py-3 text-[10px] font-bold tracking-widest transition-all ${
+                  state.selectedTime === slot
+                    ? "bg-gold text-white"
+                    : "bg-noir/5 dark:bg-white/5 text-noir dark:text-ivory hover:bg-noir hover:text-white"
+                } ${bookedSlots.includes(slot) ? "opacity-20 cursor-not-allowed" : ""}`}
+              >
+                {slot}
+              </button>
+            ))}
           </div>
-          <div className="flex justify-between items-end pt-4">
-            <span className="text-2xl font-serif text-gold">
-              ₦{service.price.toLocaleString()}
-            </span>
-            <button
-              disabled={!state.selectedDate || !state.selectedTime}
-              onClick={onNext}
-              className="bg-white text-noir px-6 py-3 text-[10px] font-black uppercase tracking-widest disabled:opacity-30"
-            >
-              Next
-            </button>
-          </div>
+          <button
+            disabled={!state.selectedDate || !state.selectedTime}
+            onClick={onNext}
+            className="w-full mt-8 py-4 bg-noir dark:bg-white text-white dark:text-noir text-[10px] font-black uppercase tracking-widest disabled:opacity-30 transition-all"
+          >
+            Continue to Details
+          </button>
         </div>
       </div>
     </div>
@@ -303,47 +284,46 @@ function StepOne({ service, onNext, state }: any) {
 
 function StepTwo({ onNext, onBack, form }: any) {
   return (
-    <div className="max-w-2xl mx-auto bg-white p-10 border border-noir/10 shadow-lg space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-noir/70">
-            Name
-          </label>
-          <div className="p-4 bg-noir/[0.03] border border-noir/10 text-sm font-serif italic text-noir/80">
-            {form.displayName}
-          </div>
-        </div>
-        <div className="space-y-2">
-          <label className="text-[9px] font-black uppercase tracking-widest text-noir/70">
-            Phone Number*
+    <div className="max-w-2xl mx-auto bg-white dark:bg-white/[0.03] p-10 border border-noir/10 dark:border-white/10 transition-all">
+      <h2 className="font-serif text-3xl text-noir dark:text-ivory mb-8">
+        Your Contact Details
+      </h2>
+      <div className="space-y-6">
+        <div>
+          <label className="text-[10px] font-black uppercase text-noir/40 dark:text-ivory/40">
+            Phone Number
           </label>
           <input
             value={form.bookingPhone}
             onChange={(e) => form.setBookingPhone(e.target.value)}
-            type="tel"
-            className="w-full p-4 border border-noir/20 outline-none text-sm text-noir"
+            className="w-full mt-2 bg-transparent border-b border-noir/10 dark:border-white/10 py-3 focus:border-gold outline-none text-noir dark:text-ivory transition-all"
+            placeholder="+234..."
+          />
+        </div>
+        <div>
+          <label className="text-[10px] font-black uppercase text-noir/40 dark:text-ivory/40">
+            Special Notes (Optional)
+          </label>
+          <textarea
+            value={form.bookingNotes}
+            onChange={(e) => form.setBookingNotes(e.target.value)}
+            className="w-full mt-2 bg-transparent border-b border-noir/10 dark:border-white/10 py-3 focus:border-gold outline-none text-noir dark:text-ivory transition-all min-h-[100px]"
+            placeholder="Any allergies or specific requests?"
           />
         </div>
       </div>
-      <textarea
-        value={form.bookingNotes}
-        onChange={(e) => form.setBookingNotes(e.target.value)}
-        className="w-full p-4 border border-noir/20 outline-none text-sm min-h-[100px]"
-        placeholder="Allergies or notes..."
-      />
-      <div className="flex gap-4 pt-4">
+      <div className="flex gap-4 mt-12">
         <button
           onClick={onBack}
-          className="flex-1 py-4 border border-noir/20 text-noir text-[10px] font-black uppercase tracking-widest"
+          className="flex-1 py-4 border border-noir/10 dark:border-white/10 text-noir dark:text-ivory text-[10px] font-black uppercase tracking-widest hover:bg-noir/5 transition-all"
         >
           Back
         </button>
         <button
           onClick={onNext}
-          disabled={!form.bookingPhone}
-          className="flex-1 py-4 bg-noir text-white text-[10px] font-black uppercase tracking-widest"
+          className="flex-1 py-4 bg-noir dark:bg-white text-white dark:text-noir text-[10px] font-black uppercase tracking-widest hover:bg-gold transition-all"
         >
-          Next
+          Confirm Summary
         </button>
       </div>
     </div>
@@ -352,70 +332,85 @@ function StepTwo({ onNext, onBack, form }: any) {
 
 function StepThree({ service, onBack, onConfirm, data }: any) {
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-white p-10 border border-noir/10 shadow-lg space-y-10">
-        <h3 className="font-serif text-2xl italic text-center text-noir">
-          Review Booking
-        </h3>
-        <div className="space-y-4 border-y border-noir/10 py-8 text-[10px] uppercase tracking-widest">
-          <div className="flex justify-between">
-            <span>Service</span>
-            <span className="font-bold">{service.name}</span>
-          </div>
-          <div className="flex justify-between">
-            <span>Date & Time</span>
-            <span className="font-bold">
-              {data.selectedDate} @ {data.selectedTime}
-            </span>
-          </div>
+    <div className="max-w-2xl mx-auto bg-white dark:bg-white/[0.03] p-10 border border-noir/10 dark:border-white/10 transition-all">
+      <div className="text-center mb-10">
+        <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4 text-gold">
+          <ShieldCheck size={32} />
         </div>
-        <div className="flex justify-between items-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-noir/40">
-            Total
+        <h2 className="font-serif text-3xl text-noir dark:text-ivory">
+          Review Appointment
+        </h2>
+      </div>
+      <div className="space-y-4 border-y border-noir/5 dark:border-white/5 py-8 mb-8">
+        <div className="flex justify-between">
+          <span className="text-[10px] font-black uppercase text-noir/40 dark:text-ivory/40 transition-colors">
+            Service
           </span>
-          <span className="text-3xl font-serif text-gold">
+          <span className="text-sm font-bold text-noir dark:text-ivory transition-colors">
+            {service.name}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-[10px] font-black uppercase text-noir/40 dark:text-ivory/40 transition-colors">
+            Date & Time
+          </span>
+          <span className="text-sm font-bold text-noir dark:text-ivory transition-colors">
+            {data.selectedDate} at {data.selectedTime}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-[10px] font-black uppercase text-noir/40 dark:text-ivory/40 transition-colors">
+            Amount
+          </span>
+          <span className="text-sm font-bold text-gold transition-colors">
             ₦{service.price.toLocaleString()}
           </span>
         </div>
       </div>
-      <button
-        onClick={onConfirm}
-        className="w-full py-5 bg-gold text-white text-[10px] font-black uppercase tracking-widest shadow-xl"
-      >
-        Confirm Booking
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={onBack}
+          className="flex-1 py-4 border border-noir/10 dark:border-white/10 text-noir dark:text-ivory text-[10px] font-black uppercase tracking-widest transition-all"
+        >
+          Back
+        </button>
+        <button
+          onClick={onConfirm}
+          className="flex-1 py-4 bg-noir dark:bg-white text-white dark:text-noir text-[10px] font-black uppercase tracking-widest shadow-xl transition-all"
+        >
+          Schedule Now
+        </button>
+      </div>
     </div>
   );
 }
 
-// SUCCESS STATE - UPDATED WITH YOUR EXACT LOGIC
 function SuccessCard({ serviceName, clear }: any) {
   return (
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className="max-w-lg mx-auto text-center py-20 bg-white border border-gold/20 shadow-2xl relative"
+      className="max-w-md mx-auto mt-32 text-center bg-white dark:bg-white/[0.03] p-12 border border-noir/10 dark:border-white/10 shadow-2xl transition-all"
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-gold" />
-      <div className="w-20 h-20 bg-gold/10 text-gold rounded-full flex items-center justify-center mx-auto mb-8">
+      <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 text-white">
         <Check size={40} />
       </div>
-      <h2 className="font-serif text-4xl italic mb-4 text-noir">
+      <h2 className="font-serif text-4xl italic mb-4 text-noir dark:text-ivory transition-colors">
         Booking Confirmed
       </h2>
-      <p className="text-xs text-noir/60 mb-8">
+      <p className="text-xs text-noir/60 dark:text-ivory/60 mb-8 transition-colors">
         Ref: GH-2025-{Math.floor(1000 + Math.random() * 9000)} • {serviceName}
       </p>
       <div className="px-12 space-y-4">
-        <button className="w-full py-4 border border-noir/20 text-noir text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-noir/5 transition-all">
+        <button className="w-full py-4 border border-noir/20 dark:border-white/20 text-noir dark:text-ivory text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-noir/5 dark:hover:bg-white/5 transition-all">
           <Sparkles size={14} className="text-gold" /> Add To Calendar
         </button>
         <button
           onClick={() => {
             clear();
-            window.location.href = "appointments";
+            window.location.href = "/account/appointments";
           }}
-          className="w-full py-4 bg-noir text-white text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-noir/90 transition-all"
+          className="w-full py-4 bg-noir dark:bg-white text-white dark:text-noir text-[9px] font-black uppercase tracking-widest shadow-lg hover:bg-noir/90 dark:hover:bg-ivory transition-all"
         >
           View My Appointments
         </button>

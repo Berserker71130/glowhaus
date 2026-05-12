@@ -48,12 +48,12 @@ export default function NewArrivals() {
   );
 
   return (
-    // Section background is Ivory
-    <section className="py-24 px-6 lg:px-20 bg-ivory">
+    /* Added dark:bg-[#0D0D0D] and transition */
+    <section className="py-24 px-6 lg:px-20 bg-ivory dark:bg-[#0D0D0D] transition-colors duration-500">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <h2 className="text-4xl lg:text-5xl font-display text-noir mb-8 italic">
+            <h2 className="text-4xl lg:text-5xl font-display text-noir dark:text-ivory mb-8 italic transition-colors duration-500">
               New Arrivals
             </h2>
             <div className="flex gap-8 overflow-x-auto pb-2">
@@ -64,7 +64,7 @@ export default function NewArrivals() {
                   className={`relative pb-2 text-xs uppercase tracking-widest font-bold transition-all ${
                     activeTab === tab
                       ? "text-gold"
-                      : "text-noir/40 hover:text-noir"
+                      : "text-noir/40 dark:text-ivory/40 hover:text-noir dark:hover:text-ivory"
                   }`}
                 >
                   {tab}
@@ -97,27 +97,24 @@ export default function NewArrivals() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                // THE "POP" FIX:
-                // 1. bg-white: Sharp contrast against Ivory
-                // 2. border-taupe/20: Defined edge using brand muted color
-                // 3. shadow-card: Using your design system's custom card shadow
-                // 4. hover:shadow-gold: Using your design system's gold glow
-                className="group bg-white p-4 rounded-xl border border-taupe/20 shadow-card hover:shadow-gold hover:border-gold/50 transition-all duration-500"
+                /* Updated card: added dark:bg-zinc-900, dark border, and adjusted shadow */
+                className="group bg-white dark:bg-zinc-900 p-4 rounded-xl border border-taupe/20 dark:border-white/5 shadow-card hover:shadow-gold hover:border-gold/50 transition-all duration-500"
               >
-                <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-blush">
+                {/* Updated inner image container bg */}
+                <div className="relative aspect-[4/5] mb-6 overflow-hidden rounded-lg bg-blush dark:bg-zinc-800">
                   <img
                     src={product.img}
                     className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-1000"
                     alt={product.name}
                   />
-                  {/* Floating Badge to break the image line */}
                   <div className="absolute top-3 left-3 bg-rose-deep text-white text-[9px] font-bold px-3 py-1 rounded-sm uppercase tracking-widest">
                     New
                   </div>
                 </div>
 
                 <div className="text-center px-2">
-                  <h3 className="font-display italic text-xl text-noir leading-tight mb-2">
+                  {/* Added dark text flip */}
+                  <h3 className="font-display italic text-xl text-noir dark:text-ivory leading-tight mb-2 transition-colors duration-500">
                     {product.name}
                   </h3>
                   <p className="text-gold font-bold text-lg">{product.price}</p>

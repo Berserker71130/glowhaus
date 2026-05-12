@@ -53,9 +53,9 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative w-full h-[85vh] lg:h-screen bg-ivory overflow-hidden">
-      {/* Background Texture Overlay */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/p6.png')]" />
+    <section className="relative w-full h-[85vh] lg:h-screen bg-ivory dark:bg-[#0D0D0D] overflow-hidden transition-colors duration-500">
+      {/* Background Texture Overlay - Reduced opacity in dark mode for luxury feel */}
+      <div className="absolute inset-0 opacity-10 dark:opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/p6.png')]" />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -80,7 +80,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-5xl lg:text-7xl font-display text-noir leading-[1.1] whitespace-pre-line"
+              className="text-5xl lg:text-7xl font-display text-noir dark:text-ivory leading-[1.1] whitespace-pre-line transition-colors duration-500"
             >
               {HERO_SLIDES[current].title}
             </motion.h1>
@@ -89,7 +89,7 @@ export default function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-taupe text-lg lg:text-xl max-w-md font-sans"
+              className="text-taupe dark:text-ivory/70 text-lg lg:text-xl max-w-md font-sans transition-colors duration-500"
             >
               {HERO_SLIDES[current].subtext}
             </motion.p>
@@ -119,7 +119,7 @@ export default function Hero() {
                 (text) => (
                   <div
                     key={text}
-                    className="flex items-center gap-2 text-xs font-semibold text-noir/70 uppercase tracking-wider"
+                    className="flex items-center gap-2 text-xs font-semibold text-noir/70 dark:text-ivory/60 uppercase tracking-wider transition-colors duration-500"
                   >
                     <Check className="w-4 h-4 text-gold" />
                     {text}
@@ -140,12 +140,16 @@ export default function Hero() {
             />
 
             {/* FLOATING CARDS */}
-            <motion.div className="absolute bottom-12 left-10 bg-white/80 backdrop-blur-md p-4 rounded-xl shadow-xl animate-float">
-              <p className="text-sm font-bold text-noir">★ 4.9 Rating</p>
-              <p className="text-xs text-taupe">2,000+ happy clients</p>
+            <motion.div className="absolute bottom-12 left-10 bg-white/80 dark:bg-noir/80 backdrop-blur-md p-4 rounded-xl shadow-xl animate-float transition-colors duration-500">
+              <p className="text-sm font-bold text-noir dark:text-ivory transition-colors duration-500">
+                ★ 4.9 Rating
+              </p>
+              <p className="text-xs text-taupe dark:text-ivory/60">
+                2,000+ happy clients
+              </p>
             </motion.div>
 
-            <motion.div className="absolute top-32 right-10 bg-noir/90 text-white p-4 rounded-xl shadow-xl animate-float [animation-delay:1s]">
+            <motion.div className="absolute top-32 right-10 bg-noir/90 dark:bg-ivory/10 text-white dark:text-ivory p-4 rounded-xl shadow-xl animate-float [animation-delay:1s] transition-colors duration-500 border border-transparent dark:border-gold/20">
               <p className="text-sm font-bold">Book Today</p>
               <p className="text-xs text-gold/80">Limited slots available</p>
             </motion.div>

@@ -28,15 +28,15 @@ export default function DashboardPage() {
     >
       {/* WELCOME BANNER */}
       <section>
-        <h1 className="font-serif text-5xl text-noir mb-3 italic">
-          Good morning, {displayName.split("")[0]!}
+        <h1 className="font-serif text-5xl text-noir dark:text-ivory mb-3 italic transition-colors duration-500">
+          Good morning, {displayName.split(" ")[0]}!
         </h1>
-        <p className="text-noir/40 text-sm tracking-wide">
+        <p className="text-noir/40 dark:text-ivory/40 text-sm tracking-wide transition-colors duration-500">
           Manage your aesthetic journey and loyalty rewards.
         </p>
       </section>
 
-      {/* 4 STATS CARDS */}
+      {/* 4 STATS CARDS - Note: Ensure StatCard component itself handles dark mode! */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Orders"
@@ -61,13 +61,15 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* RECENT ORDERS */}
-        <div className="lg:col-span-2 bg-white rounded-[2.5em] border border-noir/5 p-10 shadow-sm">
+        {/* RECENT ORDERS: Swapped bg-white for dynamic bg */}
+        <div className="lg:col-span-2 bg-white dark:bg-white/[0.03] rounded-[2.5em] border border-noir/5 dark:border-white/10 p-10 shadow-sm transition-all duration-500">
           <div className="flex items-center justify-between mb-10">
-            <h3 className="font-serif text-2xl text-noir">Recent Orders</h3>
+            <h3 className="font-serif text-2xl text-noir dark:text-ivory">
+              Recent Orders
+            </h3>
             <Link
               href="/account/orders"
-              className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gold hover:text-noir transition-all"
+              className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gold hover:text-noir dark:hover:text-ivory transition-all"
             >
               View All Orders{" "}
               <ArrowRight
@@ -81,27 +83,28 @@ export default function DashboardPage() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-noir/5 last:border-0 last:pb-0"
+                className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-noir/5 dark:border-white/5 last:border-0 last:pb-0 transition-colors"
               >
                 <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 bg-[#F9F9F9] rounded-2xl flex items-center justify-center text-noir/20">
+                  {/* Icon box background adjusted for dark mode */}
+                  <div className="w-14 h-14 bg-[#F9F9F9] dark:bg-white/5 rounded-2xl flex items-center justify-center text-noir/20 dark:text-ivory/20 transition-colors">
                     <Package size={28} />
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-widest text-noir mb-1">
+                    <p className="text-[11px] font-black uppercase tracking-widest text-noir dark:text-ivory mb-1">
                       Order #GH-990{i}
                     </p>
-                    <p className="text-xs text-noir/40 font-medium">
+                    <p className="text-xs text-noir/40 dark:text-ivory/40 font-medium">
                       Feb {18 - i}, 2026 • 2 Items
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-8">
                   <div className="text-right">
-                    <p className="text-sm font-serif text-noir mb-1">
+                    <p className="text-sm font-serif text-noir dark:text-ivory mb-1">
                       ₦{(45000 * i).toLocaleString()}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-[9px] font-black uppercase tracking-widest">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black uppercase tracking-widest">
                       <CheckCircle2 size={10} /> Delivered
                     </span>
                   </div>
@@ -113,8 +116,8 @@ export default function DashboardPage() {
 
         {/* SIDE COLUMN: APPOINTMENT & LOYALTY */}
         <div className="space-y-8">
-          {/* UPCOMING APPOINTMENT */}
-          <div className="bg-noir text-white rounded-[2.5em] p-10 relative overflow-hidden group">
+          {/* UPCOMING APPOINTMENT: Added border for dark mode visibility */}
+          <div className="bg-noir dark:bg-black text-white rounded-[2.5em] p-10 relative overflow-hidden group border border-transparent dark:border-white/10 transition-all duration-500">
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 blur-3xl rounded-full group-hover:bg-gold/20 transition-all duration-700" />
 
             <div className="flex items-center gap-2 text-gold mb-8">
@@ -164,8 +167,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* LOYALTY SNAPSHOT */}
-          <div className="bg-gold p-10 rounded-[2.5em] text-noir">
+          {/* LOYALTY SNAPSHOT: Gold remains gold, but text contrast checked */}
+          <div className="bg-gold p-10 rounded-[2.5em] text-noir shadow-lg shadow-gold/5">
             <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-2 opacity-60">
               Status
             </p>
@@ -179,7 +182,7 @@ export default function DashboardPage() {
               </div>
               <Link
                 href="/loyalty"
-                className="p-3 bg-noir text-white rounded-2xl hover:scale-110 transition-transform"
+                className="p-3 bg-noir text-white rounded-2xl hover:scale-110 transition-transform flex items-center justify-center"
               >
                 <ArrowRight size={20} />
               </Link>

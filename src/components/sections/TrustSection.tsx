@@ -37,7 +37,7 @@ const TrustSection = () => {
   }, []);
 
   return (
-    <section className="py-20 border-t border-gold/10">
+    <section className="py-20 border-t border-gold/10 transition-colors duration-500">
       {/* TESTIMONIAL CAROUSEL */}
       <div className="max-w-4xl mx-auto px-4 text-center h-[250px] flex items-center justify-center">
         <AnimatePresence mode="wait">
@@ -58,11 +58,11 @@ const TrustSection = () => {
                 />
               ))}
             </div>
-            <p className="text-xl md:text-2xl font-medium text-gray-800 italic">
+            <p className="text-xl md:text-2xl font-medium text-gray-800 dark:text-ivory/90 italic transition-colors duration-500">
               "{testimonials[index].text}"
             </p>
             <div className="flex items-center justify-center gap-3">
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-gray-900 dark:text-ivory transition-colors duration-500">
                 {testimonials[index].name}
               </span>
               <span className="text-[10px] uppercase tracking-widest bg-[#D4AF37]/10 text-[#D4AF37] px-3 py-1 rounded-full border border-[#D4AF37]/20">
@@ -75,59 +75,59 @@ const TrustSection = () => {
 
       {/* TRUST/USP SECTION */}
       <div className="max-w-7xl mx-auto px-4 mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-y-12 md:gap-y-0 py-12 border-y border-[#D4AF37]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-y-12 md:gap-y-0 py-12 border-y border-[#D4AF37] dark:border-[#D4AF37]/30 transition-colors duration-500">
           {/* Column 1 Delivery */}
-          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37]">
+          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37] dark:border-[#D4AF37]/30">
             <Truck
               className="text-[#D4AF37] mb-4"
               size={32}
               strokeWidth={1.2}
             />
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 mb-2">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 dark:text-ivory mb-2 transition-colors duration-500">
               Fast Delivery
             </h4>
-            <p className="text-gray-600 text-xs">
+            <p className="text-gray-600 dark:text-ivory/60 text-xs transition-colors duration-500">
               Next day delivery within Lagos, 2-3 days nationwide
             </p>
           </div>
 
           {/* Column 2 Authentic  */}
-          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37]">
+          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37] dark:border-[#D4AF37]/30">
             <ShieldCheck
               className="text-[#D4AF37] mb-4"
               size={32}
               strokeWidth={1.2}
             />
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 mb-2">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 dark:text-ivory mb-2 transition-colors duration-500">
               100% Authentic
             </h4>
-            <p className="text-gray-600 text-xs">
+            <p className="text-gray-600 dark:text-ivory/60 text-xs transition-colors duration-500">
               All products are geniune and quality-verified
             </p>
           </div>
 
           {/* Column 3: Returns */}
-          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37]">
+          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37] dark:border-[#D4AF37]/30">
             <RefreshCw
               className="text-[#D4AF37] mb-4"
               size={32}
               strokeWidth={1.2}
             />
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 mb-2">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 dark:text-ivory mb-2 transition-colors duration-500">
               Easy Returns
             </h4>
-            <p className="text-gray-600 text-xs">
+            <p className="text-gray-600 dark:text-ivory/60 text-xs transition-colors duration-500">
               14-day hassle-free return policy
             </p>
           </div>
 
           {/* Column 4: Loyalty */}
-          <div className="flex flex-col items-center text-center px-4 md:border-r border-[#D4AF37]">
+          <div className="flex flex-col items-center text-center px-4">
             <Gem className="text-[#D4AF37] mb-4" size={32} strokeWidth={1.2} />
-            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 mb-2">
+            <h4 className="font-bold text-xs uppercase tracking-[0.2em] text-gray-900 dark:text-ivory mb-2 transition-colors duration-500">
               Loyalty Rewards
             </h4>
-            <p className="text-gray-600 text-xs">
+            <p className="text-gray-600 dark:text-ivory/60 text-xs transition-colors duration-500">
               Earn points on every purchase
             </p>
           </div>
@@ -138,13 +138,12 @@ const TrustSection = () => {
       <div className="mt-24">
         <div className="flex flex-col items-center mb-10">
           <div className="h-[1px] w-12 bg-[#D4AF37] mb-4"></div>
-          <h4 className="text-[11px] font-bold tracking-[0.4em] text-gray-900 uppercase">
+          <h4 className="text-[11px] font-bold tracking-[0.4em] text-gray-900 dark:text-ivory uppercase transition-colors duration-500">
             On the Gram
           </h4>
         </div>
 
         <div className="max-w-[1400px] mx-auto px-4">
-          {/* We removed bg-white here. Now it uses the Global Ivory */}
           <div className="grid grid-cols-2 md:grid-cols-6 gap-2 p-2 border border-[#D4AF37]/30">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div
@@ -152,7 +151,7 @@ const TrustSection = () => {
                 className="relative group aspect-square overflow-hidden border border-[#D4AF37]/10"
               >
                 <img
-                  src={`https://picsum.photos/400/400?random=${item}`} // Used a different source for variety
+                  src={`https://picsum.photos/400/400?random=${item}`}
                   alt="GlowHaus Aesthetic"
                   className="object-cover w-full h-full transition-transform duration-1000 group-hover:scale-110"
                 />
@@ -169,7 +168,7 @@ const TrustSection = () => {
         </div>
 
         <div className="flex justify-center mt-12 pb-10">
-          <button className="px-8 py-3 border border-gray-900 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-gray-900 hover:text-white transition-all duration-500 flex items-center gap-3 bg-transparent">
+          <button className="px-8 py-3 border border-gray-900 dark:border-ivory/40 text-[10px] font-bold tracking-[0.3em] uppercase hover:bg-gray-900 dark:hover:bg-ivory hover:text-white dark:hover:text-noir transition-all duration-500 flex items-center gap-3 bg-transparent text-gray-900 dark:text-ivory">
             <FaInstagram size={14} />
             Follow @GLOWHAUS
           </button>

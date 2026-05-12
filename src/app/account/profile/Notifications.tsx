@@ -14,12 +14,12 @@ export default function Notifications() {
   };
 
   return (
-    <div className="space-y-10 animate-in fade-in duration-700 bg-white/30 p-6 rounded-2xl">
-      <div className="border-b border-blush/20 pb-6">
-        <h3 className="text-2xl font-serif text-noir tracking-tight">
+    <div className="space-y-10 animate-in fade-in duration-700 bg-white/30 dark:bg-white/[0.02] p-6 rounded-2xl transition-colors">
+      <div className="border-b border-blush/20 dark:border-white/10 pb-6">
+        <h3 className="text-2xl font-serif text-noir dark:text-ivory tracking-tight">
           Notification Preferences
         </h3>
-        <p className="text-sm text-taupe mt-2 italic">
+        <p className="text-sm text-taupe dark:text-ivory/40 mt-2 italic">
           Choose how you'd like to stay connected with the GlowHaus experience.
         </p>
       </div>
@@ -54,11 +54,13 @@ export default function Notifications() {
             ].map((item) => (
               <div
                 key={item.key}
-                className="flex items-center justify-between p-5 rounded-2xl bg-white border border-blush/20 hover:border-gold/30 transition-colors shadow-sm"
+                className="flex items-center justify-between p-5 rounded-2xl bg-white dark:bg-white/[0.03] border border-blush/20 dark:border-white/10 hover:border-gold/30 transition-all shadow-sm"
               >
                 <div className="space-y-1">
-                  <p className="font-medium text-noir text-sm">{item.label}</p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <p className="font-medium text-noir dark:text-ivory text-sm">
+                    {item.label}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground dark:text-ivory/40 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -99,11 +101,13 @@ export default function Notifications() {
             ].map((item) => (
               <div
                 key={item.key}
-                className="flex items-center justify-between p-5 rounded-2xl bg-white border border-blush/20 hover:border-gold/30 transition-colors shadow-sm"
+                className="flex items-center justify-between p-5 rounded-2xl bg-white dark:bg-white/[0.03] border border-blush/20 dark:border-white/10 hover:border-gold/30 transition-all shadow-sm"
               >
                 <div className="space-y-1">
-                  <p className="font-medium text-noir text-sm">{item.label}</p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <p className="font-medium text-noir dark:text-ivory text-sm">
+                    {item.label}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground dark:text-ivory/40 leading-relaxed">
                     {item.desc}
                   </p>
                 </div>
@@ -122,11 +126,11 @@ export default function Notifications() {
       </div>
 
       {/* FOOTER NOTE */}
-      <div className="pt-8 flex items-start gap-4 border-t border-blush/20">
+      <div className="pt-8 flex items-start gap-4 border-t border-blush/20 dark:border-white/10">
         <div className="p-2 bg-gold/5 rounded-full">
           <ShieldCheck className="text-gold" size={16} />
         </div>
-        <p className="text-[10px] text-taupe leading-relaxed uppercase tracking-wider max-w-xl">
+        <p className="text-[10px] text-taupe dark:text-ivory/60 leading-relaxed uppercase tracking-wider max-w-xl">
           Your privacy is paramount. GlowHaus will never share your contact
           details with third-party advertisers. Standard messaging rates may
           apply for SMS alerts.
