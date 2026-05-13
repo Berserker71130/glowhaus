@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link"; // IMPORTED LINK
 import { motion } from "framer-motion";
 import { Eye, Heart, ShoppingBag, Star } from "lucide-react";
 import { Product } from "@/types";
@@ -23,7 +24,6 @@ export default function ProductCard({
     setMounted(true);
   }, []);
 
-  // UPDATED: Now using the correct keys from new Product interface
   const displayImage = product.images[0] || "/placeholder.jpg";
   const displayReviews = product.reviewCount || 0;
   const isLiked = mounted ? isWishlisted(product.id) : false;
@@ -36,6 +36,7 @@ export default function ProductCard({
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault(); // Added preventDefault
     addToCart(product, {});
   };
 
@@ -49,7 +50,11 @@ export default function ProductCard({
       }}
       className="group relative flex flex-col w-full bg-[#FCF9F2] dark:bg-noir border border-[#D4AF37]/10 dark:border-white/5 transition-all duration-500 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
     >
-      <div className="relative aspect-square overflow-hidden bg-[#F2EDE4] dark:bg-zinc-900 transition-colors duration-500">
+      {/* WRAP IMAGE IN LINK FOR MOBILE ACCESS */}
+      <Link
+        href={`/product/${product.id}`}
+        className="relative aspect-square overflow-hidden bg-[#F2EDE4] dark:bg-zinc-900 transition-colors duration-500"
+      >
         <motion.div
           variants={{
             initial: { scale: 1 },
@@ -58,7 +63,6 @@ export default function ProductCard({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className={`w-full h-full relative ${product.isSoldOut ? "grayscale brightness-75" : ""}`}
         >
-          {/* Primary Image */}
           <Image
             src={displayImage}
             alt={product.name}
@@ -67,7 +71,6 @@ export default function ProductCard({
             className={`object-cover transition-opacity duration-700 ${product.images[1] ? "group-hover:opacity-0" : ""}`}
           />
 
-          {/* Hover Image - Using the correct array index */}
           {product.images[1] && (
             <Image
               src={product.images[1]}
@@ -79,7 +82,7 @@ export default function ProductCard({
           )}
         </motion.div>
 
-        {/* BADGES OVERLAY - Updated from .badges to .tags */}
+        {/* BADGES */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {product.isSoldOut ? (
             <span className="bg-black dark:bg-ivory dark:text-noir text-white text-[8px] font-black px-2 py-1 tracking-[0.2em] uppercase shadow-lg transition-colors">
@@ -96,14 +99,9 @@ export default function ProductCard({
               </span>
             ))
           )}
-          {product.isNew && !product.isSoldOut && (
-            <span className="bg-black dark:bg-ivory dark:text-noir text-white text-[8px] font-black px-2 py-1 tracking-[0.2em] uppercase shadow-sm transition-colors">
-              NEW ARRIVAL
-            </span>
-          )}
         </div>
 
-        {/* WISHLIST HEART */}
+        {/* WISHLIST HEART - STOP PROPAGATION TO PREVENT LINK CLICK */}
         <button
           onClick={handleWishlist}
           className="absolute top-3 right-3 p-2 rounded-full bg-[#FCF9F2]/80 dark:bg-noir/60 backdrop-blur-md hover:bg-white dark:hover:bg-gold transition-all duration-300 z-20"
@@ -118,7 +116,7 @@ export default function ProductCard({
           />
         </button>
 
-        {/* HOVER ACTION BAR */}
+        {/* DESKTOP HOVER ACTION BAR (Still hidden on mobile) */}
         <motion.div
           variants={{
             initial: { y: "100%", opacity: 0 },
@@ -134,7 +132,11 @@ export default function ProductCard({
           ) : (
             <>
               <button
-                onClick={() => onQuickView(product)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onQuickView(product);
+                }}
                 className="flex-1 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-white transition-all duration-300 border-r border-white/10 dark:border-noir/10"
               >
                 <Eye size={12} /> View
@@ -148,13 +150,15 @@ export default function ProductCard({
             </>
           )}
         </motion.div>
-      </div>
+      </Link>
 
       {/* PRODUCT INFO */}
       <div className="flex flex-col py-4 px-3 gap-1">
-        <h3 className="font-serif text-[13px] md:text-[14px] text-noir dark:text-ivory leading-tight line-clamp-1 min-h-[18px] uppercase tracking-widest transition-colors duration-500">
-          {product.name}
-        </h3>
+        <Link href={`/product/${product.id}`}>
+          <h3 className="font-serif text-[13px] md:text-[14px] text-noir dark:text-ivory leading-tight line-clamp-1 min-h-[18px] uppercase tracking-widest transition-colors duration-500 hover:text-[#D4AF37]">
+            {product.name}
+          </h3>
+        </Link>
 
         <div className="flex items-center gap-2">
           <div className="flex text-[#D4AF37]">
@@ -167,7 +171,7 @@ export default function ProductCard({
               />
             ))}
           </div>
-          <span className="text-[9px] text-gray-500 dark:text-ivory/30 font-bold transition-colors">
+          <span className="text-[9px] text-gray-500 dark:text-ivory/30 font-bold">
             ({displayReviews})
           </span>
         </div>
@@ -183,9 +187,9 @@ export default function ProductCard({
           )}
         </div>
 
-        {/* MOBILE BUTTON */}
+        {/* MOBILE ADD TO BAG */}
         <button
-          onClick={(e) => !product.isSoldOut && handleAddToCart(e)}
+          onClick={handleAddToCart}
           className={`mt-3 w-full py-2.5 text-[8px] font-black uppercase tracking-[0.1em] transition-all duration-300 md:hidden border
             ${
               product.isSoldOut
@@ -193,7 +197,7 @@ export default function ProductCard({
                 : "bg-noir dark:bg-ivory text-white dark:text-noir border-noir dark:border-ivory active:bg-[#D4AF37]"
             }`}
         >
-          {product.isSoldOut ? "Notify" : "Add to Bag"}
+          {product.isSoldOut ? "Notify Me" : "Add to Bag"}
         </button>
       </div>
     </motion.div>
