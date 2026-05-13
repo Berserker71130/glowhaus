@@ -45,12 +45,12 @@ export default function ProductCard({
 
   const cardVariants = {
     initial: { y: 0 },
-    hover: { y: -8 },
+    hover: { y: -4 }, // Subtler lift for slim cards
   };
 
   const imageVariants = {
     initial: { scale: 1 },
-    hover: { scale: 1.08 },
+    hover: { scale: 1.05 },
   };
 
   const actionBarVariants = {
@@ -64,10 +64,10 @@ export default function ProductCard({
       whileHover="hover"
       variants={cardVariants}
       /* Updated bg to handle dark mode and border colors */
-      className="group relative flex flex-col w-full bg-[#FCF9F2] dark:bg-zinc-900 border border-[#D4AF37]/10 dark:border-white/5 transition-all duration-500 hover:shadow-[0_20px_50px_-20px_rgba(212,175,55,0.3)]"
+      className="group relative flex flex-col w-full bg-[#FCF9F2] dark:bg-noir border border-[#D4AF37]/10 dark:border-white/5 transition-all duration-500 hover:shadow-[0_15px_40px_-15px_rgba(212,175,55,0.2)]"
     >
-      {/* 1. IMAGE CONTAINER */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-[#F2EDE4] dark:bg-zinc-800 transition-colors duration-500">
+      {/* 1. SLIM RECTANGULAR IMAGE CONTAINER (Changed from 3/4 to 16/10) */}
+      <div className="relative aspect-[16/10] overflow-hidden bg-[#F2EDE4] dark:bg-zinc-900 transition-colors duration-500">
         <motion.div
           variants={imageVariants}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -78,6 +78,7 @@ export default function ProductCard({
             src={displayImage}
             alt={product.name}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={`object-cover transition-opacity duration-700 ${product.images?.[1] ? "group-hover:opacity-0" : ""}`}
           />
 
@@ -87,6 +88,7 @@ export default function ProductCard({
               src={product.images[1]}
               alt={`${product.name} alternate view`}
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700"
             />
           )}
@@ -95,22 +97,22 @@ export default function ProductCard({
         {/* 2. BADGES OVERLAY */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {product.isSoldOut ? (
-            <span className="bg-black dark:bg-white dark:text-black text-white text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-lg transition-colors">
+            <span className="bg-black dark:bg-ivory dark:text-noir text-white text-[8px] font-black px-2 py-1 tracking-[0.2em] uppercase shadow-lg transition-colors">
               SOLD OUT
             </span>
           ) : (
             (product as any).badges?.map((badge: string) => (
               <span
                 key={badge}
-                className={`text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-sm transition-colors
-                    ${badge === "SALE" ? "bg-[#D4AF37] text-white" : "bg-black dark:bg-white text-white dark:text-black"}`}
+                className={`text-[8px] font-black px-2 py-1 tracking-[0.2em] uppercase shadow-sm transition-colors
+                    ${badge === "SALE" ? "bg-[#D4AF37] text-white" : "bg-black dark:bg-ivory text-white dark:text-noir"}`}
               >
                 {badge}
               </span>
             ))
           )}
           {(product as any).isNew && !product.isSoldOut && (
-            <span className="bg-black dark:bg-white dark:text-black text-white text-[9px] font-bold px-2 py-1 tracking-widest uppercase shadow-sm transition-colors">
+            <span className="bg-black dark:bg-ivory dark:text-noir text-white text-[8px] font-black px-2 py-1 tracking-[0.2em] uppercase shadow-sm transition-colors">
               NEW ARRIVAL
             </span>
           )}
@@ -119,10 +121,10 @@ export default function ProductCard({
         {/* 3. WISHLIST HEART */}
         <button
           onClick={handleWishlist}
-          className="absolute top-3 right-3 p-2.5 rounded-full bg-[#FCF9F2]/90 dark:bg-noir/80 backdrop-blur-md hover:bg-white dark:hover:bg-gold transition-all duration-300 z-20 shadow-md"
+          className="absolute top-3 right-3 p-2 rounded-full bg-[#FCF9F2]/80 dark:bg-noir/60 backdrop-blur-md hover:bg-white dark:hover:bg-gold transition-all duration-300 z-20"
         >
           <Heart
-            size={16}
+            size={14}
             className={`transition-colors duration-300 ${
               isLiked
                 ? "fill-[#D4AF37] text-[#D4AF37]"
@@ -131,16 +133,15 @@ export default function ProductCard({
           />
         </button>
 
-        {/* 4. HOVER ACTION BAR */}
+        {/* 4. HOVER ACTION BAR (Integrated Dark Mode) */}
         <motion.div
           variants={actionBarVariants}
           transition={{ duration: 0.4, ease: "easeOut" }}
-          /* Adjusted dark mode hover bar */
-          className="absolute bottom-0 left-0 right-0 hidden md:flex h-14 bg-black dark:bg-white/10 dark:backdrop-blur-lg text-white z-30 transition-colors"
+          className="absolute bottom-0 left-0 right-0 hidden md:flex h-12 bg-noir/90 dark:bg-ivory/95 text-white dark:text-noir z-30 transition-colors"
         >
           {product.isSoldOut ? (
             <button
-              className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-[#D4AF37] transition-all duration-300"
+              className="flex-1 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] hover:bg-[#D4AF37] hover:text-white transition-all duration-300"
               onClick={(e) => e.stopPropagation()}
             >
               Notify Me
@@ -149,24 +150,24 @@ export default function ProductCard({
             <>
               <button
                 onClick={() => onQuickView(product)}
-                className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-white transition-all duration-300 border-r border-white/10"
+                className="flex-1 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-[#D4AF37] hover:text-white dark:hover:text-white transition-all duration-300 border-r border-white/10 dark:border-noir/10"
               >
-                <Eye size={14} /> Quick View
+                <Eye size={12} /> View
               </button>
               <button
                 onClick={handleAddToCart}
-                className="flex-1 flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black dark:hover:bg-gold dark:hover:text-white transition-all duration-300"
+                className="flex-1 flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-white hover:text-noir dark:hover:bg-gold dark:hover:text-white transition-all duration-300"
               >
-                <ShoppingBag size={14} /> Add To Bag
+                <ShoppingBag size={12} /> Add
               </button>
             </>
           )}
         </motion.div>
       </div>
 
-      {/* 5. PRODUCT INFO */}
-      <div className="flex flex-col py-6 px-4 gap-2">
-        <h3 className="font-serif text-[15px] md:text-[17px] text-gray-900 dark:text-ivory leading-tight line-clamp-2 min-h-[40px] uppercase tracking-wider transition-colors duration-500">
+      {/* 5. PRODUCT INFO (Slimmed Padding) */}
+      <div className="flex flex-col py-5 px-4 gap-1.5">
+        <h3 className="font-serif text-[13px] md:text-[14px] text-noir dark:text-ivory leading-tight line-clamp-1 min-h-[18px] uppercase tracking-widest transition-colors duration-500">
           {product.name}
         </h3>
 
@@ -175,7 +176,7 @@ export default function ProductCard({
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
-                size={12}
+                size={10}
                 fill={
                   i < Math.floor(product.rating || 5) ? "currentColor" : "none"
                 }
@@ -183,17 +184,17 @@ export default function ProductCard({
               />
             ))}
           </div>
-          <span className="text-[10px] text-gray-500 dark:text-ivory/40 font-bold transition-colors">
+          <span className="text-[9px] text-gray-500 dark:text-ivory/30 font-bold transition-colors">
             ({displayReviews})
           </span>
         </div>
 
-        <div className="flex items-center gap-3 mt-2">
-          <span className="font-bold text-[#D4AF37] text-lg">
+        <div className="flex items-center gap-3 mt-1">
+          <span className="font-black text-[#D4AF37] text-base tracking-tighter">
             ₦{product.price.toLocaleString()}
           </span>
           {product.originalPrice && (
-            <span className="text-gray-400 dark:text-white/20 line-through text-[12px] font-medium italic transition-colors">
+            <span className="text-gray-400 dark:text-white/10 line-through text-[11px] font-medium italic transition-colors">
               ₦{product.originalPrice.toLocaleString()}
             </span>
           )}
@@ -202,14 +203,14 @@ export default function ProductCard({
         {/* MOBILE BUTTON */}
         <button
           onClick={(e) => !product.isSoldOut && handleAddToCart(e)}
-          className={`mt-4 w-full py-4 text-[10px] font-bold uppercase tracking-[0.3em] transition-all duration-300 md:hidden border
+          className={`mt-4 w-full py-3.5 text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-300 md:hidden border
             ${
               product.isSoldOut
-                ? "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-white/20 border-gray-200 dark:border-white/5 cursor-not-allowed"
-                : "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white active:bg-[#D4AF37]"
+                ? "bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-white/10 border-gray-200 dark:border-white/5 cursor-not-allowed"
+                : "bg-noir dark:bg-ivory text-white dark:text-noir border-noir dark:border-ivory active:bg-[#D4AF37]"
             }`}
         >
-          {product.isSoldOut ? "Notify Me" : "Add To Bag"}
+          {product.isSoldOut ? "Notify" : "Add to Bag"}
         </button>
       </div>
     </motion.div>

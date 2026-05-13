@@ -24,9 +24,13 @@ export default function ProductGrid({ categoryTitle }: ProductGridProps) {
     : products.slice(0, 12);
 
   return (
-    <section className="w-full">
-      {/* 3. THE GRID: Responsive layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+    <section className="w-full bg-ivory dark:bg-noir transition-colors duration-500">
+      {/* 3. THE GRID: 
+          - grid-cols-2: Enables the double-column look for mobile 
+          - gap-x-3: Tightened horizontal gap for slim mobile cards
+          - gap-y-10: Maintains vertical spacing for readability
+      */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-10 md:gap-x-10 md:gap-y-20 px-4 md:px-0">
         {displayProducts.map((product: any) => (
           <ProductCard
             key={product.id}

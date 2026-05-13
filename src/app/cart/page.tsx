@@ -129,9 +129,11 @@ export default function FullCartPage() {
             {cartItems.map((item) => (
               <div
                 key={item.product.id}
-                className="flex gap-6 border-b border-gold/10 pb-10 group"
+                /* SLIM FIX: Reduced padding from pb-10 to pb-6 on mobile */
+                className="flex gap-4 sm:gap-6 border-b border-gold/10 pb-6 sm:pb-10 group"
               >
-                <div className="w-[120px] h-[160px] flex-shrink-0 bg-white dark:bg-zinc-900 border border-gold/5 rounded-sm overflow-hidden">
+                {/* IMAGE: Reduced from 120x160 to 80x100 on mobile for that "slim" look */}
+                <div className="w-[80px] h-[100px] sm:w-[120px] sm:h-[160px] flex-shrink-0 bg-white dark:bg-zinc-900 border border-gold/5 rounded-sm overflow-hidden">
                   <img
                     src={item.product.images?.[0] || "/placeholder.png"}
                     className="w-full h-full object-cover transition-transform group-hover:scale-105 duration-700"
@@ -139,56 +141,62 @@ export default function FullCartPage() {
                   />
                 </div>
 
-                <div className="flex-1 flex flex-col justify-between py-2">
+                <div className="flex-1 flex flex-col justify-between py-1 sm:py-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-sm font-bold uppercase tracking-widest text-noir dark:text-ivory">
+                      {/* TEXT: Reduced sizes on mobile to prevent bulky rows */}
+                      <h3 className="text-[10px] sm:text-sm font-bold uppercase tracking-widest text-noir dark:text-ivory line-clamp-1">
                         {item.product.name}
                       </h3>
-                      <p className="text-[10px] text-gold font-black mt-1 uppercase italic">
+                      <p className="text-[9px] text-gold font-black mt-0.5 uppercase italic">
                         {item.selectedOptions?.inch || "18"} Inch — Premium
-                        Quality
                       </p>
                     </div>
                     <button
                       onClick={() => handleRemove(item)}
-                      className="text-noir/20 hover:text-red-500 transition-colors"
+                      className="text-noir/20 hover:text-red-500 transition-colors p-1"
                     >
-                      <X size={18} />
+                      <X size={16} />
                     </button>
                   </div>
 
-                  <div className="flex justify-between items-end">
-                    <div className="flex items-center gap-6">
-                      <div className="flex items-center border border-noir/10 dark:border-white/10 rounded-full px-4 py-2 gap-6 bg-white dark:bg-white/5 shadow-sm transition-all">
+                  <div className="flex justify-between items-end mt-2 sm:mt-0">
+                    <div className="flex items-center gap-4 sm:gap-6">
+                      {/* QUANTITY: Slimmed down padding for mobile */}
+                      <div className="flex items-center border border-noir/10 dark:border-white/10 rounded-full px-3 py-1 sm:px-4 sm:py-2 gap-4 sm:gap-6 bg-white dark:bg-white/5 shadow-sm">
                         <button
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity - 1)
                           }
-                          className="text-gold hover:scale-110 transition-transform"
+                          className="text-gold hover:scale-110"
                         >
-                          <Minus size={14} />
+                          <Minus size={12} />
                         </button>
-                        <span className="text-xs font-black text-noir dark:text-ivory">
+                        <span className="text-[10px] sm:text-xs font-black text-noir dark:text-ivory">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() =>
                             updateQuantity(item.product.id, item.quantity + 1)
                           }
-                          className="text-gold hover:scale-110 transition-transform"
+                          className="text-gold hover:scale-110"
                         >
-                          <Plus size={14} />
+                          <Plus size={12} />
                         </button>
                       </div>
+
+                      {/* Hide 'Save for later' text on tiny screens to save space, keep icon */}
                       <button
                         onClick={() => handleSaveForLater(item)}
-                        className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-tighter text-noir/40 dark:text-ivory/40 hover:text-gold transition-colors"
+                        className="flex items-center gap-2 text-[9px] font-bold uppercase text-noir/40 dark:text-ivory/40 hover:text-gold"
                       >
-                        <Heart size={14} /> Save for later
+                        <Heart size={14} />{" "}
+                        <span className="hidden xs:inline">Save</span>
                       </button>
                     </div>
-                    <p className="text-lg font-black text-noir dark:text-ivory tracking-tighter">
+
+                    {/* PRICE: Smaller font on mobile */}
+                    <p className="text-sm sm:text-lg font-black text-noir dark:text-ivory tracking-tighter">
                       ₦{(item.product.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
@@ -279,13 +287,13 @@ export default function FullCartPage() {
                   </span>
                 </div>
 
-<Link href='/checkout' className='block w-full mt-8'>
-                <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir dark:hover:bg-white hover:text-gold dark:hover:text-noir transition-all shadow-xl group flex items-center justify-center gap-2">
-                  <span>Secure Checkout{" "}</span>
-                  <span className="inline-block transition-transform group-hover:translate-x-2">
-                    →
-                  </span>
-                </button>
+                <Link href="/checkout" className="block w-full mt-8">
+                  <button className="w-full bg-gold text-noir py-5 text-[11px] font-black uppercase tracking-[0.4em] hover:bg-noir dark:hover:bg-white hover:text-gold dark:hover:text-noir transition-all shadow-xl group flex items-center justify-center gap-2">
+                    <span>Secure Checkout </span>
+                    <span className="inline-block transition-transform group-hover:translate-x-2">
+                      →
+                    </span>
+                  </button>
                 </Link>
 
                 <div className="flex justify-center gap-4 pt-6 border-t border-gold/5 text-noir dark:text-ivory">

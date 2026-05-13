@@ -63,12 +63,12 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] dark:bg-noir text-noir dark:text-ivory transition-colors duration-300 font-sans">
+    <div className="min-h-screen bg-ivory dark:bg-noir text-noir dark:text-ivory transition-colors duration-500 font-sans">
       {/* HEADER */}
-      <nav className="p-6 border-b border-gold/10 bg-white flex justify-between items-center">
+      <nav className="p-6 border-b border-gold/10 bg-white dark:bg-zinc-900/50 backdrop-blur-md flex justify-between items-center sticky top-0 z-50">
         <Link
           href="/"
-          className="flex items-center text-gold hover:text-noir transition-colors text-xs font-black uppercase tracking-[0.2em]"
+          className="flex items-center text-gold hover:text-noir dark:hover:text-white transition-colors text-xs font-black uppercase tracking-[0.2em]"
         >
           <ChevronLeft size={16} className="mr-1" /> Back to Shop
         </Link>
@@ -82,22 +82,24 @@ export default function CheckoutPage() {
         {/* LEFT & CENTER: SHIPPING & PAYMENT */}
         <div className="lg:col-span-2 space-y-8">
           {/* Shipping Section */}
-          <section className="bg-white p-8 rounded-sm shadow-sm border border-gold/5">
+          <section className="bg-white dark:bg-zinc-900/40 p-8 rounded-sm shadow-sm border border-gold/5 dark:border-white/5">
             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold mb-6 flex items-center gap-2">
               <MapPin size={14} /> Shipping Destination
             </h2>
             <div className="flex justify-between items-start border-l-2 border-gold pl-6 py-2">
               <div>
-                <p className="font-bold text-noir uppercase text-xs tracking-widest">
+                <p className="font-bold text-noir dark:text-ivory uppercase text-xs tracking-widest">
                   {displayName}
                 </p>
-                <p className="text-noir/60 text-sm mt-1">
+                <p className="text-noir/60 dark:text-ivory/60 text-sm mt-1">
                   {defaultAddress?.street}
                 </p>
-                <p className="text-noir/60 text-sm">
+                <p className="text-noir/60 dark:text-ivory/60 text-sm">
                   {defaultAddress?.city}, {defaultAddress?.state}
                 </p>
-                <p className="text-noir/60 text-sm">{defaultAddress?.phone}</p>
+                <p className="text-noir/60 dark:text-ivory/60 text-sm">
+                  {defaultAddress?.phone}
+                </p>
               </div>
               <button className="text-[9px] font-black uppercase tracking-widest text-gold hover:underline">
                 Change
@@ -105,16 +107,18 @@ export default function CheckoutPage() {
             </div>
 
             {/* --- DELIVERY & BILLING INCLUSIONS --- */}
-            <div className="mt-8 pt-8 border-t border-gold/5 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="mt-8 pt-8 border-t border-gold/5 dark:border-white/5 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex items-start gap-3">
                 <div className="text-gold mt-1">
                   <Truck size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-noir/40">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-noir/40 dark:text-ivory/30">
                     Delivery Route
                   </p>
-                  <p className="text-xs font-bold text-noir">{deliveryRoute}</p>
+                  <p className="text-xs font-bold text-noir dark:text-ivory">
+                    {deliveryRoute}
+                  </p>
                   <p className="text-[10px] text-gold italic">{deliveryTime}</p>
                 </div>
               </div>
@@ -123,10 +127,10 @@ export default function CheckoutPage() {
                   <ReceiptText size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-noir/40">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-noir/40 dark:text-ivory/30">
                     Billing Details
                   </p>
-                  <p className="text-xs font-bold text-noir uppercase tracking-tighter">
+                  <p className="text-xs font-bold text-noir dark:text-ivory uppercase tracking-tighter">
                     Same as shipping destination
                   </p>
                   <p className="text-[10px] text-gold italic font-medium">
@@ -138,17 +142,17 @@ export default function CheckoutPage() {
           </section>
 
           {/* Payment Section */}
-          <section className="bg-white p-8 rounded-sm shadow-sm border border-gold/5">
+          <section className="bg-white dark:bg-zinc-900/40 p-8 rounded-sm shadow-sm border border-gold/5 dark:border-white/5">
             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold mb-6 flex items-center gap-2">
               <CreditCard size={14} /> Secure Payment
             </h2>
-            <div className="group p-6 border-2 border-gold rounded-xl bg-gold/5 flex items-center justify-between cursor-pointer transition-all">
+            <div className="group p-6 border-2 border-gold rounded-xl bg-gold/5 dark:bg-gold/10 flex items-center justify-between cursor-pointer transition-all">
               <div className="flex items-center gap-4">
-                <div className="bg-noir p-3 rounded-full text-gold shadow-lg">
+                <div className="bg-noir dark:bg-white p-3 rounded-full text-gold dark:text-gold shadow-lg">
                   <ShieldCheck size={24} />
                 </div>
                 <div>
-                  <p className="font-black text-xs uppercase tracking-widest text-noir">
+                  <p className="font-black text-xs uppercase tracking-widest text-noir dark:text-ivory">
                     GlowPay Digital
                   </p>
                   <p className="text-[10px] text-gold font-bold italic mt-0.5">
@@ -164,7 +168,7 @@ export default function CheckoutPage() {
             <button
               onClick={handleGlowPay}
               disabled={cartItems.length === 0 || paymentStatus !== "idle"}
-              className="w-full mt-10 bg-noir text-white py-6 rounded-sm text-[11px] font-black uppercase tracking-[0.5em] hover:bg-gold hover:text-noir transition-all active:scale-[0.98] shadow-2xl disabled:opacity-50"
+              className="w-full mt-10 bg-noir dark:bg-ivory text-white dark:text-noir py-6 rounded-sm text-[11px] font-black uppercase tracking-[0.5em] hover:bg-gold dark:hover:bg-gold hover:text-noir dark:hover:text-noir transition-all active:scale-[0.98] shadow-2xl disabled:opacity-50"
             >
               {paymentStatus === "idle"
                 ? `Pay ₦${cartTotal.toLocaleString()} with GlowPay`
@@ -175,8 +179,8 @@ export default function CheckoutPage() {
 
         {/* RIGHT: ORDER SUMMARY WITH PRODUCT IMAGES */}
         <aside className="lg:col-span-1">
-          <div className="bg-white p-8 rounded-sm shadow-sm border border-gold/5 sticky top-24">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-noir/40 mb-6 border-b border-gold/10 pb-4">
+          <div className="bg-white dark:bg-zinc-900/60 p-8 rounded-sm shadow-sm border border-gold/5 dark:border-white/5 sticky top-24">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-noir/40 dark:text-ivory/40 mb-6 border-b border-gold/10 pb-4">
               Order Summary
             </h3>
 
@@ -184,30 +188,30 @@ export default function CheckoutPage() {
               {cartItems.map((item) => (
                 <div
                   key={item.product.id}
-                  className="flex items-center gap-4 text-xs group"
+                  className="flex items-center gap-4 text-xs group p-1.5 rounded-sm bg-ivory/50 dark:bg-white/5 border border-transparent hover:border-gold/20 transition-all"
                 >
-                  {/* ASSET IMAGE THUMBNAIL */}
-                  <div className="w-14 h-14 bg-[#FAF7F2] rounded-sm overflow-hidden flex-shrink-0 border border-gold/10 relative">
+                  {/* ASSET IMAGE THUMBNAIL - Slim Rectangular Fix */}
+                  <div className="w-16 h-12 bg-white dark:bg-zinc-800 rounded-xs overflow-hidden flex-shrink-0 border border-gold/10 relative">
                     <img
                       src={item.product.images?.[0] || "/placeholder.png"}
                       alt={item.product.name}
                       className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-500"
                     />
-                    <div className="absolute top-0 right-0 bg-gold text-white text-[8px] px-1.5 py-0.5 font-bold shadow-sm">
+                    <div className="absolute -top-1 -right-1 bg-gold text-white text-[8px] px-1.5 py-0.5 font-bold shadow-sm rounded-full">
                       {item.quantity}
                     </div>
                   </div>
 
-                  <div className="flex-1 flex justify-between items-center">
+                  <div className="flex-1 flex justify-between items-center min-w-0">
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-noir font-bold uppercase tracking-tighter truncate max-w-[120px]">
+                      <span className="text-noir dark:text-ivory font-bold uppercase tracking-tighter truncate max-w-[120px] text-[9px]">
                         {item.product.name}
                       </span>
-                      <span className="text-noir/40 text-[9px] uppercase tracking-widest font-medium">
+                      <span className="text-noir/40 dark:text-ivory/40 text-[9px] uppercase tracking-widest font-medium">
                         ₦{item.product.price.toLocaleString()}
                       </span>
                     </div>
-                    <span className="font-bold text-gold">
+                    <span className="font-bold text-gold text-[10px]">
                       ₦{(item.product.price * item.quantity).toLocaleString()}
                     </span>
                   </div>
@@ -215,22 +219,24 @@ export default function CheckoutPage() {
               ))}
             </div>
 
-            <div className="space-y-3 pt-4 border-t border-gold/10">
-              <div className="flex justify-between text-xs text-noir/40 uppercase tracking-widest font-bold">
+            <div className="space-y-3 pt-4 border-t border-gold/10 dark:border-white/10">
+              <div className="flex justify-between text-xs text-noir/40 dark:text-ivory/40 uppercase tracking-widest font-bold">
                 <span>Subtotal</span>
-                <span>₦{cartTotal.toLocaleString()}</span>
+                <span className="text-noir dark:text-ivory">
+                  ₦{cartTotal.toLocaleString()}
+                </span>
               </div>
               <div className="flex justify-between text-xs text-gold uppercase tracking-widest font-bold">
                 <span>Shipping</span>
                 <span className="animate-pulse">FREE</span>
               </div>
-              <div className="flex justify-between pt-4 text-xl font-black text-noir tracking-tighter">
+              <div className="flex justify-between pt-4 text-xl font-black text-noir dark:text-ivory tracking-tighter">
                 <span>Total</span>
-                <span>₦{cartTotal.toLocaleString()}</span>
+                <span className="text-gold">₦{cartTotal.toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="mt-6 bg-gold/5 p-4 rounded-sm border border-gold/10 text-center">
+            <div className="mt-6 bg-gold/5 dark:bg-gold/10 p-4 rounded-sm border border-gold/10 text-center">
               <p className="text-[9px] font-black uppercase tracking-widest text-gold">
                 ✨ Earns {glowPointsEarned.toLocaleString()} GlowPoints
               </p>
@@ -246,11 +252,11 @@ export default function CheckoutPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-noir/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center"
+            className="fixed inset-0 z-[200] bg-noir/95 dark:bg-black/98 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center"
           >
             {paymentStatus === "processing" ? (
               <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
-                <div className="relative mb-8">
+                <div className="relative mb-8 flex justify-center">
                   <Loader2 className="w-20 h-20 text-gold animate-spin stroke-[1px]" />
                   <div className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-gold animate-pulse">
                     GP
@@ -259,7 +265,7 @@ export default function CheckoutPage() {
                 <h2 className="text-gold text-sm font-black uppercase tracking-[0.5em] animate-pulse">
                   Securing GlowPay Transaction
                 </h2>
-                <p className="text-white/30 text-[9px] mt-4 uppercase tracking-widest">
+                <p className="text-white/30 dark:text-white/20 text-[9px] mt-4 uppercase tracking-widest">
                   Validating with Glowhaus Secure Nodes...
                 </p>
               </motion.div>
