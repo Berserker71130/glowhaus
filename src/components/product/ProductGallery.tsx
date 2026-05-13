@@ -48,7 +48,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
     <div className="flex flex-col gap-4">
       {/* 1. Main Image Container (Large, Square) */}
       <div className="relative aspect-square bg-gray-50 overflow-hidden group cursor-zoom-in">
-        {/* 6. Badges top-left */}
+        {/* Badges top-left */}
         <div className="absolute top-4 left-4 z-30 flex flex-col gap-2 pointer-events-none">
           {badges?.map((badge) => (
             <span
@@ -60,7 +60,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
           ))}
         </div>
 
-        {/* 7. Wishlist button top-right */}
+        {/* Wishlist button top-right */}
         <button className="absolute top-4 right-4 z-30 p-2 bg-white rounded-full shadow-md hover:scale-110 transition-transform">
           <Heart
             size={20}
@@ -68,7 +68,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
           />
         </button>
 
-        {/* 5. Mobile Swipe Carousel (Embla Viewport) */}
+        {/* Mobile Swipe Carousel */}
         <div className="h-full w-full" ref={emblaRef}>
           <div className="flex h-full w-full">
             {images.map((img, i) => (
@@ -81,7 +81,6 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
                   setZoomStyle({ ...zoomStyle, display: "none" })
                 }
               >
-                {/* 3. Crossfade with Framer Motion */}
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={selectedIndex}
@@ -97,16 +96,17 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
                       className="w-full h-full object-cover"
                     />
 
-                    {/* 4. Zoom on hover Overlay */}
-                    <div
-                      className="absolute inset-0 z-10 pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        ...zoomStyle,
-                        backgroundImage: `url(${images[selectedIndex]})`,
-                        backgroundSize: "250%",
-                        backgroundRepeat: "no-repeat",
-                      }}
-                    />
+                  
+                    {/* Zoom Overlay */}
+<div
+  className="absolute inset-0 z-10 pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+  style={{
+    ...zoomStyle,
+    backgroundImage: `url(${images[selectedIndex]})`, // FIXED: Wrapped in backticks
+    backgroundSize: "250%",
+    backgroundRepeat: "no-repeat",
+  }}
+/>
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -115,7 +115,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
         </div>
       </div>
 
-      {/* 2. Thumbnail Strip (4 visible, scroll if more) */}
+      {/* 2. Thumbnail Strip */}
       <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
         {images.map((img, i) => (
           <button
@@ -124,7 +124,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
             className={`relative w-24 h-24 flex-shrink-0 border-2 transition-all ${
               selectedIndex === i
                 ? "border-[#D4AF37]"
-                : "border-transparent hover:border-gray-300"
+                : "border-transparent hover:border-gray-200"
             }`}
           >
             <img
@@ -133,6 +133,18 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
               className="w-full h-full object-cover"
             />
           </button>
+        ))}
+
+        {/* Placeholder logic for 3-photo criteria */}
+        {images.length < 3 && Array.from({ length: 3 - images.length }).map((_, idx) => (
+          <div 
+            key={`placeholder-${idx}`} 
+            className="w-24 h-24 flex-shrink-0 bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
+          >
+            <span className="text-[8px] text-gray-400 uppercase tracking-widest text-center px-1">
+              Angle {images.length + idx + 1} <br/> Coming Soon
+            </span>
+          </div>
         ))}
       </div>
     </div>

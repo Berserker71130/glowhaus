@@ -16,7 +16,6 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  // UPDATE: Search by ID or Slug
   const product = products.find((p) => p.slug === slug || p.id === slug);
   if (!product) return { title: "Product Not Found" };
 
@@ -28,8 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-
-  // UPDATE: Search by ID or Slug so your Modal links work
   const product = products.find((p) => p.slug === slug || p.id === slug);
 
   if (!product) {
@@ -65,8 +62,34 @@ export default async function Page({ params }: Props) {
         </div>
       </div>
 
+      {/* 1. REVIEWS SECTION */}
       <div className="mt-20 border-t border-gray-100">
         <ProductReviews reviews={productReviews} />
+      </div>
+
+      {/* 2. NEW VIDEO EXPERIENCE SECTION (The Bianca Criteria) */}
+      <div className="mt-24 pt-16 border-t border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-center text-xl font-light tracking-[0.3em] uppercase mb-10 text-gray-800">
+            Product Experience
+          </h2>
+          <div className="relative aspect-video w-full bg-zinc-900 overflow-hidden rounded-sm group cursor-pointer shadow-2xl">
+            {/* Background Preview */}
+            <img 
+              src={product.images[0]} 
+              alt="Experience Video" 
+              className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-[2000ms]"
+            />
+            {/* Play Button Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-md group-hover:bg-[#D4AF37] group-hover:border-[#D4AF37] transition-all duration-500">
+                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
+              </div>
+              <p className="mt-6 text-white text-[10px] tracking-[0.5em] uppercase font-light">Watch the Glow-Up</p>
+              <span className="mt-2 text-white/40 text-[8px] uppercase tracking-widest">Coming Soon to GlowHaus</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {isHairProduct && (
