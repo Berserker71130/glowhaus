@@ -163,7 +163,9 @@ export default function OrdersPage() {
                             >
                               <div className="relative w-16 h-16 rounded-xl overflow-hidden shadow-sm">
                                 <Image
-                                  src={item.product.images}
+                                  src={
+                                    item.product.images[0] || "/placeholder.jpg"
+                                  }
                                   alt={item.product.name}
                                   fill
                                   className="object-cover"
