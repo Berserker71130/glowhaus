@@ -18,15 +18,27 @@ export interface Stylist {
 
 export interface Product {
   id: string;
+  slug: string;
   name: string;
+  category: "hair" | "nails" | "accessories" | "beauty";
+  subcategory: string;
   price: number;
   originalPrice?: number;
+  images: string[];
   rating: number;
-  reviewsCount: number;
-  images: string;
-  category?: string;
-  badges: BadgeType[];
-  isSoldOut: boolean;
+  reviewCount: number; // No longer reviewsCount
+  inStock: boolean;
+  stockCount: number;
+  tags: string[]; // No longer badges
+  description: string;
+  details: string[];
+  isNew: boolean;
+  isBestseller: boolean;
+  isSale: boolean;
+  isSoldOut?: boolean;
+  careInstructions?: string;
+  shadeOptions?: string[];
+  lengthOptions?: string[];
 }
 
 // --- Added for Task #26 ---

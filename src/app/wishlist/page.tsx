@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { showGlowToast } from "@/lib/toast";
 import { products as allProducts } from "@/lib/dummy-data/products";
 import EmptyState from "@/components/ui/EmptyState";
+import { Product } from "@/types"; // Import your standardized type
 import {
   ArrowDown,
   BellRing,
@@ -31,7 +32,8 @@ export default function WishlistPage() {
     });
   };
 
-  const handleRemove = (product: any) => {
+  // FIXED: Added Proper Typing to handleRemove
+  const handleRemove = (product: Product) => {
     removeFromWishlist(product.id);
     showGlowToast({
       message: "Removed from wishlist",
@@ -54,6 +56,7 @@ export default function WishlistPage() {
   }, [wishlistItems, sortBy]);
 
   const recommendations = useMemo(() => {
+    // FIXED: Standardized category access
     const favoriteCategory = wishlistItems[0]?.category || "hair";
     return allProducts
       .filter(
@@ -65,7 +68,7 @@ export default function WishlistPage() {
   }, [wishlistItems]);
 
   return (
-    <div className="min-h-screen pt-32 pb-20 transition-colors duration-500">
+    <div className="min-h-screen pt-32 pb-20 transition-colors duration-500 bg-[#FCF9F2] dark:bg-noir">
       <div className="container mx-auto px-6">
         {/* HEADER SECTION */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
@@ -92,18 +95,10 @@ export default function WishlistPage() {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="w-full appearance-none bg-white dark:bg-white/5 border border-noir/10 dark:border-white/10 px-6 py-3 pr-12 text-xs text-noir dark:text-ivory uppercase tracking-widest focus:outline-none focus:border-gold transition-all"
               >
-                <option className="bg-white dark:bg-noir text-noir dark:text-ivory">
-                  Date Added
-                </option>
-                <option className="bg-white dark:bg-noir text-noir dark:text-ivory">
-                  Price Low-High
-                </option>
-                <option className="bg-white dark:bg-noir text-noir dark:text-ivory">
-                  Price High-Low
-                </option>
-                <option className="bg-white dark:bg-noir text-noir dark:text-ivory">
-                  Category
-                </option>
+                <option>Date Added</option>
+                <option>Price Low-High</option>
+                <option>Price High-Low</option>
+                <option>Category</option>
               </select>
               <ArrowDown
                 size={14}
@@ -120,7 +115,7 @@ export default function WishlistPage() {
           </div>
         </div>
 
-        {/* WISHLIST GRID OR EMPTY STATE */}
+        {/* WISHLIST GRID */}
         <AnimatePresence mode="popLayout">
           {wishlistItems.length > 0 ? (
             <motion.div
@@ -136,9 +131,10 @@ export default function WishlistPage() {
                   exit={{ opacity: 0 }}
                   className="group relative"
                 >
-                  <div className="relative aspect-[3/4] mb-6 overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-noir/5 dark:border-white/5 transition-colors">
+                  {/* FIXED: Aspect Ratio to match ProductCard 16/10 for consistency */}
+                  <div className="relative aspect-[16/10] mb-6 overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-noir/5 dark:border-white/5 transition-colors">
                     <img
-                      src={product.images || (product as any).images?.[0]}
+                      src={product.images[0] || "/placeholder.jpg"}
                       alt={product.name}
                       className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${product.isSoldOut ? "grayscale" : ""}`}
                     />
@@ -151,7 +147,7 @@ export default function WishlistPage() {
                     )}
                     <button
                       onClick={() => handleRemove(product)}
-                      className="absolute top-4 right-4 p-2.5 bg-white dark:bg-noir text-noir dark:text-ivory hover:bg-noir dark:hover:bg-gold hover:text-white transition-all shadow-sm"
+                      className="absolute top-4 right-4 p-2.5 bg-white dark:bg-noir text-noir dark:text-ivory hover:bg-noir dark:hover:bg-gold hover:text-white transition-all shadow-sm z-10"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -194,7 +190,7 @@ export default function WishlistPage() {
                 title="Your Wishlist is Empty"
                 subtitle={
                   <span className="dark:text-ivory/60">
-                    Sign in to sync your favorites across devices or explore our
+                    Explore our
                     <span className="text-[#D4AF37] italic ml-1">
                       Luxury Collections
                     </span>{" "}
@@ -208,7 +204,7 @@ export default function WishlistPage() {
           )}
         </AnimatePresence>
 
-        {/* YOU MIGHT ALSO LIKE SECTION */}
+        {/* RECOMMENDATIONS */}
         {recommendations.length > 0 && (
           <section className="mt-40 transition-all duration-500">
             <div className="flex items-center gap-8 mb-12">
@@ -219,14 +215,14 @@ export default function WishlistPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {recommendations.map((p) => (
-                <div key={p.id} className="group cursor-pointer">
-                  <div className="relative aspect-[3/4] mb-4 bg-gray-50 dark:bg-zinc-900 overflow-hidden border border-transparent dark:border-white/5 transition-colors">
+                <Link
+                  href={`/product/${p.id}`}
+                  key={p.id}
+                  className="group cursor-pointer"
+                >
+                  <div className="relative aspect-[16/10] mb-4 bg-gray-50 dark:bg-zinc-900 overflow-hidden border border-transparent dark:border-white/5 transition-colors">
                     <img
-                      src={
-                        Array.isArray(p.images)
-                          ? p.images[0]
-                          : (p as any).image || "/placeholder.png"
-                      }
+                      src={p.images[0] || "/placeholder.jpg"}
                       className="w-full h-full object-cover transition-transform group-hover:scale-105"
                       alt={p.name}
                     />
@@ -237,7 +233,7 @@ export default function WishlistPage() {
                   <p className="text-gold text-sm font-medium">
                     ₦{p.price.toLocaleString()}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </section>

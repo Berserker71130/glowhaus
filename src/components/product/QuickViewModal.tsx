@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Product } from "@/types";
 import { useStore } from "@/store/useStore";
 import { ShoppingBag, Star, X } from "lucide-react";
+import { showGlowToast } from "@/lib/toast";
+import Link from "next/link";
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -17,26 +19,34 @@ export default function QuickViewModal({
   isOpen,
   onClose,
 }: QuickViewModalProps) {
-  const { addToCart } = useStore();
+  const { addToCart, setCartOpen } = useStore();
 
-  // If no product is selected, don't even try to render the modal
   if (!product) return null;
 
-  // --- THE SURGICAL FIX FOR THE RED ERROR ---
-  // We check every possible place the image could be.
-  // If all else fails, we use a placeholder so the 'src' is NEVER empty.
-  const displayImage =
-    (product as any).images?.[0] ||
-    (product as any).image ||
-    product.images?.[0] ||
-    "/placeholder.jpg";
+  // Now that we have a standard type, we can trust product.images[0]
+  const displayImage = product.images[0] || "/placeholder.jpg";
+
+  const handleAddToCart = () => {
+    addToCart(product, {});
+    onClose();
+
+    showGlowToast({
+      message: `${product.name} added to bag`,
+      accentColor: "#D4AF37",
+      icon: "👜",
+      action: {
+        label: "View Bag",
+        fn: () => setCartOpen(true),
+      },
+    });
+  };
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm z-[100] animate-in fade-in duration-300" />
+        <Dialog.Overlay className="fixed inset-0 bg-noir/60 dark:bg-black/80 backdrop-blur-sm z-[100] animate-in fade-in duration-300" />
 
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl bg-[#FCF9F2] dark:bg-[#0D0D0D] shadow-2xl z-[101] outline-none animate-in zoom-in-95 duration-300 overflow-hidden border border-[#D4AF37]/20 dark:border-white/10 transition-colors duration-500">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-4xl bg-ivory dark:bg-noir shadow-2xl z-[101] outline-none animate-in zoom-in-95 duration-300 overflow-hidden border border-gold/20 dark:border-white/10 transition-colors duration-500">
           <Dialog.Title className="sr-only">
             Quick view for {product.name}
           </Dialog.Title>
@@ -45,99 +55,89 @@ export default function QuickViewModal({
           </Dialog.Description>
 
           <div className="flex flex-col md:flex-row h-full max-h-[90vh] overflow-y-auto">
-            {/* LEFT: Image Section */}
-            <div className="relative w-full md:w-1/2 aspect-[3/4] bg-[#F2EDE4] dark:bg-zinc-800 transition-colors duration-500">
+            {/* LEFT: Image Section - Using the 16/10 logic for consistent luxury framing */}
+            <div className="relative w-full md:w-1/2 aspect-[16/10] md:aspect-auto bg-gray-100 dark:bg-zinc-800 transition-colors duration-500">
               <Image
-                src={displayImage} // UPDATED TO USE THE SMART CONSTANT
+                src={displayImage}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-transform duration-700 hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                priority
               />
               {product.isSoldOut && (
-                <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                  <span className="bg-white text-black px-4 py-2 font-bold tracking-widest text-xs">
-                    SOLD OUT
+                <div className="absolute inset-0 bg-noir/40 backdrop-blur-[2px] flex items-center justify-center">
+                  <span className="bg-ivory text-noir px-6 py-3 font-black tracking-[0.3em] text-[10px] uppercase">
+                    Sold Out
                   </span>
                 </div>
               )}
             </div>
 
             {/* RIGHT: Product Details */}
-            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-[#FCF9F2] dark:bg-zinc-900 transition-colors duration-500">
-              <Dialog.Close className="absolute top-4 right-4 p-2 hover:bg-[#D4AF37]/10 dark:hover:bg-white/10 rounded-full transition-all">
-                <X size={20} className="text-black dark:text-ivory" />
+            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white dark:bg-zinc-900 transition-colors duration-500">
+              <Dialog.Close className="absolute top-4 right-4 p-2 hover:bg-gold/10 dark:hover:bg-white/10 rounded-full transition-all z-10">
+                <X size={20} className="text-noir dark:text-ivory" />
               </Dialog.Close>
 
               <div className="space-y-6">
                 <div>
-                  <h2 className="font-serif text-3xl md:text-4xl text-gray-900 dark:text-ivory uppercase tracking-tight leading-tight transition-colors">
+                  <p className="text-[10px] font-black text-gold uppercase tracking-[0.3em] mb-2">
+                    {product.category}
+                  </p>
+                  <h2 className="font-serif text-3xl md:text-4xl text-noir dark:text-ivory italic font-bold tracking-tight leading-tight transition-colors">
                     {product.name}
                   </h2>
 
                   <div className="flex items-center gap-2 mt-4">
-                    <div className="flex text-[#D4AF37]">
+                    <div className="flex text-gold">
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
-                          size={14}
-                          fill={
-                            i < Math.floor(product.rating || 5)
-                              ? "currentColor"
-                              : "none"
-                          }
+                          size={12}
+                          fill={i < 5 ? "currentColor" : "none"} // Static for now per your dummy data
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] font-bold text-gray-400 dark:text-ivory/40 tracking-widest transition-colors">
-                      (
-                      {(product as any).reviewCount ||
-                        (product as any).reviewsCount ||
-                        0}{" "}
-                      REVIEWS)
+                    <span className="text-[9px] font-black text-noir/30 dark:text-ivory/30 tracking-widest uppercase">
+                      (Featured Collection)
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-baseline gap-4">
-                  <span className="text-2xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-black text-noir dark:text-ivory tracking-tighter">
                     ₦{product.price.toLocaleString()}
                   </span>
-                  {product.originalPrice && (
-                    <span className="text-lg text-gray-400 dark:text-white/20 line-through italic transition-colors">
-                      ₦{product.originalPrice.toLocaleString()}
-                    </span>
-                  )}
                 </div>
 
-                <p className="text-sm text-gray-700 dark:text-ivory/70 leading-relaxed font-light italic transition-colors">
-                  Experience the epitome of luxury with the {product.name}.
-                  Carefully curated for the Glowhaus woman who values elegance
-                  and quality above all else.
+                <p className="text-xs text-noir/60 dark:text-ivory/60 leading-relaxed font-light italic transition-colors border-l-2 border-gold/20 pl-4">
+                  Experience the epitome of luxury with the {product.name}. A
+                  signature piece from the Glowhaus collection, meticulously
+                  crafted for the modern woman.
                 </p>
 
-                <div className="pt-4 space-y-4">
+                <div className="pt-6 space-y-4">
                   <button
                     disabled={product.isSoldOut}
-                    onClick={() => {
-                      addToCart(product, {});
-                      onClose();
-                    }}
-                    className={`w-full flex items-center justify-center gap-3 py-5 text-[10px] font-bold uppercase tracking-[0.3em] transition-all ${
+                    onClick={handleAddToCart}
+                    className={`w-full flex items-center justify-center gap-3 py-5 text-[10px] font-black uppercase tracking-[0.4em] transition-all ${
                       product.isSoldOut
                         ? "bg-gray-200 dark:bg-zinc-800 text-gray-400 dark:text-white/20 cursor-not-allowed"
-                        : "bg-black dark:bg-white text-white dark:text-black hover:bg-[#D4AF37] dark:hover:bg-gold transition-colors duration-300"
+                        : "bg-noir dark:bg-ivory text-white dark:text-noir hover:bg-gold dark:hover:bg-gold transition-colors duration-300 shadow-xl"
                     }`}
                   >
-                    <ShoppingBag size={18} />
-                    {product.isSoldOut
-                      ? "Notify Me When Available"
-                      : "Add to Shopping Bag"}
+                    <ShoppingBag size={18} strokeWidth={1.5} />
+                    {product.isSoldOut ? "Notify Me" : "Add to Bag"}
                   </button>
 
-                  <button className="w-full text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-ivory/40 hover:text-black dark:hover:text-gold transition-colors underline underline-offset-8 decoration-[#D4AF37]/40">
-                    View Full Product Details
-                  </button>
+                  <Link
+                    href={`/product/${product.id}`}
+                    onClick={onClose}
+                    className="block w-full text-center text-[9px] font-black uppercase tracking-[0.2em] text-noir/40 dark:text-ivory/40 hover:text-gold transition-colors"
+                  >
+                    View Full Details — Discover More
+                  </Link>
                 </div>
               </div>
             </div>

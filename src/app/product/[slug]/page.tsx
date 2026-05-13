@@ -16,7 +16,8 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+  // UPDATE: Search by ID or Slug
+  const product = products.find((p) => p.slug === slug || p.id === slug);
   if (!product) return { title: "Product Not Found" };
 
   return {
@@ -27,13 +28,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params;
-  const product = products.find((p) => p.slug === slug);
+
+  // UPDATE: Search by ID or Slug so your Modal links work
+  const product = products.find((p) => p.slug === slug || p.id === slug);
 
   if (!product) {
     notFound();
   }
 
-  // --- LOGIC FOR TASK #19 ---
   const relatedProducts = products
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 6);
@@ -41,7 +43,6 @@ export default async function Page({ params }: Props) {
   const isHairProduct =
     product.category.toLowerCase().includes("hair") ||
     product.category.toLowerCase().includes("wig");
-  // --- END LOGIC ---
 
   const productReviews = reviews.filter((r) => r.productId === product.id);
 
@@ -68,16 +69,12 @@ export default async function Page({ params }: Props) {
         <ProductReviews reviews={productReviews} />
       </div>
 
-      {/* --- ADDED SECTIONS BELOW --- */}
-
-      {/* 3. CRITERIA: "Complete the Look" (hair products only) */}
       {isHairProduct && (
         <div className="mt-16">
           <CompleteTheLook />
         </div>
       )}
 
-      {/* 4. CRITERIA: "You May Also Like" carousel */}
       <div className="mt-24">
         <RelatedProducts
           products={relatedProducts}
@@ -85,7 +82,6 @@ export default async function Page({ params }: Props) {
         />
       </div>
 
-      {/* 5. CRITERIA: Recently Viewed strip at the very bottom */}
       <div className="mt-32">
         <RecentlyViewedStrip currentProductId={product.id} />
       </div>
