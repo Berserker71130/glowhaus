@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import { NAV_DATA } from "./NavData";
 import { AnimatePresence, motion } from "framer-motion";
@@ -11,9 +11,16 @@ export default function MobileMenu() {
   const { mobileMenuOpen, setMobileMenuOpen } = useStore();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
-  // Mock Authentication state for Criterion #4 (Set to false for now, change to true to test)
-  // When backend is ready, this will come from your auth context/store: const { user } = useAuth();
-  const isLoggedIn = false; 
+  // Dynamic automatic account check for Criterion #4
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Looks for data filled out during checkout
+      const savedUser = localStorage.getItem("glowhaus_user");
+      setIsLoggedIn(!!savedUser);
+    }
+  }, [mobileMenuOpen]); // Re-evaluates every time the user slides open the menu
 
   const categories = Object.keys(NAV_DATA).filter((k) => k !== "Simple");
   const simpleLinks = NAV_DATA.Simple;
@@ -90,27 +97,6 @@ export default function MobileMenu() {
                           exit={{ height: 0, opacity: 0 }}
                           className="overflow-hidden bg-gold/5 dark:bg-white/5 rounded-sm"
                         >
-                          {/* <div className="flex flex-col gap-4 p-4 ml-2">
-                            {NAV_DATA[
-                              cat as keyof Omit<typeof NAV_DATA, "Simple">
-                            ].links.map((linkText: string) => (
-                              <Link
-                                key={linkText}
-                                href={/category/`${generateSlug(linkText)}`}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="text-[10px] uppercase tracking-widest text-black/60 dark:text-ivory/60 hover:text-gold"
-                              >
-                                {linkText}
-                              </Link>
-                            ))}
-                            <Link
-                              href={/category/`${cat.toLowerCase()}`}
-                              onClick={() => setMobileMenuOpen(false)}
-                              className="text-[10px] uppercase tracking-widest text-gold font-bold mt-2"
-                            >
-                              Shop All {cat}
-                            </Link>
-                          </div> */}
                           <div className="flex flex-col gap-4 p-4 ml-2">
                             {NAV_DATA[
                               cat as keyof Omit<typeof NAV_DATA, "Simple">
