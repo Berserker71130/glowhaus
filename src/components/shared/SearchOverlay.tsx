@@ -12,6 +12,7 @@ import {
   Loader2,
   Tag,
   Layers,
+  SlidersHorizontal,
 } from "lucide-react";
 import Portal from "./Portal";
 
@@ -20,6 +21,7 @@ export default function SearchOverlay() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string>("all"); // Track active category filter
   const debouncedQuery = useDebounce(query, 300);
   const router = useRouter();
 
@@ -57,7 +59,10 @@ export default function SearchOverlay() {
     setRecent(updated);
     localStorage.setItem("recentSearches", JSON.stringify(updated));
     setIsOpen(false);
-    router.push(`/search?q=${encodeURIComponent(searchTerm)}`);
+    
+    // Dynamically append category query if one is active
+    const filterParam = activeFilter !== "all" ? `&category=${activeFilter.toLowerCase()}` : "";
+    router.push(`/search?q=${encodeURIComponent(searchTerm)}${filterParam}`);
   };
 
   return (
@@ -86,7 +91,7 @@ export default function SearchOverlay() {
                   <input
                     autoFocus
                     className="w-full outline-none text-xl py-2 bg-transparent text-black placeholder:text-gray-300"
-                    placeholder="Search GlowHaus..."
+                    placeholder={activeFilter === "all" ? "Search GlowHaus..." : `Search in ${activeFilter}...`}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleSearch(query)}
@@ -103,6 +108,29 @@ export default function SearchOverlay() {
                   >
                     <X size={20} className="text-gray-400" />
                   </button>
+                </div>
+
+                {/* Horizontal Category Filter Pills */}
+                <div className="px-6 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                  <SlidersHorizontal size={14} className="text-gray-400 shrink-0 mr-1" />
+                  {[
+                    { id: "all", label: "All Items" },
+                    { id: "hair", label: "Hair" },
+                    { id: "nails", label: "Nails" },
+                    { id: "accessories", label: "Accessories" }
+                  ].map((filter) => (
+                    <button
+                      key={filter.id}
+                      onClick={() => setActiveFilter(filter.id)}
+                      className={`text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full font-medium transition-all duration-200 border whitespace-nowrap ${
+                        activeFilter === filter.id
+                          ? "bg-noir text-white border-noir dark:bg-gold dark:border-gold"
+                          : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
+                      }`}
+                    >
+                      {filter.label}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="p-6 max-h-[60vh] overflow-y-auto bg-white text-black no-scrollbar">
@@ -210,7 +238,10 @@ export default function SearchOverlay() {
                         onClick={() => handleSearch(query)}
                         className="w-full p-4 bg-noir text-white text-[10px] font-bold uppercase tracking-[0.2em] flex justify-between items-center rounded-xl hover:bg-gold transition-colors"
                       >
-                        See all results for "{query}" <ArrowRight size={16} />
+                        {activeFilter === "all" 
+                          ? `See all results for "${query}"` 
+                          : `See ${activeFilter} results for "${query}"`} 
+                        <ArrowRight size={16} />
                       </button>
                     </div>
                   )}
