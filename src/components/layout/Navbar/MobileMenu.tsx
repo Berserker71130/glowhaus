@@ -11,6 +11,10 @@ export default function MobileMenu() {
   const { mobileMenuOpen, setMobileMenuOpen } = useStore();
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
+  // Mock Authentication state for Criterion #4 (Set to false for now, change to true to test)
+  // When backend is ready, this will come from your auth context/store: const { user } = useAuth();
+  const isLoggedIn = false; 
+
   const categories = Object.keys(NAV_DATA).filter((k) => k !== "Simple");
   const simpleLinks = NAV_DATA.Simple;
 
@@ -86,14 +90,13 @@ export default function MobileMenu() {
                           exit={{ height: 0, opacity: 0 }}
                           className="overflow-hidden bg-gold/5 dark:bg-white/5 rounded-sm"
                         >
-                          <div className="flex flex-col gap-4 p-4 ml-2">
+                          {/* <div className="flex flex-col gap-4 p-4 ml-2">
                             {NAV_DATA[
                               cat as keyof Omit<typeof NAV_DATA, "Simple">
                             ].links.map((linkText: string) => (
                               <Link
                                 key={linkText}
-                                // SURGICAL FIX: Uses the helper to match Product Data
-                                href={`/category/${generateSlug(linkText)}`}
+                                href={/category/`${generateSlug(linkText)}`}
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="text-[10px] uppercase tracking-widest text-black/60 dark:text-ivory/60 hover:text-gold"
                               >
@@ -101,8 +104,28 @@ export default function MobileMenu() {
                               </Link>
                             ))}
                             <Link
-                              // FIX: Shop All for parent category (hair, nails, etc)
-                              href={`/category/${cat.toLowerCase()}`}
+                              href={/category/`${cat.toLowerCase()}`}
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="text-[10px] uppercase tracking-widest text-gold font-bold mt-2"
+                            >
+                              Shop All {cat}
+                            </Link>
+                          </div> */}
+                          <div className="flex flex-col gap-4 p-4 ml-2">
+                            {NAV_DATA[
+                              cat as keyof Omit<typeof NAV_DATA, "Simple">
+                            ].links.map((linkText: string) => (
+                              <Link
+                                key={linkText}
+                                href={`/category/${generateSlug(linkText)}`} 
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="text-[10px] uppercase tracking-widest text-black/60 dark:text-ivory/60 hover:text-gold"
+                              >
+                                {linkText}
+                              </Link>
+                            ))}
+                            <Link
+                              href={`/category/${cat.toLowerCase()}`} 
                               onClick={() => setMobileMenuOpen(false)}
                               className="text-[10px] uppercase tracking-widest text-gold font-bold mt-2"
                             >
@@ -115,44 +138,71 @@ export default function MobileMenu() {
                   </div>
                 ))}
 
-                {simpleLinks.map((link) => (
-                  <Link
-                    key={link}
-                    href={`/${generateSlug(link)}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-5 border-b border-gold/5 text-xs uppercase tracking-[0.2em] font-medium text-black dark:text-ivory"
-                  >
-                    {link}
-                  </Link>
-                ))}
+               {simpleLinks.map((link) => {
+  // Explicit routing checks for standalone links
+  const isSale = link.toLowerCase() === "sale";
+  const isBook = link.toLowerCase() === "book";
+
+  // Force "Book" to /booking, "Sale" to /category/sale, or use the fallback slug
+  const targetHref = isBook 
+    ? "/booking" 
+    : isSale 
+      ? "/category/sale" 
+      : `/${generateSlug(link)}`;
+
+  return (
+    <Link
+      key={link}
+      href={targetHref}
+      onClick={() => setMobileMenuOpen(false)}
+      className="block py-5 border-b border-gold/5 text-xs uppercase tracking-[0.2em] font-medium text-black dark:text-ivory hover:text-gold transition-colors"
+    >
+      {link}
+    </Link>
+  );
+})}
               </nav>
             </div>
 
-            {/* Bottom Section */}
+           {/* Bottom Section */}
             <div className="p-6 bg-white dark:bg-white/[0.02] border-t border-gold/20 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <Link
-                  href="/account"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-black dark:text-ivory"
-                >
-                  <User className="w-4 h-4 text-gold" /> Account
-                </Link>
+              
+              {/* Dynamic Grid Layout Wrapper */}
+              <div 
+                className={
+                  isLoggedIn 
+                    ? "grid grid-cols-2 gap-4" 
+                    : "grid grid-cols-1 gap-4"
+                }
+              >
+                {/* Criterion #4: Conditionally render Account link based on auth token status */}
+                {isLoggedIn && (
+                  <Link
+                    href="/account"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-black dark:text-ivory hover:text-gold transition-colors"
+                  >
+                    <User className="w-4 h-4 text-gold" /> Account
+                  </Link>
+                )}
+
                 <Link
                   href="/wishlist"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-black dark:text-ivory"
+                  className="flex items-center gap-3 text-[10px] uppercase tracking-widest text-black dark:text-ivory hover:text-gold transition-colors"
                 >
                   <Heart className="w-4 h-4 text-gold" /> Wishlist
                 </Link>
               </div>
 
-              <button
+              {/* SURGICAL FIX: Converted from basic button to a fully functional routing Next.js Link element */}
+              <Link
+                href="/appointments"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full bg-gold text-white dark:text-noir py-4 flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-black dark:hover:bg-ivory transition-colors"
+                className="w-full bg-gold text-white dark:text-noir py-4 flex items-center justify-center gap-3 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-black dark:hover:bg-ivory transition-colors text-center"
               >
                 <Calendar className="w-4 h-4" /> Book Appointment
-              </button>
+              </Link>
             </div>
           </motion.div>
         </>
