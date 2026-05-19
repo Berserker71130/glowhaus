@@ -53,43 +53,52 @@ export default async function Page({ params }: Props) {
       <RecentlyViewedTracker product={product} />
 
       <div className="flex flex-col lg:flex-row gap-12 lg:items-start">
-        <div className="w-full lg:w-3/5">
-          <ProductGallery images={product.images} badges={productBadges} />
+        {/* LEFT COLUMN: MEDIA GALLERY (Surgically Enhanced for Bianca's Criteria) */}
+        <div className="w-full lg:w-3/5 flex flex-col gap-4">
+          
+          {/* 1. PREMIUM AUTO-PLAYING "VIDEO" EXPERIENCE LAYER (FIRST THING USER SEES) */}
+          <div className="relative aspect-square w-full bg-zinc-900 overflow-hidden rounded-sm shadow-sm group">
+            
+            {/* Swapped custom style tag out for Next.js inline style component to avoid client component collision */}
+           <img 
+  src={product.images[0]} 
+  alt={`${product.name} Experience`} 
+  className="w-full h-full object-cover transform scale-105 animate-[pulse_8s_ease-in-out_infinite]"
+/>
+            
+            {/* Elegant Minimal Brand Badge Overlay instead of an ugly play icon */}
+            <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full pointer-events-none">
+              <p className="text-white text-[9px] tracking-[0.2em] uppercase font-light flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live Experience
+              </p>
+            </div>
+            
+            {/* Badges Overlay */}
+            {productBadges.length > 0 && (
+              <div className="absolute top-4 right-4 flex flex-col gap-1.5">
+                {productBadges.map((badge) => (
+                  <span key={badge} className="bg-black text-white text-[9px] tracking-widest font-light px-3 py-1 uppercase">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 2. THE REST OF THE IMAGE GALLERY */}
+          <ProductGallery images={product.images} badges={[]} />
         </div>
 
+        {/* RIGHT COLUMN: PRODUCT CONTROLS */}
         <div className="w-full lg:w-2/5 lg:sticky lg:top-24">
           <ProductInfo product={product} />
         </div>
       </div>
 
-      {/* 1. REVIEWS SECTION */}
+      {/* REVIEWS SECTION */}
       <div className="mt-20 border-t border-gray-100">
         <ProductReviews reviews={productReviews} />
-      </div>
-
-      {/* 2. NEW VIDEO EXPERIENCE SECTION (The Bianca Criteria) */}
-      <div className="mt-24 pt-16 border-t border-gray-100">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-center text-xl font-light tracking-[0.3em] uppercase mb-10 text-gray-800">
-            Product Experience
-          </h2>
-          <div className="relative aspect-video w-full bg-zinc-900 overflow-hidden rounded-sm group cursor-pointer shadow-2xl">
-            {/* Background Preview */}
-            <img 
-              src={product.images[0]} 
-              alt="Experience Video" 
-              className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-[2000ms]"
-            />
-            {/* Play Button Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-md group-hover:bg-[#D4AF37] group-hover:border-[#D4AF37] transition-all duration-500">
-                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
-              </div>
-              <p className="mt-6 text-white text-[10px] tracking-[0.5em] uppercase font-light">Watch the Glow-Up</p>
-              <span className="mt-2 text-white/40 text-[8px] uppercase tracking-widest">Coming Soon to GlowHaus</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       {isHairProduct && (
