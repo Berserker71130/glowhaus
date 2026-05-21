@@ -128,15 +128,27 @@ export default function Navbar() {
                 </span>
               </div>
             ))}
-          {NAV_DATA.Simple.map((link) => (
-            <Link
-              key={link}
-              href={`/${link.toLowerCase()}`}
-              className="text-[11px] uppercase tracking-[0.25em] hover:text-gold transition-colors font-bold dark:text-ivory"
-            >
-              {link}
-            </Link>
-          ))}
+
+          {/* SCRIPTED OVERRIDE: Exactly updating URL outputs for the simple string list */}
+          {NAV_DATA.Simple.map((link) => {
+            const norm = link.toLowerCase().trim();
+            const targetUrl =
+              norm === "book" || norm === "book appointment"
+                ? "/booking"
+                : norm === "sale" || norm === "sales"
+                  ? "/category/sale"
+                  : `/${norm}`;
+
+            return (
+              <Link
+                key={link}
+                href={targetUrl}
+                className="text-[11px] uppercase tracking-[0.25em] hover:text-gold transition-colors font-bold dark:text-ivory"
+              >
+                {link}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right: Icons */}
@@ -204,7 +216,6 @@ export default function Navbar() {
                         {data.links.map((link) => (
                           <Link
                             key={link}
-                            // FIX: Added generateSlug to match category architecture
                             href={`/category/${generateSlug(link)}`}
                             className="text-noir/70 dark:text-ivory/70 hover:text-gold text-sm tracking-wide transition-colors duration-300 italic"
                           >
@@ -214,7 +225,6 @@ export default function Navbar() {
                       </div>
 
                       <Link
-                        // THE CRITICAL FIX: Changed hardcoded "/shop" to dynamic category
                         href={`/category/${hoveredCategory.toLowerCase()}`}
                         className="mt-10 inline-block text-[10px] font-bold uppercase tracking-[0.3em] text-gold border-b border-gold/40 pb-1 w-fit hover:border-gold transition-all"
                       >
