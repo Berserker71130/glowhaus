@@ -53,19 +53,17 @@ export default async function Page({ params }: Props) {
       <RecentlyViewedTracker product={product} />
 
       <div className="flex flex-col lg:flex-row gap-12 lg:items-start">
-        {/* LEFT COLUMN: MEDIA GALLERY (Surgically Enhanced for Bianca's Criteria) */}
+        {/* LEFT COLUMN: MEDIA GALLERY (Surgically Enhanced) */}
         <div className="w-full lg:w-3/5 flex flex-col gap-4">
-          
           {/* 1. PREMIUM AUTO-PLAYING "VIDEO" EXPERIENCE LAYER (FIRST THING USER SEES) */}
           <div className="relative aspect-square w-full bg-zinc-900 overflow-hidden rounded-sm shadow-sm group">
-            
             {/* Swapped custom style tag out for Next.js inline style component to avoid client component collision */}
-           <img 
-  src={product.images[0]} 
-  alt={`${product.name} Experience`} 
-  className="w-full h-full object-cover transform scale-105 animate-[pulse_8s_ease-in-out_infinite]"
-/>
-            
+            <img
+              src={product.images?.[0]}
+              alt={`${product.name} Experience`}
+              className="w-full h-full object-cover transform scale-105 animate-[pulse_8s_ease-in-out_infinite]"
+            />
+
             {/* Elegant Minimal Brand Badge Overlay instead of an ugly play icon */}
             <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full pointer-events-none">
               <p className="text-white text-[9px] tracking-[0.2em] uppercase font-light flex items-center gap-1.5">
@@ -73,12 +71,15 @@ export default async function Page({ params }: Props) {
                 Live Experience
               </p>
             </div>
-            
+
             {/* Badges Overlay */}
             {productBadges.length > 0 && (
               <div className="absolute top-4 right-4 flex flex-col gap-1.5">
                 {productBadges.map((badge) => (
-                  <span key={badge} className="bg-black text-white text-[9px] tracking-widest font-light px-3 py-1 uppercase">
+                  <span
+                    key={badge}
+                    className="bg-black text-white text-[9px] tracking-widest font-light px-3 py-1 uppercase"
+                  >
                     {badge}
                   </span>
                 ))}
@@ -87,7 +88,7 @@ export default async function Page({ params }: Props) {
           </div>
 
           {/* 2. THE REST OF THE IMAGE GALLERY */}
-          <ProductGallery images={product.images} badges={[]} />
+          <ProductGallery images={product.images || []} badges={[]} />
         </div>
 
         {/* RIGHT COLUMN: PRODUCT CONTROLS */}

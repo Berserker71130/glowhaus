@@ -91,22 +91,21 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
                     className="h-full w-full"
                   >
                     <img
-                      src={images[selectedIndex]}
+                      src={images[selectedIndex] || "/placeholder.jpg"}
                       alt="Product"
                       className="w-full h-full object-cover"
                     />
 
-                  
                     {/* Zoom Overlay */}
-<div
-  className="absolute inset-0 z-10 pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-  style={{
-    ...zoomStyle,
-    backgroundImage: `url(${images[selectedIndex]})`, // FIXED: Wrapped in backticks
-    backgroundSize: "250%",
-    backgroundRepeat: "no-repeat",
-  }}
-/>
+                    <div
+                      className="absolute inset-0 z-10 pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        ...zoomStyle,
+                        backgroundImage: `url(${images[selectedIndex] || "/placeholder.jpg"})`, // FIXED: Wrapped in backticks
+                        backgroundSize: "250%",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    />
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -136,16 +135,17 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
         ))}
 
         {/* Placeholder logic for 3-photo criteria */}
-        {images.length < 3 && Array.from({ length: 3 - images.length }).map((_, idx) => (
-          <div 
-            key={`placeholder-${idx}`} 
-            className="w-24 h-24 flex-shrink-0 bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
-          >
-            <span className="text-[8px] text-gray-400 uppercase tracking-widest text-center px-1">
-              Angle {images.length + idx + 1} <br/> Coming Soon
-            </span>
-          </div>
-        ))}
+        {images.length < 3 &&
+          Array.from({ length: 3 - images.length }).map((_, idx) => (
+            <div
+              key={`placeholder-${idx}`}
+              className="w-24 h-24 flex-shrink-0 bg-gray-50 border border-dashed border-gray-200 flex items-center justify-center"
+            >
+              <span className="text-[8px] text-gray-400 uppercase tracking-widest text-center px-1">
+                Angle {images.length + idx + 1} <br /> Coming Soon
+              </span>
+            </div>
+          ))}
       </div>
     </div>
   );

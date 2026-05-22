@@ -103,7 +103,7 @@ export default function CartDrawer() {
                     {/* FIXED: Uses images[0] and matches your new 16/10 ratio logic */}
                     <div className="w-20 h-14 flex-shrink-0 bg-white dark:bg-zinc-800 rounded-xs overflow-hidden border border-gold/10 shadow-sm relative">
                       <img
-                        src={item.product.images[0] || "/placeholder.png"}
+                        src={item.product.images?.[0] || "/placeholder.png"}
                         alt={item.product.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
