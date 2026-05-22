@@ -53,13 +53,13 @@ export default async function Page({ params }: Props) {
       <RecentlyViewedTracker product={product} />
 
       <div className="flex flex-col lg:flex-row gap-12 lg:items-start">
-        {/* LEFT COLUMN: MEDIA GALLERY (Surgically Enhanced) */}
+        {/* LEFT COLUMN: MEDIA GALLERY (Surgically Enhanced for Bianca's Criteria) */}
         <div className="w-full lg:w-3/5 flex flex-col gap-4">
           {/* 1. PREMIUM AUTO-PLAYING "VIDEO" EXPERIENCE LAYER (FIRST THING USER SEES) */}
           <div className="relative aspect-square w-full bg-zinc-900 overflow-hidden rounded-sm shadow-sm group">
             {/* Swapped custom style tag out for Next.js inline style component to avoid client component collision */}
             <img
-              src={product.images?.[0]}
+              src={product.images[0]}
               alt={`${product.name} Experience`}
               className="w-full h-full object-cover transform scale-105 animate-[pulse_8s_ease-in-out_infinite]"
             />
@@ -88,7 +88,7 @@ export default async function Page({ params }: Props) {
           </div>
 
           {/* 2. THE REST OF THE IMAGE GALLERY */}
-          <ProductGallery images={product.images || []} badges={[]} />
+          <ProductGallery images={product.images} badges={[]} />
         </div>
 
         {/* RIGHT COLUMN: PRODUCT CONTROLS */}

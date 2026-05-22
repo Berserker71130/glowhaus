@@ -6,7 +6,6 @@ import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import Link from "next/link";
 import { showGlowToast } from "@/lib/toast";
-// Import your Product type
 import { Product } from "@/types";
 
 export default function CartDrawer() {

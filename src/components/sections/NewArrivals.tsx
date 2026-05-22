@@ -14,7 +14,7 @@ const PRODUCTS = [
     category: "Hair",
     price: "₦145,000",
     isNew: true,
-    img: "brazilliansilkstraight.webp",
+    img: "/hdlacefrontal.jpg",
   },
   {
     id: 2,
@@ -27,12 +27,12 @@ const PRODUCTS = [
   },
   {
     id: 3,
-    slug: "hd-lace-frontal-13x4",
-    name: "HD Invisible Lace Front",
-    category: "Hair",
+    slug: "acrylic-full-set",
+    name: "Acrylic Full Set",
+    category: "Nails",
     price: "₦185,000",
     isNew: true,
-    img: "/hdlacefrontal.jpg",
+    img: "/acrylicfullset.jpg",
   },
   {
     id: 4,
@@ -62,10 +62,15 @@ export default function NewArrivals() {
         ? parseInt(product.price.replace(/[^\d]/g, ""), 10)
         : product.price;
 
+    const cleanImgPath = product.img.startsWith("/")
+      ? product.img
+      : `/${product.img}`;
+
     addToCart({
       ...product,
       id: `prod-${product.slug}`,
       price: rawPrice,
+      images: [cleanImgPath],
       quantity: 1,
     });
 
@@ -89,9 +94,14 @@ export default function NewArrivals() {
         icon: "💙",
       });
     } else {
+      const cleanImgPath = product.img.startsWith("/")
+        ? product.img
+        : `/${product.img}`;
+
       addToWishlist({
         ...product,
         id: targetId,
+        images: [cleanImgPath],
       });
       showGlowToast({
         message: "Saved to wishlist ❤️",

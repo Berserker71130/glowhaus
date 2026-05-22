@@ -91,7 +91,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
                     className="h-full w-full"
                   >
                     <img
-                      src={images[selectedIndex] || "/placeholder.jpg"}
+                      src={images[selectedIndex]}
                       alt="Product"
                       className="w-full h-full object-cover"
                     />
@@ -101,7 +101,7 @@ export default function ProductGallery({ images, badges }: GalleryProps) {
                       className="absolute inset-0 z-10 pointer-events-none hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       style={{
                         ...zoomStyle,
-                        backgroundImage: `url(${images[selectedIndex] || "/placeholder.jpg"})`, // FIXED: Wrapped in backticks
+                        backgroundImage: `url(${images[selectedIndex]})`, // FIXED: Wrapped in backticks
                         backgroundSize: "250%",
                         backgroundRepeat: "no-repeat",
                       }}

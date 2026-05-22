@@ -92,6 +92,7 @@ export default function BestSellers() {
       ...product,
       id: `prod-${product.slug}`,
       price: rawPrice,
+      images: [product.img],
       quantity: 1,
     });
 
@@ -118,6 +119,7 @@ export default function BestSellers() {
       addToWishlist({
         ...product,
         id: targetId,
+        images: [product.img],
       });
       showGlowToast({
         message: "Saved to wishlist ❤️",

@@ -71,7 +71,7 @@ export default function ProductCard({
             className={`object-cover transition-opacity duration-700 ${product.images[1] ? "group-hover:opacity-0" : ""}`}
           />
 
-          {product.images?.[1] && (
+          {product.images[1] && (
             <Image
               src={product.images[1]}
               alt={`${product.name} alternate view`}
