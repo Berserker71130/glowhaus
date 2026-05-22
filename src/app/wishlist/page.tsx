@@ -134,7 +134,7 @@ export default function WishlistPage() {
                   {/* FIXED: Aspect Ratio to match ProductCard 16/10 for consistency */}
                   <div className="relative aspect-[16/10] mb-6 overflow-hidden bg-gray-50 dark:bg-zinc-900 border border-noir/5 dark:border-white/5 transition-colors">
                     <img
-                      src={product.images[0] || "/placeholder.jpg"}
+                      src={product.images?.[0] || "/placeholder.jpg"}
                       alt={product.name}
                       className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${product.isSoldOut ? "grayscale" : ""}`}
                     />
